@@ -141,16 +141,19 @@ The Express API acts as the central gateway connecting the database and AI servi
 
 ### 🧠 AI Microservice (`apps/ai_services`)
 
-This Python FastAPI service handles resume vector searches and AI prompt generation.
+This Python FastAPI service handles candidate screening assessment generation, weighted resume fit scoring, and vector search embeddings.
+
+> 📖 **Full AI Documentation**: For detailed architecture, model specifications (GPT-4o & text-embedding-3-small), prompt strategies, offline mock mode, and Swagger schemas, see the [AI Services README](apps/ai_services/README.md).
 
 1. Navigate to the AI service directory: `cd apps/ai_services`
-2. Create a virtual environment : `python -m venv venv`
+2. Create a virtual environment: `python -m venv venv`
 3. Activate the virtual environment:
-   - Windows: `venv\Scripts\activate`
+   - Windows: `venv\Scripts\activate` (or `.\venv\Scripts\Activate.ps1`)
    - Mac/Linux: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
-5. Run the FastAPI server: `npm run dev` (or run `uvicorn main:app --reload --host 0.0.0.0 --port 8000`)
-6. **Access the API Docs:** Open `http://localhost:8000/docs` in your browser to interact with the AI Swagger UI.
+5. Copy environment template: `cp .env.example .env` (configure your `OPENAI_API_KEY`, or set `MOCK_INFERENCE=true` for offline testing)
+6. Run the FastAPI server: `npm run dev` (or run `uvicorn main:app --reload --host 0.0.0.0 --port 8000`)
+7. **Access the API Docs:** Open `http://localhost:8000/docs` in your browser to interact with the AI Swagger UI.
 
 ## 🛠️ Built With
 

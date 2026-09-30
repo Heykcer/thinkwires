@@ -17,6 +17,7 @@ venv/
 env/
 .venv/
 .pytest_cache/
+models_cache/
 
 # Build Outputs
 dist/
