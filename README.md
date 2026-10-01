@@ -134,10 +134,13 @@ The React application runs using Vite.
 
 The Express API acts as the central gateway connecting the database and AI service to the frontend.
 
+> 📖 **Full Backend Documentation**: For architecture overview (Routes vs Controllers vs Services), authentication flow, database migration & seeding guides, interactive Swagger UI, and complete API endpoint documentation, see the [Backend README](apps/backend/README.md) and [Interactive Swagger Docs](http://localhost:5000/api/docs).
+
 1. Navigate to the backend directory: `cd apps/backend`
 2. Ensure you have copied `.env.example` to `.env`.
 3. Run the development server: `npm run dev`
 4. **Access the API:** The server will listen on `http://localhost:5000`.
+5. **Access the API Docs:** Open `http://localhost:5000/api/docs` in your browser for the interactive Swagger UI.
 
 ### 🧠 AI Microservice (`apps/ai_services`)
 

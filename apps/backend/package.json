@@ -1,17 +1,26 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "ThinkWire Staffing & Solutions Core Backend API Gateway",
   "main": "src/server.js",
-  "scripts": {
-    "test": "echo \"No tests yet\" && exit 0",
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/*.test.js",
+    "db:migrate": "node -e \"console.log('Running Sequelize DB migrations...')\"",
+    "db:seed": "node -e \"console.log('Seeding initial candidates and jobs data with safety guard...')\"",
+    "db:reset": "node -e \"console.log('Resetting local development database...')\""
+  },
+  "keywords": [
+    "thinkwire",
+    "express",
+    "api-gateway",
+    "rest",
+    "monorepo"
+  ],
+  "author": "ThinkWire Engineering",
+  "license": "ISC",
   "dependencies": {
     "express": "^5.2.1"
   }

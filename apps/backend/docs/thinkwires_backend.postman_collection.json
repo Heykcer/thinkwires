@@ -1,0 +1,271 @@
+{
+  "info": {
+    "_postman_id": "c7a8b910-1234-5678-9abc-def012345678",
+    "name": "ThinkWire Backend API Gateway Collection",
+    "description": "Comprehensive Postman collection for the ThinkWire Staffing and Solutions Backend API Gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "dev-admin-token",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. System & Health",
+      "item": [
+        {
+          "name": "Service Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "OpenAPI Swagger Spec",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docs/swagger.json",
+              "host": ["{{base_url}}"],
+              "path": ["api", "docs", "swagger.json"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidate@thinkwire.internal\",\n  \"password\": \"SecurePass123!\",\n  \"firstName\": \"Alex\",\n  \"lastName\": \"Vance\",\n  \"role\": \"candidate\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@thinkwire.internal\",\n  \"password\": \"AdminPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Jobs & Requisitions",
+      "item": [
+        {
+          "name": "List Jobs (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/jobs?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "jobs"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/jobs/c56a4180-65aa-42ec-a945-5fd21dec0538",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "jobs",
+                "c56a4180-65aa-42ec-a945-5fd21dec0538"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Job Requisition",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cloud Native Kubernetes Architect\",\n  \"company\": \"FinTech Velocity\",\n  \"description\": \"Lead container infrastructure on AWS EKS with ArgoCD.\",\n  \"requiredSkills\": [\"Kubernetes\", \"AWS\", \"Terraform\", \"Docker\"],\n  \"requiredExperienceYears\": 6,\n  \"engagementMode\": \"contract\",\n  \"budgetMin\": 150000,\n  \"budgetMax\": 180000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "jobs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Bench Management",
+      "item": [
+        {
+          "name": "Get Bench Summary & Daily Burn",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bench",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bench"]
+            }
+          }
+        },
+        {
+          "name": "Assign Bench Talent to Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"candidateId\": \"d47ac10b-58cc-4372-a567-0e02b2c3d479\",\n  \"jobId\": \"c56a4180-65aa-42ec-a945-5fd21dec0538\",\n  \"startDate\": \"2026-10-15\",\n  \"billingRate\": 110\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/bench/assign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bench", "assign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Candidates Pool",
+      "item": [
+        {
+          "name": "List Candidates (RBAC Protected)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/candidates?benchStatus=on_bench",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "candidates"],
+              "query": [{ "key": "benchStatus", "value": "on_bench" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. AI Microservice Proxy",
+      "item": [
+        {
+          "name": "Generate AI Assessment Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_title\": \"Senior React/Node Developer\",\n  \"job_description\": \"High scale full-stack web application engineering.\",\n  \"required_skills\": [\"React\", \"Node.js\", \"PostgreSQL\"],\n  \"passing_threshold_percentage\": 80\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/ai/generate-assessment",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "ai", "generate-assessment"]
+            }
+          }
+        },
+        {
+          "name": "Score Resume Fit (0-100%)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resume_text\": \"Full stack engineer with 6 years experience in Node.js, Express, React, and PostgreSQL.\",\n  \"job_description\": \"Looking for senior developer with 5+ years building web applications.\",\n  \"required_skills\": [\"Node.js\", \"React\", \"PostgreSQL\"],\n  \"candidate_experience_years\": 6.0,\n  \"required_experience_years\": 5.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/ai/score-resume",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "ai", "score-resume"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin CMS & Feature Flags",
+      "item": [
+        {
+          "name": "List Dynamic Feature Flags",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/feature-flags",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "feature-flags"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

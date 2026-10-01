@@ -1,0 +1,824 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ThinkWire Backend API Gateway",
+    "version": "1.0.0",
+    "description": "Core REST API Gateway for the ThinkWire Staffing and Solutions platform. Powers authentication, role-based access control (RBAC), job requisitions, candidate onboarding, bench talent management, client billing, CMS feature flags, and proxy routing to the Python FastAPI AI Microservice.",
+    "contact": {
+      "name": "ThinkWire Engineering Team",
+      "email": "engineering@thinkwire.internal"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local Development Gateway"
+    },
+    {
+      "url": "https://api.thinkwire.internal",
+      "description": "Staging / Production Gateway"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your JWT token obtained from `/api/v1/auth/login`"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string", "example": "RESOURCE_NOT_FOUND" },
+              "message": {
+                "type": "string",
+                "example": "The requested resource could not be found."
+              },
+              "details": { "type": "object", "nullable": true }
+            }
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "healthy" },
+          "service": { "type": "string", "example": "thinkwire-backend" },
+          "version": { "type": "string", "example": "1.0.0" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "dependencies": {
+            "type": "object",
+            "properties": {
+              "postgres": { "type": "string", "example": "connected" },
+              "redis": { "type": "string", "example": "connected" },
+              "ai_service": { "type": "string", "example": "available" }
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "candidate@thinkwire.com"
+          },
+          "firstName": { "type": "string", "example": "Sarah" },
+          "lastName": { "type": "string", "example": "Connor" },
+          "role": {
+            "type": "string",
+            "enum": ["candidate", "client", "admin", "recruiter"],
+            "example": "candidate"
+          },
+          "isActive": { "type": "boolean", "example": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AuthTokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "expiresIn": { "type": "string", "example": "7d" }
+        }
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "c56a4180-65aa-42ec-a945-5fd21dec0538"
+          },
+          "title": {
+            "type": "string",
+            "example": "Senior Full Stack React/Node Engineer"
+          },
+          "company": { "type": "string", "example": "Acme Global Tech" },
+          "description": {
+            "type": "string",
+            "example": "Architect and scale distributed high-load web applications."
+          },
+          "requiredSkills": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Node.js", "Express", "React", "PostgreSQL"]
+          },
+          "requiredExperienceYears": { "type": "number", "example": 5 },
+          "engagementMode": {
+            "type": "string",
+            "enum": ["full_time", "contract", "freelance", "bench"],
+            "example": "full_time"
+          },
+          "budgetMin": { "type": "number", "example": 120000 },
+          "budgetMax": { "type": "number", "example": 150000 },
+          "status": {
+            "type": "string",
+            "enum": ["open", "draft", "filled", "closed"],
+            "example": "open"
+          },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Candidate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "userId": { "type": "string", "format": "uuid" },
+          "fullName": { "type": "string", "example": "Jordan Lee" },
+          "title": { "type": "string", "example": "Senior Backend Specialist" },
+          "skills": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Node.js", "Express", "PostgreSQL", "Docker", "Redis"]
+          },
+          "totalExperienceYears": { "type": "number", "example": 6 },
+          "engagementMode": {
+            "type": "string",
+            "enum": ["full_time", "contract", "freelance", "bench"],
+            "example": "bench"
+          },
+          "benchStatus": {
+            "type": "string",
+            "enum": ["active", "on_bench", "assigned", "offboarding"],
+            "example": "on_bench"
+          },
+          "hourlyRate": { "type": "number", "example": 85 },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "BenchCandidate": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "candidateId": { "type": "string", "format": "uuid" },
+          "name": { "type": "string", "example": "Alex Mercer" },
+          "primarySkill": { "type": "string", "example": "Cloud & DevOps" },
+          "benchStatus": {
+            "type": "string",
+            "enum": ["on_bench", "assigned", "redeployment_pending"],
+            "example": "on_bench"
+          },
+          "benchSince": { "type": "string", "format": "date-time" },
+          "dailyCost": { "type": "number", "example": 650 },
+          "currentClientProject": {
+            "type": "string",
+            "nullable": true,
+            "example": null
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check & Diagnostics",
+        "description": "Returns operational health status of the Express API Gateway, PostgreSQL database, and AI microservice.",
+        "tags": ["System & Health"],
+        "responses": {
+          "200": {
+            "description": "System is healthy and operational",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Register New User Account",
+        "description": "Registers a new Candidate or Client user account with hashed password credentials.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password",
+                  "firstName",
+                  "lastName",
+                  "role"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "jordan.lee@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "SecureP@ss123"
+                  },
+                  "firstName": { "type": "string", "example": "Jordan" },
+                  "lastName": { "type": "string", "example": "Lee" },
+                  "role": {
+                    "type": "string",
+                    "enum": ["candidate", "client"],
+                    "example": "candidate"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": {
+                      "type": "string",
+                      "example": "Registration successful"
+                    },
+                    "user": { "$ref": "#/components/schemas/User" },
+                    "tokens": { "$ref": "#/components/schemas/AuthTokens" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or email already in use",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Authenticate User & Obtain JWT Tokens",
+        "description": "Validates email and password credentials, returning signed JWT access and refresh tokens.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "admin@thinkwire.internal"
+                  },
+                  "password": { "type": "string", "example": "AdminPass123!" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": { "$ref": "#/components/schemas/User" },
+                    "tokens": { "$ref": "#/components/schemas/AuthTokens" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "summary": "Get Current Authenticated User Profile",
+        "description": "Returns current user details extracted from verified Bearer token.",
+        "tags": ["Authentication"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs": {
+      "get": {
+        "summary": "List Job Requisitions",
+        "description": "Fetches paginated list of active jobs with optional filtering by role, engagement mode, or skills.",
+        "tags": ["Jobs & Requisitions"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": { "type": "integer", "default": 1 },
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 10 },
+            "description": "Items per page"
+          },
+          {
+            "name": "engagementMode",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Filter by engagement mode"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Keyword search across title/skills"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Job" }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": { "type": "integer", "example": 42 },
+                        "page": { "type": "integer", "example": 1 },
+                        "totalPages": { "type": "integer", "example": 5 },
+                        "limit": { "type": "integer", "example": 10 }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create New Job Requisition",
+        "description": "Creates a new client job opening. Requires Client or Admin authentication.",
+        "tags": ["Jobs & Requisitions"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "description",
+                  "requiredSkills",
+                  "requiredExperienceYears",
+                  "engagementMode"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Lead DevOps & Platform Engineer"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Manage Kubernetes clusters, AWS infrastructure, and CI/CD pipelines."
+                  },
+                  "requiredSkills": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["Kubernetes", "AWS", "Terraform", "Docker"]
+                  },
+                  "requiredExperienceYears": { "type": "number", "example": 6 },
+                  "engagementMode": {
+                    "type": "string",
+                    "enum": ["full_time", "contract", "bench"],
+                    "example": "contract"
+                  },
+                  "budgetMin": { "type": "number", "example": 140000 },
+                  "budgetMax": { "type": "number", "example": 170000 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job requisition created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "job": { "$ref": "#/components/schemas/Job" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden - Insufficient permissions" }
+        }
+      }
+    },
+    "/api/v1/jobs/{id}": {
+      "get": {
+        "summary": "Get Single Job Requisition Details",
+        "description": "Retrieves comprehensive details for a specific job requisition.",
+        "tags": ["Jobs & Requisitions"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "job": { "$ref": "#/components/schemas/Job" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/candidates": {
+      "get": {
+        "summary": "Search & Filter Candidates Pool",
+        "description": "Returns candidate profiles with filters for skills, experience, and bench status. Protected for Client and Admin roles.",
+        "tags": ["Candidates & Talent Pool"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 10 }
+          },
+          {
+            "name": "benchStatus",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Filter by 'on_bench', 'assigned', etc."
+          },
+          {
+            "name": "skill",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Match specific technical skill"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching candidates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Candidate" }
+                    },
+                    "pagination": { "type": "object" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/v1/bench": {
+      "get": {
+        "summary": "Retrieve Bench Talent Pool & Financial Burn Rates",
+        "description": "Monitors internal bench engineers awaiting client project assignments, calculating daily burn cost and redeployment urgency.",
+        "tags": ["Bench Management"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Bench overview and active bench talent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "totalOnBench": { "type": "integer", "example": 8 },
+                        "totalDailyBurn": { "type": "number", "example": 5200 },
+                        "averageDaysOnBench": {
+                          "type": "number",
+                          "example": 14.5
+                        }
+                      }
+                    },
+                    "benchCandidates": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/BenchCandidate" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign Bench Candidate to Client Requisition",
+        "description": "Transition a candidate from 'on_bench' to 'assigned' status upon signing with a client.",
+        "tags": ["Bench Management"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["candidateId", "jobId", "startDate"],
+                "properties": {
+                  "candidateId": { "type": "string", "format": "uuid" },
+                  "jobId": { "type": "string", "format": "uuid" },
+                  "startDate": { "type": "string", "format": "date" },
+                  "billingRate": { "type": "number", "example": 110 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Candidate reassigned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": {
+                      "type": "string",
+                      "example": "Bench candidate successfully assigned to requisition."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/generate-assessment": {
+      "post": {
+        "summary": "Trigger AI Assessment Generation",
+        "description": "Proxies request to Python FastAPI AI Microservice to generate 10 tailored screening questions.",
+        "tags": ["AI Microservice Proxy"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["job_title", "job_description", "required_skills"],
+                "properties": {
+                  "job_title": {
+                    "type": "string",
+                    "example": "Full Stack React/Node Developer"
+                  },
+                  "job_description": {
+                    "type": "string",
+                    "example": "Building web apps with React and Express."
+                  },
+                  "required_skills": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["React", "Node.js"]
+                  },
+                  "passing_threshold_percentage": {
+                    "type": "integer",
+                    "default": 80
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assessment generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "assessment": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/score-resume": {
+      "post": {
+        "summary": "Score Candidate Resume Against Job Requisition",
+        "description": "Dispatches resume text and job description to AI microservice, returning Fit Score (0-100%) and Tier badge.",
+        "tags": ["AI Microservice Proxy"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "resume_text",
+                  "job_description",
+                  "required_skills"
+                ],
+                "properties": {
+                  "resume_text": {
+                    "type": "string",
+                    "example": "Senior full-stack developer with 6 years experience..."
+                  },
+                  "job_description": {
+                    "type": "string",
+                    "example": "Looking for React and Node.js engineer..."
+                  },
+                  "required_skills": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["Node.js", "React"]
+                  },
+                  "candidate_experience_years": {
+                    "type": "number",
+                    "example": 6.0
+                  },
+                  "required_experience_years": {
+                    "type": "number",
+                    "example": 5.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resume scored successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "score": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/feature-flags": {
+      "get": {
+        "summary": "List Dynamic Feature Flags",
+        "description": "Retrieves the real-time configuration flag matrix cached in Redis for fast client evaluation.",
+        "tags": ["Admin & CMS"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Feature flag matrix",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string",
+                            "example": "ai_screening_gatekeeper"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "AI Screening Gatekeeper"
+                          },
+                          "isEnabled": { "type": "boolean", "example": true },
+                          "targetRole": { "type": "string", "example": "all" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
