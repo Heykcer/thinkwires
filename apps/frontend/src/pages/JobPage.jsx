@@ -32,17 +32,27 @@ const JobPage = () => {
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('All');
   const [experienceFilter, setExperienceFilter] = useState('All');
   const [workMode, setWorkMode] = useState('All Modes');
   const [departmentFilter, setDepartmentFilter] = useState('All Roles');
   const [sortBy, setSortBy] = useState('Newest First');
 
+  // Debounce search query to avoid triggering API calls on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   // Dispatch Redux thunk to fetch openings dynamically from backend
-  const loadJobsFromBackend = useCallback(() => {
+  const loadJobsFromBackend = useCallback((overrideQuery) => {
+    const queryToUse = overrideQuery !== undefined ? overrideQuery : debouncedSearchQuery;
     dispatch(
       fetchOpenings({
-        q: searchQuery,
+        q: queryToUse,
         location: locationFilter,
         experience: experienceFilter,
         workMode: workMode,
@@ -50,16 +60,17 @@ const JobPage = () => {
         sort: sortBy,
       })
     );
-  }, [dispatch, searchQuery, locationFilter, experienceFilter, workMode, departmentFilter, sortBy]);
+  }, [dispatch, debouncedSearchQuery, locationFilter, experienceFilter, workMode, departmentFilter, sortBy]);
 
-  // Trigger search on filter changes or initial load
+  // Trigger search on filter changes, debounced query update, or initial load
   useEffect(() => {
     loadJobsFromBackend();
-  }, [departmentFilter, workMode, sortBy, loadJobsFromBackend]);
+  }, [loadJobsFromBackend]);
 
-  // Handle Search button submit
+  // Handle Search button submit (immediate trigger)
   const handleSearchSubmit = () => {
-    loadJobsFromBackend();
+    setDebouncedSearchQuery(searchQuery);
+    loadJobsFromBackend(searchQuery);
   };
 
   const isLoading = status.openings === 'loading';

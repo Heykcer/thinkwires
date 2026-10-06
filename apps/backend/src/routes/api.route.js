@@ -46,6 +46,31 @@ router.post('/tech-stack', (req, res) => {
   }
 });
 
+// Helper to extract a representative numeric salary metric for sorting
+const parseSalaryNumericValue = (salary) => {
+  if (!salary || typeof salary !== 'string') return 0;
+
+  // Look for numeric values in string (e.g. "₹30 - 40 LPA", "₹20+ LPA")
+  const matches = salary.match(/\d+(\.\d+)?/g);
+  if (matches && matches.length > 0) {
+    const nums = matches.map(Number);
+    const maxVal = Math.max(...nums);
+
+    if (/usd|\$|\bk\b/i.test(salary) && maxVal < 1000) {
+      return maxVal * 8.3;
+    }
+    return maxVal;
+  }
+
+  // Qualitative fallback rankings
+  const lower = salary.toLowerCase();
+  if (lower.includes('premium')) return 35;
+  if (lower.includes('open')) return 25;
+  if (lower.includes('market')) return 20;
+
+  return 0;
+};
+
 // --- Openings ---
 router.get('/openings', (req, res) => {
   const { q, location, experience, workMode, department, sort } = req.query;
@@ -97,7 +122,14 @@ router.get('/openings', (req, res) => {
   if (sort === 'Title A-Z') {
     filtered.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sort === 'Highest Salary') {
-    filtered.sort((a, b) => b.salary.localeCompare(a.salary));
+    filtered.sort((a, b) => {
+      const valA = parseSalaryNumericValue(a.salary);
+      const valB = parseSalaryNumericValue(b.salary);
+      if (valB !== valA) {
+        return valB - valA;
+      }
+      return (b.salary || '').localeCompare(a.salary || '');
+    });
   } else {
     // Default priority/newest sort
     filtered.sort((a, b) => {

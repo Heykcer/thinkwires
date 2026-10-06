@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
+import { Link, useLocation } from '../../router';
 
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { pathname } = useLocation();
 
   return (
     <>
@@ -56,36 +58,36 @@ const Navbar = () => {
         <nav className={'Navbar-mainNav'}>
           <div className={'Navbar-leftNavGroup'}>
             <div className={'Navbar-logoContainer'}>
-              <a href="/">
+              <Link to="/">
                 <img
                   src={logo}
                   alt="ThinkWires Logo"
                   className={'Navbar-logo'}
                 />
-              </a>
+              </Link>
             </div>
 
             <ul className={'Navbar-navLinks'}>
               <li>
-                <a
-                  href="/"
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/') ? 'Navbar-active' : ''}`}
+                <Link
+                  to="/"
+                  className={`Navbar-navLink ${pathname === '/' ? 'Navbar-active' : ''}`}
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/about" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/about') ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/about" 
+                  className={`Navbar-navLink ${pathname === '/about' ? 'Navbar-active' : ''}`}
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li className="Navbar-dropdownContainer">
-                <a
-                  href="/services"
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname.startsWith('/services')) ? 'Navbar-active' : ''}`}
+                <Link
+                  to="/services"
+                  className={`Navbar-navLink ${pathname.startsWith('/services') ? 'Navbar-active' : ''}`}
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   Services
@@ -104,75 +106,75 @@ const Navbar = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
+                </Link>
                 <div className="Navbar-dropdownMenu">
-                  <a
-                    href="/services/staff-augmentation"
+                  <Link
+                    to="/services/staff-augmentation"
                     className="Navbar-dropdownItem"
                   >
                     Staff Augmentation
-                  </a>
-                  <a href="/services/eor" className="Navbar-dropdownItem">
+                  </Link>
+                  <Link to="/services/eor" className="Navbar-dropdownItem">
                     Employer of Record (EOR)
-                  </a>
-                  <a
-                    href="/services/permanent-staffing"
+                  </Link>
+                  <Link
+                    to="/services/permanent-staffing"
                     className="Navbar-dropdownItem"
                   >
                     Permanent Staffing &amp; Executive Search
-                  </a>
-                  <a href="/services/payroll" className="Navbar-dropdownItem">
+                  </Link>
+                  <Link to="/services/payroll" className="Navbar-dropdownItem">
                     Payroll Outsourcing
-                  </a>
+                  </Link>
                 </div>
               </li>
               <li>
-                <a 
-                  href="/industries" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/industries') ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/industries" 
+                  className={`Navbar-navLink ${pathname === '/industries' ? 'Navbar-active' : ''}`}
                 >
                   Industries
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/hot-jobs" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && (window.location.pathname === '/hot-jobs' || window.location.pathname === '/jobs')) ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/hot-jobs" 
+                  className={`Navbar-navLink ${(pathname === '/hot-jobs' || pathname === '/jobs') ? 'Navbar-active' : ''}`}
                 >
                   Hot Jobs
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/talent-cloud" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/talent-cloud') ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/talent-cloud" 
+                  className={`Navbar-navLink ${pathname === '/talent-cloud' ? 'Navbar-active' : ''}`}
                 >
                   Talent Cloud
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/blog" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/blog') ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/blog" 
+                  className={`Navbar-navLink ${pathname === '/blog' ? 'Navbar-active' : ''}`}
                 >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="/contact" 
-                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/contact') ? 'Navbar-active' : ''}`}
+                <Link 
+                  to="/contact" 
+                  className={`Navbar-navLink ${pathname === '/contact' ? 'Navbar-active' : ''}`}
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           <div className={'Navbar-actionButtons'}>
-            <a href="/find-talent" className={'Navbar-btnPrimary'}>
+            <Link to="/find-talent" className={'Navbar-btnPrimary'}>
               Find Talent
-            </a>
+            </Link>
             <button
               onClick={() => setIsApplyModalOpen(true)}
               className={'Navbar-btnOutline'}
