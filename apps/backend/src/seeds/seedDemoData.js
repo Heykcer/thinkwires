@@ -100,6 +100,104 @@ export const seedDatabase = async () => {
     );
   }
 
+  // Employees & Internal Staff
+  for (const emp of adminData.employees || []) {
+    await Employee.findOneAndUpdate(
+      { email: emp.email },
+      { ...emp },
+      { upsert: true, new: true }
+    );
+  }
+
+  // Job Postings & Requirements
+  for (const job of adminData.jobs || []) {
+    await JobRequirement.findOneAndUpdate(
+      { title: job.title, client: job.client },
+      { ...job, jobId: job.id },
+      { upsert: true, new: true }
+    );
+  }
+
+  // Pre-vetted Talent Cloud Candidates
+  const candidateScores = {
+    'deepak.verma@example.com': 94,
+    'shalini.m@example.com': 91,
+    'aditya.rao@example.com': 97,
+    'meera.joshi@example.com': 89,
+    'gaurav.b@example.com': 95,
+    'swati.d@example.com': 93,
+    'naveen.c@example.com': 72,
+    'zara.williams@example.com': 90,
+  };
+
+  for (const cand of adminData.candidates || []) {
+    const score = candidateScores[cand.email] || 90;
+    const isPassing = score >= 75;
+    const text = [
+      ...(cand.technicalSkills || []),
+      cand.currentRole || '',
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    let detectedSpecialty = 'Systems & Distributed';
+    if (/pytorch|llm|genai|langchain|rag|openai|transformer|nlp|prompt|diffusion/i.test(text)) {
+      detectedSpecialty = 'GenAI & LLMs';
+    } else if (/aws|azure|gcp|kubernetes|docker|devops|terraform|ansible|helm|cloud|istio/i.test(text)) {
+      detectedSpecialty = 'Cloud & DevOps';
+    } else if (/sap|abap|hana|fico|erp|enterprise|salesforce/i.test(text)) {
+      detectedSpecialty = 'SAP & Enterprise';
+    } else if (/sql|data|etl|snowflake|databricks|spark|analytics|hadoop|pandas|bi/i.test(text)) {
+      detectedSpecialty = 'Data & Analytics';
+    }
+
+    const rubric = {
+      systemDesign: Math.min(100, Math.round(score * 1.02)),
+      codeQuality: Math.min(100, Math.round(score * 0.98)),
+      liveDebugging: Math.min(100, Math.round(score * 1.01)),
+      communication: 96,
+    };
+
+    const dossier = {
+      rubric,
+      evaluatorNotes:
+        cand.notes ||
+        `Cleared ThinkWires technical screening assessment (${score}%). Verified for immediate enterprise client syndication.`,
+      specialty: detectedSpecialty,
+      verificationChecks: {
+        identity: 'Verified via ThinkWires Identity Guard',
+        technicalDepth: `Cleared Screening Assessment (${score}%)`,
+        backgroundAudit: 'Cleared & Authenticated',
+      },
+    };
+
+    await Candidate.findOneAndUpdate(
+      { email: cand.email.toLowerCase().trim() },
+      {
+        name: cand.name,
+        email: cand.email.toLowerCase().trim(),
+        password: defaultHashedPassword,
+        phone: cand.phone || '',
+        currentRole: cand.currentRole || 'Software Engineer',
+        technicalSkills: cand.technicalSkills || [],
+        experience: cand.experience || 5,
+        expectedSalary: cand.expectedSalary || '$65 - $80',
+        resumeUrl: cand.resumeUrl || '',
+        bio: cand.notes || '',
+        status: cand.status || 'Applied',
+        workMode: isPassing ? 'On-Bench' : 'Full-Time Looking',
+        isVetted: isPassing,
+        specialty: detectedSpecialty,
+        assessmentScore: score,
+        vettingScore: score,
+        noticePeriod: isPassing ? 'Immediate' : '30 Days',
+        rubric: isPassing ? rubric : null,
+        dossier: isPassing ? dossier : null,
+      },
+      { upsert: true, new: true }
+    );
+  }
+
   // 7. Articles & Editorial (from both adminSeedData and mockData articles)
   if (Array.isArray(adminData.articles)) {
     for (const art of adminData.articles) {

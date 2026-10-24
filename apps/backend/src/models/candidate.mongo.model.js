@@ -104,6 +104,22 @@ const candidateSchema = new mongoose.Schema(
       type: Number,
       default: 85,
     },
+    isVetted: {
+      type: Boolean,
+      default: false,
+    },
+    specialty: {
+      type: String,
+      default: 'Systems & Distributed',
+    },
+    rubric: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    dossier: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
     resetPasswordToken: {
       type: String,
       default: null,
