@@ -9,6 +9,7 @@ import JobPage from './pages/JobPage';
 import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import IndustriesPage from './pages/IndustriesPage';
+import IndustryDetailPage from './pages/IndustryDetailPage';
 import BenchPage from './pages/BenchPage';
 import PayrollPage from './pages/PayrollPage';
 import EorPage from './pages/EorPage';
@@ -70,6 +71,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/industries" element={<IndustriesPage />} />
+          <Route path="/industries/:slug" element={<IndustryDetailPage />} />
           <Route path="/talent-cloud" element={<BenchPage />} />
           <Route path="/bench" element={<BenchPage />} />
           <Route path="/jobs" element={<JobPage />} />

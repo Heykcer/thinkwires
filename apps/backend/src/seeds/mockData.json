@@ -34,7 +34,13 @@
       "workMode": "Work From Home",
       "noticePeriod": "Immediate",
       "description": "Architect and deploy production agentic workflows, multi-modal LLM reasoning pipelines, LangGraph/AutoGPT orchestrators, and enterprise RAG clusters with sub-second latency.",
-      "skills": ["Agentic AI", "LangGraph", "PyTorch", "vLLM", "Vector DB"],
+      "skills": [
+        "Agentic AI",
+        "LangGraph",
+        "PyTorch",
+        "vLLM",
+        "Vector DB"
+      ],
       "department": "AI & Data Engineering",
       "postedDate": "2026-10-13",
       "priority": 1
@@ -84,7 +90,13 @@
       "workMode": "Hybrid",
       "noticePeriod": "< 30 Days",
       "description": "Build high-concurrency event-driven microservices handling 50k+ transactions per second. Optimize low-latency gRPC services, Apache Kafka pipelines, and PostgreSQL sharding.",
-      "skills": ["Golang", "Apache Kafka", "gRPC", "PostgreSQL", "Docker"],
+      "skills": [
+        "Golang",
+        "Apache Kafka",
+        "gRPC",
+        "PostgreSQL",
+        "Docker"
+      ],
       "department": "FinTech & Systems",
       "postedDate": "2026-10-12",
       "priority": 3
@@ -131,7 +143,13 @@
       "salary": "₹10 - 15 LPA",
       "joining": "< 15 Days",
       "description": "Professionals with hands-on experience in ABAP development and HANA-based solutions, along with strong expertise in form development, CDS Views, AMDP...",
-      "skills": ["SAP ABAP", "HANA Database", "CDS views", "RICEF", "AMDP"],
+      "skills": [
+        "SAP ABAP",
+        "HANA Database",
+        "CDS views",
+        "RICEF",
+        "AMDP"
+      ],
       "workMode": "Work From Office",
       "department": "SAP & Enterprise",
       "postedDate": "2026-10-04",
@@ -237,7 +255,13 @@
       "salary": "Premium CTC",
       "joining": "Multi-Cloud",
       "description": "Hands-on Cloud Architect passionate about building the next generation of enterprise AI/ML platforms. Focus on high scalability, multi-region Kubernetes...",
-      "skills": ["AWS & Azure", "MLOps", "Kubernetes", "Terraform", "CI/CD"],
+      "skills": [
+        "AWS & Azure",
+        "MLOps",
+        "Kubernetes",
+        "Terraform",
+        "CI/CD"
+      ],
       "workMode": "Work From Office",
       "department": "Cloud & DevOps",
       "postedDate": "2026-09-30",
@@ -449,44 +473,66 @@
   "industriesData": [
     {
       "id": 1,
-      "name": "Information Tech",
-      "desc": "Cloud, DevOps & Full Stack",
+      "name": "Information Technology",
+      "slug": "information-technology",
+      "desc": "Cloud, AI/ML & Enterprise Systems",
       "icon": "monitor",
       "color": "blue"
     },
     {
       "id": 2,
-      "name": "Banking & Fintech",
-      "desc": "Ledger & ACH Systems",
+      "name": "BFSI & FinTech",
+      "slug": "bfsi",
+      "desc": "Core Banking, ACH & ISO 20022 Rails",
       "icon": "building",
       "color": "blue"
     },
     {
       "id": 3,
-      "name": "Life Sciences",
-      "desc": "HIPAA & Digital Health",
+      "name": "Healthcare & Life Sciences",
+      "slug": "healthcare-life-sciences",
+      "desc": "HIPAA, FHIR & Biomedical Research",
       "icon": "medical",
       "color": "green"
     },
     {
       "id": 4,
-      "name": "Automation",
-      "desc": "Robotics & Industrial IoT",
+      "name": "Automobile & Manufacturing",
+      "slug": "automobile-manufacturing",
+      "desc": "Smart Factory & Industrial IoT",
       "icon": "robot",
       "color": "purple"
     },
     {
       "id": 5,
-      "name": "Aerospace",
-      "desc": "PLM & Embedded Tech",
-      "icon": "plane",
+      "name": "Automotive & Mobility",
+      "slug": "automotive-mobility",
+      "desc": "Software-Defined Vehicles & EV Systems",
+      "icon": "robot",
       "color": "blue"
     },
     {
       "id": 6,
-      "name": "Telecom & Infra",
-      "desc": "5G, Networks & Optical",
+      "name": "Telecommunications",
+      "slug": "telecommunications",
+      "desc": "5G Core, Open RAN & Edge Networks",
       "icon": "antenna",
+      "color": "blue"
+    },
+    {
+      "id": 7,
+      "name": "Retail & E-Commerce",
+      "slug": "retail-ecommerce",
+      "desc": "Headless Commerce & Fulfillment",
+      "icon": "monitor",
+      "color": "purple"
+    },
+    {
+      "id": 8,
+      "name": "Aerospace & Defense",
+      "slug": "aerospace-defense",
+      "desc": "DO-178C Avionics & Mission-Critical Tech",
+      "icon": "plane",
       "color": "blue"
     }
   ],
@@ -938,11 +984,11 @@
       },
       {
         "key": "tech",
-        "label": "Tech & Digital"
+        "label": "Technology & Cloud"
       },
       {
         "key": "financial",
-        "label": "Financial Services"
+        "label": "Financial & BFSI"
       },
       {
         "key": "healthcare",
@@ -950,133 +996,362 @@
       },
       {
         "key": "industrial",
-        "label": "Industrial & Engineering"
+        "label": "Industrial & Automotive"
       },
       {
-        "key": "defense",
-        "label": "Defense & Public"
+        "key": "telecom",
+        "label": "Telecommunications"
+      },
+      {
+        "key": "retail",
+        "label": "Retail & E-Commerce"
+      },
+      {
+        "key": "energy",
+        "label": "Energy & Infrastructure"
+      },
+      {
+        "key": "consulting",
+        "label": "Consulting & EdTech"
       }
     ],
     "sectors": [
       {
         "id": "tech",
+        "slug": "information-technology",
         "filter": "tech",
-        "title": "Enterprise Software & Cloud Platforms",
-        "desc": "Distributed microservices, hyperscale cloud architecture, and multi-tenant SaaS platforms built for zero-downtime reliability.",
-        "icon": "cloud",
+        "category": "tech",
+        "title": "Information Technology & Digital Transformation",
+        "desc": "Empowering enterprises to navigate the evolving digital landscape with specialized technology talent, hyperscale cloud architecture, and modern AI/ML systems.",
+        "shortDesc": "Empowering enterprises to navigate the evolving digital landscape with specialized technology talent, hyperscale cloud architecture, and modern AI/ML systems.",
+        "icon": "terminal",
         "iconBg": "rgba(37, 99, 235, 0.1)",
         "iconColor": "#2563EB",
         "badgeText": "Hyperscale Verified",
         "badgeColor": "rgba(37, 99, 235, 0.1)",
         "badgeDot": "#2563EB",
         "complianceText": "SOC 2 Type II, ISO 27001, GDPR, FedRAMP High",
+        "compliance": [
+          "SOC 2 Type II",
+          "ISO 27001",
+          "GDPR & CCPA",
+          "FedRAMP High",
+          "PCI-DSS 4.0"
+        ],
         "placements": [
           "Kubernetes Architects",
-          "Golang / Rust Systems",
-          "Distributed Systems Lead",
+          "Full-Stack Leads",
+          "AI/ML Systems Engineers",
           "Cloud Security Ops"
         ],
-        "podsDeployed": "38+"
+        "podsDeployed": "38+",
+        "bgImage": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "financial",
+        "slug": "bfsi",
         "filter": "financial",
-        "title": "Core Banking & FinTech Protocols",
-        "desc": "High-throughput payment rails, ISO 20022 messaging integrations, algorithmic settlement, and ledger reconciliation pods.",
+        "category": "financial",
+        "title": "Banking, Financial Services & Insurance (BFSI)",
+        "desc": "High-throughput payment rails, ISO 20022 messaging integrations, algorithmic settlement, and hardened ledger reconciliation pods.",
+        "shortDesc": "High-throughput payment rails, ISO 20022 messaging integrations, algorithmic settlement, and hardened ledger reconciliation pods.",
         "icon": "account_balance",
-        "iconBg": "rgba(0, 55, 176, 0.1)",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
         "iconColor": "#0037B0",
         "badgeText": "PCI-DSS 4.0 Cleared",
-        "badgeColor": "rgba(0, 55, 176, 0.1)",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
         "badgeDot": "#0037B0",
-        "complianceText": "PCI-DSS 4.0, GLBA, FINRA, ISO 20022 Rails",
+        "complianceText": "PCI-DSS 4.0, GLBA, FINRA, ISO 20022 Rails, SOX",
+        "compliance": [
+          "PCI-DSS 4.0",
+          "SOX (Sarbanes-Oxley)",
+          "Basel III & IV",
+          "ISO 20022 Rails",
+          "AML / KYC / FINRA",
+          "GLBA"
+        ],
         "placements": [
           "ACH / FedNow Engineers",
           "Low-Latency C++ Devs",
           "Smart Contract Auditors",
           "FinOps Architects"
         ],
-        "podsDeployed": "29+"
+        "podsDeployed": "29+",
+        "bgImage": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "healthcare",
+        "slug": "healthcare-life-sciences",
         "filter": "healthcare",
-        "title": "HealthTech & Life Sciences",
+        "category": "healthcare",
+        "title": "Healthcare & Life Sciences",
         "desc": "HIPAA-hardened clinical trial suites, HL7 FHIR interoperability layers, and FDA 21 CFR Part 11 compliant medical imaging pipelines.",
+        "shortDesc": "HIPAA-hardened clinical trial suites, HL7 FHIR interoperability layers, and FDA 21 CFR Part 11 compliant medical imaging pipelines.",
         "icon": "medical_services",
-        "iconBg": "rgba(34, 197, 94, 0.1)",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
         "iconColor": "#16A34A",
         "badgeText": "FDA 21 CFR Compliant",
-        "badgeColor": "rgba(34, 197, 94, 0.1)",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
         "badgeDot": "#16A34A",
         "complianceText": "HIPAA Omnibus, HL7 / FHIR, FDA 21 CFR Part 11, HITRUST",
+        "compliance": [
+          "HIPAA Omnibus",
+          "HL7 / FHIR Standards",
+          "FDA 21 CFR Part 11",
+          "HITRUST CSF",
+          "ISO 13485 (Medical Devices)"
+        ],
         "placements": [
           "Bio-Stats Engineers",
           "FHIR API Specialists",
           "Clinical QA Automation",
           "Health Data Scientists"
         ],
-        "podsDeployed": "24+"
+        "podsDeployed": "24+",
+        "bgImage": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1200&q=80"
       },
       {
-        "id": "industrial",
+        "id": "industrial-mfg",
+        "slug": "automobile-manufacturing",
         "filter": "industrial",
-        "title": "Automotive & Autonomous Systems",
+        "category": "industrial",
+        "title": "Automobile, Manufacturing & Engineering",
+        "desc": "Powering industrial excellence with specialized engineering talent, SCADA connectivity, and predictive maintenance solutions.",
+        "shortDesc": "Powering industrial excellence with specialized engineering talent, SCADA connectivity, and predictive maintenance solutions.",
+        "icon": "precision_manufacturing",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#EA580C",
+        "badgeText": "Industry 4.0 Ready",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#EA580C",
+        "complianceText": "IATF 16949, ISO 9001, IEC 62443, Lean Six Sigma",
+        "compliance": [
+          "ISO 9001",
+          "IATF 16949",
+          "IEC 62443 (Industrial Cybersecurity)",
+          "Lean Six Sigma",
+          "OSHA Safety"
+        ],
+        "placements": [
+          "SCADA / PLC Specialists",
+          "Robotics Automation Engineers",
+          "Supply Chain Analysts",
+          "Plant Digital Twin Leads"
+        ],
+        "podsDeployed": "22+",
+        "bgImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "mobility",
+        "slug": "automotive-mobility",
+        "filter": "industrial",
+        "category": "industrial",
+        "title": "Automotive & Mobility",
         "desc": "ISO 26262 ASIL-D functional safety pods, AUTOSAR Classic/Adaptive stacks, and drive-by-wire RTOS firmware development.",
+        "shortDesc": "ISO 26262 ASIL-D functional safety pods, AUTOSAR Classic/Adaptive stacks, and drive-by-wire RTOS firmware development.",
         "icon": "directions_car",
-        "iconBg": "rgba(79, 70, 229, 0.1)",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
         "iconColor": "#4F46E5",
         "badgeText": "ASIL-D Certified",
-        "badgeColor": "rgba(79, 70, 229, 0.1)",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
         "badgeDot": "#4F46E5",
         "complianceText": "ISO 26262 ASIL-D, AUTOSAR, ASPICE Level 3, MISRA C++",
+        "compliance": [
+          "ISO 26262 ASIL-D",
+          "AUTOSAR Classic & Adaptive",
+          "ASPICE Level 3",
+          "MISRA C / C++",
+          "UN ECE R155 / R156 (Cybersecurity)"
+        ],
         "placements": [
           "Embedded RTOS Leads",
           "AUTOSAR Architects",
-          "CAN/LIN Bus Engineers",
+          "CAN/LIN/Ethernet Engineers",
           "ADAS Simulation Techs"
         ],
-        "podsDeployed": "21+"
+        "podsDeployed": "26+",
+        "bgImage": "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "telecom",
+        "slug": "telecommunications",
+        "filter": "telecom",
+        "category": "telecom",
+        "title": "Telecommunications",
+        "desc": "5G standalone core, Open RAN disaggregation, edge computing nodes, and cloud-native network function virtualization (NFV).",
+        "shortDesc": "5G standalone core, Open RAN disaggregation, edge computing nodes, and cloud-native network function virtualization (NFV).",
+        "icon": "cell_tower",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#06B6D4",
+        "badgeText": "5G Open RAN Calibrated",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#06B6D4",
+        "complianceText": "3GPP Rel 17/18, O-RAN Alliance, ETSI NFV, NEBS Level 3",
+        "compliance": [
+          "3GPP Rel 17 & 18",
+          "O-RAN Alliance Standards",
+          "ETSI NFV Architectural Framework",
+          "NEBS Level 3",
+          "C-band Spectrum FCC Guidelines"
+        ],
+        "placements": [
+          "5G Core Protocol Engineers",
+          "Open RAN Integration Leads",
+          "Cloud-Native CNF Architects",
+          "RF Optimization Specialists"
+        ],
+        "podsDeployed": "19+",
+        "bgImage": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "retail",
+        "slug": "retail-ecommerce",
+        "filter": "retail",
+        "category": "retail",
+        "title": "Retail & E-commerce",
+        "desc": "Headless architectures, microservices checkout pipelines, inventory ledger sync, and high-concurrency peak event stability.",
+        "shortDesc": "Headless architectures, microservices checkout pipelines, inventory ledger sync, and high-concurrency peak event stability.",
+        "icon": "shopping_bag",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#EC4899",
+        "badgeText": "MACH Architecture Cleared",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#EC4899",
+        "complianceText": "PCI-DSS Level 1, WCAG 2.1 AA, GDPR, MACH Standards",
+        "compliance": [
+          "PCI-DSS Level 1",
+          "GDPR & CCPA Privacy",
+          "WCAG 2.1 AA Accessibility",
+          "MACH Alliance Guidelines"
+        ],
+        "placements": [
+          "Shopify Plus / Commercetools Leads",
+          "Headless Next.js Architects",
+          "Inventory Sync Engineers",
+          "Search & Recommendation SMEs"
+        ],
+        "podsDeployed": "31+",
+        "bgImage": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "energy",
+        "slug": "energy-utilities",
+        "filter": "energy",
+        "category": "energy",
+        "title": "Energy & Utilities",
+        "desc": "Smart grid SCADA telemetries, renewable asset monitoring, energy trading and risk management (ETRM), and decarbonization tracking.",
+        "shortDesc": "Smart grid SCADA telemetries, renewable asset monitoring, energy trading and risk management (ETRM), and decarbonization tracking.",
+        "icon": "bolt",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#10B981",
+        "badgeText": "CleanTech & NERC CIP",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#10B981",
+        "complianceText": "NERC CIP, ISO 50001, FERC, ESG Guidelines",
+        "compliance": [
+          "NERC CIP (Critical Infrastructure)",
+          "ISO 50001 (Energy Management)",
+          "FERC Regulatory Standards",
+          "ESG Carbon Reporting Guidelines"
+        ],
+        "placements": [
+          "Grid SCADA Architects",
+          "ETRM Platform Specialists",
+          "Renewable IoT Engineers",
+          "Substation Automation Leads"
+        ],
+        "podsDeployed": "17+",
+        "bgImage": "https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "edtech",
+        "slug": "education-edtech",
+        "filter": "consulting",
+        "category": "consulting",
+        "title": "Education & EdTech",
+        "desc": "Learning management systems (LMS), adaptive learning algorithms, real-time video classrooms, and student data privacy compliance.",
+        "shortDesc": "Learning management systems (LMS), adaptive learning algorithms, real-time video classrooms, and student data privacy compliance.",
+        "icon": "school",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#F59E0B",
+        "badgeText": "FERPA & COPPA Cleared",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#F59E0B",
+        "complianceText": "FERPA, COPPA, WCAG 2.1 AA, SCORM / xAPI",
+        "compliance": [
+          "FERPA (Student Privacy)",
+          "COPPA (Children Online Privacy)",
+          "WCAG 2.1 AA Accessibility",
+          "SCORM & xAPI Standards"
+        ],
+        "placements": [
+          "LMS Platform Architects",
+          "WebRTC Video Engineers",
+          "Adaptive Learning Devs",
+          "Instructional Designers"
+        ],
+        "podsDeployed": "18+",
+        "bgImage": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        "id": "consulting",
+        "slug": "professional-services",
+        "filter": "consulting",
+        "category": "consulting",
+        "title": "Professional Services & Consulting",
+        "desc": "Strategic advisory squads, fractional architecture leads, and PMO transformation teams for Big-4 and boutique consulting firms.",
+        "shortDesc": "Strategic advisory squads, fractional architecture leads, and PMO transformation teams for Big-4 and boutique consulting firms.",
+        "icon": "business_center",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#3B82F6",
+        "badgeText": "Enterprise Advisory Cleared",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#3B82F6",
+        "complianceText": "SOC 1/2, ISO 9001, PMBOK, Strict IP NDAs",
+        "compliance": [
+          "SOC 1 & SOC 2 Type II",
+          "ISO 9001 Quality",
+          "PMBOK & Agile Certifications",
+          "Confidentiality & Non-Compete Clearance"
+        ],
+        "placements": [
+          "Enterprise Agile Coaches",
+          "Fractional Chief Architects",
+          "Digital Transformation Directors",
+          "Business Strategy SMEs"
+        ],
+        "podsDeployed": "27+",
+        "bgImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "defense",
-        "filter": "defense",
-        "title": "Aerospace & Mission-Critical Defense",
+        "slug": "aerospace-defense",
+        "filter": "energy",
+        "category": "energy",
+        "title": "Aerospace & Defense",
         "desc": "DO-178C avionics software, air-gapped SCADA telemetries, and ITAR-cleared aerospace engineering units.",
+        "shortDesc": "DO-178C avionics software, air-gapped SCADA telemetries, and ITAR-cleared aerospace engineering units.",
         "icon": "shield",
-        "iconBg": "rgba(15, 23, 42, 0.1)",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
         "iconColor": "#0F172A",
-        "badgeText": "ITAR / DO-178C",
-        "badgeColor": "rgba(15, 23, 42, 0.1)",
+        "badgeText": "ITAR / DO-178C Cleared",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
         "badgeDot": "#0F172A",
         "complianceText": "DO-178C Level A, DO-254, ITAR Clearance, NIST SP 800-171",
+        "compliance": [
+          "DO-178C Level A (Avionics)",
+          "DO-254 (Hardware Design)",
+          "ITAR Clearance Regulations",
+          "NIST SP 800-171 & CMMC 2.0"
+        ],
         "placements": [
           "Avionics Software Leads",
           "SCADA Security SMEs",
-          "Guidance & Navigation",
+          "Guidance & Navigation Engineers",
           "FPGA Hardware Engineers"
         ],
-        "podsDeployed": "16+"
-      },
-      {
-        "id": "tech",
-        "filter": "tech",
-        "title": "AI, GenAI & Cognitive Architectures",
-        "desc": "Large language model fine-tuning, retrieval-augmented generation (RAG) pipelines, and low-latency inference cluster scaling.",
-        "icon": "psychology",
-        "iconBg": "rgba(147, 51, 234, 0.1)",
-        "iconColor": "#9333EA",
-        "badgeText": "NVIDIA Stack Calibrated",
-        "badgeColor": "rgba(147, 51, 234, 0.1)",
-        "badgeDot": "#9333EA",
-        "complianceText": "EU AI Act Alignment, NIST AI RMF, Responsible AI Audits",
-        "placements": [
-          "LLM Systems Engineers",
-          "Vector DB Architects",
-          "MLOps Infrastructure",
-          "Computer Vision Leads"
-        ],
-        "podsDeployed": "32+"
+        "podsDeployed": "16+",
+        "bgImage": "https://images.unsplash.com/photo-1517976487507-5b3b11329241?auto=format&fit=crop&w=1200&q=80"
       }
     ],
     "featureComparison": {
@@ -1801,7 +2076,11 @@
           "icon": "gavel",
           "title": "Taxation & Statutory Audit Readiness",
           "description": "We manage monthly computation of Tax Deducted at Source (TDS), quarterly e-TDS returns (Form 24Q), automated distribution of digitally signed Form 16s, and full adherence to Employee Provident Fund (PF) and State Insurance (ESI) laws.",
-          "tags": ["PF Challan ECR", "Form 24Q Returns", "Form 16 Generation"],
+          "tags": [
+            "PF Challan ECR",
+            "Form 24Q Returns",
+            "Form 16 Generation"
+          ],
           "accent": "primary"
         },
         {
@@ -1848,7 +2127,11 @@
         "address": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
         "email": "hr@thinkwires.com",
         "hours": "09:00 AM – 19:00 PM IST (Mon–Sat)",
-        "regions": ["United States", "Canada Hub", "India Central"]
+        "regions": [
+          "United States",
+          "Canada Hub",
+          "India Central"
+        ]
       }
     }
   },
@@ -2284,7 +2567,12 @@
           "sla": "48h SLA",
           "experience": "9+ Years",
           "overlap": "US EST (6h)",
-          "skills": ["Kubernetes", "Go", "Kafka", "FinOps"]
+          "skills": [
+            "Kubernetes",
+            "Go",
+            "Kafka",
+            "FinOps"
+          ]
         },
         {
           "initials": "RK",
@@ -2293,7 +2581,12 @@
           "sla": "48h SLA",
           "experience": "7+ Years",
           "overlap": "US PST (5h)",
-          "skills": ["React", "GraphQL", "PostgreSQL", "Tailwind"]
+          "skills": [
+            "React",
+            "GraphQL",
+            "PostgreSQL",
+            "Tailwind"
+          ]
         },
         {
           "initials": "MS",
@@ -2302,7 +2595,12 @@
           "sla": "48h SLA",
           "experience": "8+ Years",
           "overlap": "US EST (5h)",
-          "skills": ["PySpark", "LangChain", "Snowflake", "Vector DBs"]
+          "skills": [
+            "PySpark",
+            "LangChain",
+            "Snowflake",
+            "Vector DBs"
+          ]
         }
       ]
     },
@@ -2531,7 +2829,11 @@
               "sla": "Avg. 25d SLA"
             }
           ],
-          "tags": ["P&L Ownership", "Scale: 500+ Eng", "Board Governance"]
+          "tags": [
+            "P&L Ownership",
+            "Scale: 500+ Eng",
+            "Board Governance"
+          ]
         },
         {
           "badge": "Infrastructure",
@@ -2552,7 +2854,11 @@
               "sla": "Avg. 19d SLA"
             }
           ],
-          "tags": ["AWS / GCP / Azure", "Kubernetes", "Multi-Cloud"]
+          "tags": [
+            "AWS / GCP / Azure",
+            "Kubernetes",
+            "Multi-Cloud"
+          ]
         },
         {
           "badge": "Applied Intelligence",
@@ -2573,7 +2879,11 @@
               "sla": "Avg. 15d SLA"
             }
           ],
-          "tags": ["LLM Orchestration", "PyTorch", "Snowflake"]
+          "tags": [
+            "LLM Orchestration",
+            "PyTorch",
+            "Snowflake"
+          ]
         },
         {
           "badge": "Core ERP Systems",
@@ -2594,7 +2904,11 @@
               "sla": "Avg. 11d SLA"
             }
           ],
-          "tags": ["S/4HANA", "SAP BTP", "Supply Chain"]
+          "tags": [
+            "S/4HANA",
+            "SAP BTP",
+            "Supply Chain"
+          ]
         },
         {
           "badge": "Governance & Strategy",
@@ -2615,7 +2929,11 @@
               "sla": "Avg. 15d SLA"
             }
           ],
-          "tags": ["SOC 2 / ISO", "Zero Trust", "Threat Intel"]
+          "tags": [
+            "SOC 2 / ISO",
+            "Zero Trust",
+            "Threat Intel"
+          ]
         },
         {
           "badge": "Core Software",
@@ -2636,7 +2954,11 @@
               "sla": "Avg. 16d SLA"
             }
           ],
-          "tags": ["Go / Rust / Java", "React / Node.js", "gRPC / Kafka"]
+          "tags": [
+            "Go / Rust / Java",
+            "React / Node.js",
+            "gRPC / Kafka"
+          ]
         }
       ]
     },
@@ -2760,7 +3082,11 @@
         "experience": "11+ Years • Ex-Tier 1 Systems",
         "location": "Bengaluru / Remote Global",
         "rate": "Indicative: 32 - 38 LPA",
-        "tags": ["Kubernetes", "FinOps", "Microservices"],
+        "tags": [
+          "Kubernetes",
+          "FinOps",
+          "Microservices"
+        ],
         "statusBadge": "Ready in 48h",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuB4Zs3G1sn5HxRqwy9LxG_k4KO8aW0BzmClBxO3xG3TIFqJD31QWSMJRz1l9pa7yEW_Cr6QcsH3HOnFEDQmNwVyyAMPYInomSdMRJYOrZhyjxMbVaWhwTUD4uBEmS3X96W6BSel_IpjrVFCEswa0Hv5M1RkuLgSsbc3hjRCQG_6_b6VQtylaY-lJ4UCDf7nCR7jLRYBKLp1Igo5R66iICgsPkBke-PFKrfoWqkPtn59d64AqjMbeLQdZQ"
       },
@@ -2771,7 +3097,11 @@
         "experience": "6+ Years Handled 3 Migrations",
         "location": "Noida / Pune / Hybrid",
         "rate": "Indicative: 14 - 18 LPA",
-        "tags": ["RICEF", "CDS Views", "AMDP"],
+        "tags": [
+          "RICEF",
+          "CDS Views",
+          "AMDP"
+        ],
         "statusBadge": "Immediate Joining",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCkOo8MdEgXwruODLZZnt4vdp2fujk743Sn1QZmrFkva_p168bK0298ZVKFBRuaVBfZH9Ty3TRT5QJXoDQgYbg0qESP511XN8pQN0yibpIZDvtQJMOS9mszI5bwe6v-De7EmTS1ZH5a7NeoEPiwS7PkNGQKHEBYwaNoumMTSoPTxqs5pxacbBl26VdCWJuArwVM4ZLkDyunLdf-D-J5AT19mGXVrWK3JkmO_BRAv9dMVy0VD1fKoJ5PxA"
       },
@@ -2782,7 +3112,11 @@
         "experience": "9+ Years • 4 LLM Enterprise Deploys",
         "location": "Hyderabad / US Overlap",
         "rate": "Indicative: 36 - 44 LPA",
-        "tags": ["vLLM", "Vector DBs", "Fine-Tuning"],
+        "tags": [
+          "vLLM",
+          "Vector DBs",
+          "Fine-Tuning"
+        ],
         "statusBadge": "Available in 7d",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuAW2Dptbbqui0eWev6Z91SFe-WEuNxCJ0kv9bHWvltYXOeBV_4s-H2TGFLxKSH9MEuHWlgPUwlE833cMip4WHOgKNNpL_FXtlC5qKjLXb9bBGP55I6FLGw6RGowHoov62hF38QcR1yOHL-6MZdcTRAuJ_2GifMgJRPcc63oMbga08uA-ufqs4mH0Q4Ykeb-DFqTfw4p8E3d-SvEhPNIp2Kon1cj52jTf15gsX65mdGBjxYDyOvLCTDdlw"
       },
@@ -2793,7 +3127,11 @@
         "experience": "8+ Years Multi-Brand Omnichannel",
         "location": "Chennai / Bangalore / Remote",
         "rate": "Indicative: 22 - 26 LPA",
-        "tags": ["Web SDK", "HTL/Sling", "Adobe Target"],
+        "tags": [
+          "Web SDK",
+          "HTL/Sling",
+          "Adobe Target"
+        ],
         "statusBadge": "Immediate Joining",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuDoHAaEEHoITXETBHS02hbJnJZkrfoAYKjMiLZ9szdc9OuQLHTVd7yroGkSkbMRzZ2pa2hvKxiK1IgboRqJlztBX86HjA920UEMJPXfyNm9wTwc6CxH0BgfXca0CkJtntBzWSBECGL83yTFlHDAndKdPlXtAY9CexWTwAmiLccG1I64gp44mJckaGy71yD6qJQzpvqvrwnxUa6qSFKxSLrb0Y69GSzGqFBUeFfBns9bqOSmp18htUDIHw"
       }
@@ -3266,7 +3604,12 @@
             "bgColor": "#22C55E",
             "textColor": "#FFFFFF"
           },
-          "companies": ["BlackRock", "Microsoft", "IBM", "Infosys"],
+          "companies": [
+            "BlackRock",
+            "Microsoft",
+            "IBM",
+            "Infosys"
+          ],
           "footerTag": "Global Delivery Operations & Risk Governance",
           "linkedinUrl": "https://linkedin.com",
           "layout": "wide"
@@ -3564,5 +3907,1171 @@
         "answer": "Absolutely. We support contract/staff augmentation, permanent placement, executive search, and hybrid engagement models based on your business requirement."
       }
     ]
+  },
+  "industriesDetails": {
+    "information-technology": {
+      "id": "tech",
+      "slug": "information-technology",
+      "category": "tech",
+      "jobSector": "Information Technology & Cloud",
+      "title": "Information Technology & Digital Transformation",
+      "heroTagline": "Technology Talent. Digital Innovation. Business Transformation.",
+      "shortDesc": "Empowering enterprises to navigate the evolving digital landscape with specialized technology talent, hyperscale cloud architecture, and modern AI/ML systems.",
+      "fullDesc": "At Thinkwires, we empower organizations to accelerate digital transformation through specialized technology talent, strategic IT staffing, and technology-enabled workforce solutions. From emerging startups to global enterprises, we help businesses access the expertise they need to modernize operations, strengthen digital capabilities, and build a future-ready engineering workforce.",
+      "bgImage": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+      "icon": "terminal",
+      "badgeText": "Hyperscale Verified",
+      "badgeColor": "rgba(37, 99, 235, 0.15)",
+      "badgeDot": "#2563EB",
+      "podsDeployed": "38+",
+      "stats": [
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Average Pod Turnaround"
+        },
+        {
+          "value": "99.2",
+          "unit": "%",
+          "label": "Technical Screening Pass"
+        },
+        {
+          "value": "150",
+          "unit": "+",
+          "label": "Active Enterprise Deployments"
+        },
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Cross-Border Compliance Violations"
+        }
+      ],
+      "compliance": [
+        "SOC 2 Type II",
+        "ISO 27001",
+        "GDPR & CCPA",
+        "FedRAMP High",
+        "PCI-DSS 4.0"
+      ],
+      "complianceText": "SOC 2 Type II, ISO 27001, GDPR, FedRAMP High",
+      "placements": [
+        "Kubernetes Architects",
+        "Full-Stack Leads",
+        "AI/ML Systems Engineers",
+        "Cloud Security Ops"
+      ],
+      "solutions": [
+        {
+          "title": "IT Recruitment & Specialized Technology Hiring",
+          "desc": "Connect with skilled technology professionals across software engineering, cloud computing, cybersecurity, data science, and enterprise applications who align with your technical requirements.",
+          "icon": "person_search"
+        },
+        {
+          "title": "Dedicated Engineering Teams & Project-Based Pods",
+          "desc": "Deploy autonomous, multi-disciplinary pods of senior engineers, architects, and QA specialists managed under agile sprint cadences for accelerated feature delivery.",
+          "icon": "groups"
+        },
+        {
+          "title": "IT Staff Augmentation & Contract Staffing",
+          "desc": "Rapidly scale your existing squads with vetted individual contributors to bridge immediate skill gaps, meet tight sprint milestones, or support legacy system modernization.",
+          "icon": "trending_up"
+        },
+        {
+          "title": "Permanent Staffing & Executive Leadership Hiring",
+          "desc": "Recruit transformational technology leaders including CTOs, Chief Architects, VPs of Engineering, and Directors of Product with deep domain pedigree.",
+          "icon": "workspace_premium"
+        },
+        {
+          "title": "Global Delivery & Remote Technology Teams",
+          "desc": "Build resilient cross-border engineering teams across India and North America with complete statutory, payroll, and intellectual property compliance.",
+          "icon": "public"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Software Engineering & Microservices",
+          "skills": [
+            "React",
+            "Next.js",
+            "Node.js",
+            "Go",
+            "Rust",
+            "Python",
+            "Modern C++",
+            "Java/Spring Boot"
+          ]
+        },
+        {
+          "name": "Cloud Computing & DevOps Platform",
+          "skills": [
+            "AWS",
+            "Microsoft Azure",
+            "Google Cloud",
+            "Kubernetes (EKS/GKE)",
+            "Terraform",
+            "ArgoCD",
+            "Prometheus"
+          ]
+        },
+        {
+          "name": "Artificial Intelligence & Data Engineering",
+          "skills": [
+            "LLMs & Fine-Tuning",
+            "LangChain",
+            "PyTorch",
+            "Vector DBs (Pinecone/Milvus)",
+            "Snowflake",
+            "Databricks"
+          ]
+        },
+        {
+          "name": "Cybersecurity & Zero Trust Architecture",
+          "skills": [
+            "Zero Trust Network Access",
+            "SOC Operations",
+            "VAPT",
+            "IAM / Okta",
+            "Cloud Security Posture (CSPM)"
+          ]
+        },
+        {
+          "name": "Enterprise Applications & ERP",
+          "skills": [
+            "SAP S/4HANA",
+            "Salesforce Core",
+            "ServiceNow",
+            "Workday",
+            "Oracle Cloud ERP"
+          ]
+        },
+        {
+          "name": "Quality Engineering & Automation",
+          "skills": [
+            "Playwright",
+            "Cypress",
+            "Selenium",
+            "LoadRunner",
+            "Contract Testing (Pact)",
+            "CI/CD Test Automation"
+          ]
+        }
+      ]
+    },
+    "bfsi": {
+      "id": "financial",
+      "slug": "bfsi",
+      "category": "financial",
+      "jobSector": "Financial Services & FinTech",
+      "title": "Banking, Financial Services & Insurance (BFSI)",
+      "heroTagline": "Secure Financial Systems. Regulatory Resilience. Modernized Capital Markets.",
+      "shortDesc": "High-throughput payment rails, ISO 20022 messaging integrations, algorithmic settlement, and hardened ledger reconciliation pods.",
+      "fullDesc": "Enabling financial institutions to thrive through specialized expertise and technology-driven capabilities. We support digital transformation, operational resilience, and sustainable growth in an increasingly competitive, heavily regulated financial ecosystem.",
+      "bgImage": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
+      "icon": "account_balance",
+      "badgeText": "PCI-DSS 4.0 Cleared",
+      "badgeColor": "rgba(0, 55, 176, 0.15)",
+      "badgeDot": "#0037B0",
+      "podsDeployed": "29+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "Statutory Audit Clearance"
+        },
+        {
+          "value": "30",
+          "unit": "ms",
+          "label": "Low-Latency Trade Systems Sourced"
+        },
+        {
+          "value": "45",
+          "unit": "+",
+          "label": "FinTech Integrations Delivered"
+        },
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Data Leakage Incidents"
+        }
+      ],
+      "compliance": [
+        "PCI-DSS 4.0",
+        "SOX (Sarbanes-Oxley)",
+        "Basel III & IV",
+        "ISO 20022 Rails",
+        "AML / KYC / FINRA",
+        "GLBA"
+      ],
+      "complianceText": "PCI-DSS 4.0, GLBA, FINRA, ISO 20022 Rails, SOX",
+      "placements": [
+        "ACH / FedNow Engineers",
+        "Low-Latency C++ Devs",
+        "Smart Contract Auditors",
+        "FinOps Architects"
+      ],
+      "solutions": [
+        {
+          "title": "Core Banking Modernization & Payment Rails",
+          "desc": "Engineers specializing in ACH, SEPA, FedNow, SWIFT ISO 20022 messaging formats, and real-time payment settlement engines.",
+          "icon": "payments"
+        },
+        {
+          "title": "Capital Markets & Algorithmic Trading Systems",
+          "desc": "Low-latency C++, Rust, and FPGA developers architecting high-frequency trading platforms, order management systems (OMS), and risk engines.",
+          "icon": "candlestick_chart"
+        },
+        {
+          "title": "InsurTech & Actuarial Data Modeling",
+          "desc": "Specialists building automated claims processing, AI underwriting workflows, and dynamic risk assessment models.",
+          "icon": "security"
+        },
+        {
+          "title": "Governance, Risk & Compliance (GRC) Engineering",
+          "desc": "Subject matter experts experienced in automated AML transaction monitoring, fraud detection with graph neural networks, and regulatory audit pipelines.",
+          "icon": "verified_user"
+        },
+        {
+          "title": "Wealth Management & Robo-Advisory Platforms",
+          "desc": "Engineering squads creating intuitive client-facing portals, automated portfolio balancing engines, and tax-loss harvesting algorithms.",
+          "icon": "query_stats"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Payment Rails & Clearing",
+          "skills": [
+            "ISO 20022",
+            "FedNow",
+            "ACH",
+            "SWIFT",
+            "Stripe/Adyen APIs",
+            "Ledger Balancing"
+          ]
+        },
+        {
+          "name": "High-Concurrency Systems",
+          "skills": [
+            "Modern C++",
+            "Rust",
+            "Kafka Stream Processing",
+            "Zero-Allocation Systems",
+            "LMAX Disruptor"
+          ]
+        },
+        {
+          "name": "Risk & Fraud Detection",
+          "skills": [
+            "Neo4j Graph DBs",
+            "Anomaly Detection Models",
+            "AML/KYC Automation",
+            "Sanction Screening"
+          ]
+        },
+        {
+          "name": "Decentralized Finance & Blockchain",
+          "skills": [
+            "Ethereum / EVM",
+            "Solidity Audits",
+            "Hyperledger Besu",
+            "Zero-Knowledge Proofs"
+          ]
+        }
+      ]
+    },
+    "healthcare-life-sciences": {
+      "id": "healthcare",
+      "slug": "healthcare-life-sciences",
+      "category": "healthcare",
+      "jobSector": "Healthcare & MedTech",
+      "title": "Healthcare & Life Sciences",
+      "heroTagline": "Clinical Precision. Patient Data Integrity. Biomedical Innovation.",
+      "shortDesc": "HIPAA-hardened clinical trial suites, HL7 FHIR interoperability layers, and FDA 21 CFR Part 11 compliant medical imaging pipelines.",
+      "fullDesc": "Advancing healthcare innovation through skilled talent and intelligent business solutions. We help healthcare providers, biopharma leaders, and medical device manufacturers strengthen clinical performance, embrace digital health advancements, and protect patient care integrity.",
+      "bgImage": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1200&q=80",
+      "icon": "medical_services",
+      "badgeText": "FDA 21 CFR Compliant",
+      "badgeColor": "rgba(34, 197, 94, 0.15)",
+      "badgeDot": "#16A34A",
+      "podsDeployed": "24+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "HIPAA Omnibus Audit Pass"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Clinical SME Matching"
+        },
+        {
+          "value": "35",
+          "unit": "+",
+          "label": "EHR / FHIR Systems Integrated"
+        },
+        {
+          "value": "99.4",
+          "unit": "%",
+          "label": "Pod Retention"
+        }
+      ],
+      "compliance": [
+        "HIPAA Omnibus",
+        "HL7 / FHIR Standards",
+        "FDA 21 CFR Part 11",
+        "HITRUST CSF",
+        "ISO 13485 (Medical Devices)"
+      ],
+      "complianceText": "HIPAA Omnibus, HL7 / FHIR, FDA 21 CFR Part 11, HITRUST",
+      "placements": [
+        "Bio-Stats Engineers",
+        "FHIR API Specialists",
+        "Clinical QA Automation",
+        "Health Data Scientists"
+      ],
+      "solutions": [
+        {
+          "title": "Digital Health & Telemedicine Platforms",
+          "desc": "End-to-end HIPAA compliant patient portals, virtual care consultation suites, and remote patient monitoring (RPM) integrations.",
+          "icon": "health_and_safety"
+        },
+        {
+          "title": "Clinical Trials Management & EDC Systems",
+          "desc": "Engineers building electronic data capture (EDC) pipelines compliant with FDA 21 CFR Part 11 and GCP standards for pharmaceutical sponsors.",
+          "icon": "biotech"
+        },
+        {
+          "title": "HL7 & FHIR Interoperability Services",
+          "desc": "Engineers bridging legacy Epic, Cerner, and Allscripts hospital systems using SMART on FHIR protocols and RESTful clinical APIs.",
+          "icon": "hub"
+        },
+        {
+          "title": "Medical Imaging & AI Diagnostics",
+          "desc": "Computer vision specialists designing DICOM processing pipelines, PACS storage solutions, and deep learning models for radiological analysis.",
+          "icon": "radiology"
+        },
+        {
+          "title": "IoMT (Internet of Medical Things)",
+          "desc": "Embedded firmware and cloud connectivity engineers building real-time telemetry for wearable biometric sensors and bedside patient monitors.",
+          "icon": "monitor_heart"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Interoperability & EHR",
+          "skills": [
+            "HL7 v2/v3",
+            "FHIR R4/R5",
+            "SMART on FHIR",
+            "Mirth Connect",
+            "Epic Bridges",
+            "Cerner Millennium"
+          ]
+        },
+        {
+          "name": "Biomedical Data Science",
+          "skills": [
+            "Genomics Pipelines",
+            "BioPython",
+            "R / Bioconductor",
+            "Survival Analysis",
+            "DICOM / Orthanc"
+          ]
+        },
+        {
+          "name": "Clinical Software QA",
+          "skills": [
+            "FDA Software Validation (V&V)",
+            "IEC 62304",
+            "Automated Test Verification",
+            "Audit Trail Analysis"
+          ]
+        }
+      ]
+    },
+    "automobile-manufacturing": {
+      "id": "industrial-mfg",
+      "slug": "automobile-manufacturing",
+      "category": "industrial",
+      "jobSector": "Manufacturing & Industrial IoT",
+      "title": "Automobile, Manufacturing & Engineering",
+      "heroTagline": "Industry 4.0. Precision Engineering. Intelligent Shop-Floor Automation.",
+      "shortDesc": "Powering industrial excellence with specialized engineering talent, SCADA connectivity, and predictive maintenance solutions.",
+      "fullDesc": "Powering industrial excellence with specialized engineering talent and scalable business solutions. We help manufacturing giants and Tier-1 suppliers optimize plant production, embrace intelligent automation, and enhance throughput across complex manufacturing environments.",
+      "bgImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80",
+      "icon": "precision_manufacturing",
+      "badgeText": "Industry 4.0 Ready",
+      "badgeColor": "rgba(234, 88, 12, 0.15)",
+      "badgeDot": "#EA580C",
+      "podsDeployed": "22+",
+      "stats": [
+        {
+          "value": "35",
+          "unit": "%",
+          "label": "Average Downtime Reduction"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Industrial SME Sourcing"
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "ISO / IATF Quality Alignment"
+        },
+        {
+          "value": "18",
+          "unit": "+",
+          "label": "Assembly Lines Digitized"
+        }
+      ],
+      "compliance": [
+        "ISO 9001",
+        "IATF 16949",
+        "IEC 62443 (Industrial Cybersecurity)",
+        "Lean Six Sigma",
+        "OSHA Safety"
+      ],
+      "complianceText": "IATF 16949, ISO 9001, IEC 62443, Lean Six Sigma",
+      "placements": [
+        "SCADA / PLC Specialists",
+        "Robotics Automation Engineers",
+        "Supply Chain Analysts",
+        "Plant Digital Twin Leads"
+      ],
+      "solutions": [
+        {
+          "title": "Smart Factory & Industrial IoT (IIoT)",
+          "desc": "Edge-to-cloud connectivity for factory machinery, PLC telemetry ingestion, and real-time OEE (Overall Equipment Effectiveness) dashboards.",
+          "icon": "factory"
+        },
+        {
+          "title": "Predictive Maintenance & Computer Vision QA",
+          "desc": "Deploying edge AI vision systems for automated surface defect detection and vibration sensor anomaly tracking.",
+          "icon": "insights"
+        },
+        {
+          "title": "Robotics & Assembly Automation",
+          "desc": "Robotics programmers experienced with Fanuc, KUKA, and ABB robotic arms for welding, pick-and-place, and precision assembly.",
+          "icon": "smart_toy"
+        },
+        {
+          "title": "Supply Chain Engineering & Warehouse Integration",
+          "desc": "Engineers connecting ERP, MES (Manufacturing Execution Systems), and warehouse robotics for just-in-time production.",
+          "icon": "inventory_2"
+        },
+        {
+          "title": "Digital Twin & Simulation Modeling",
+          "desc": "CAD/CAM and simulation engineers modeling physical manufacturing cells to optimize line balance and eliminate bottlenecks.",
+          "icon": "view_in_ar"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Industrial Automation",
+          "skills": [
+            "Siemens S7 / TIA Portal",
+            "Rockwell Automation / Allen-Bradley",
+            "Beckhoff TwinCAT",
+            "OPC UA",
+            "MQTT"
+          ]
+        },
+        {
+          "name": "Plant Systems & MES",
+          "skills": [
+            "SAP Manufacturing",
+            "Apriso MES",
+            "Wonderware / AVEVA",
+            "Ignition SCADA"
+          ]
+        },
+        {
+          "name": "Engineering Design",
+          "skills": [
+            "SolidWorks",
+            "CATIA v5/v6",
+            "Siemens NX",
+            "ANSYS FEA/CFD"
+          ]
+        }
+      ]
+    },
+    "automotive-mobility": {
+      "id": "mobility",
+      "slug": "automotive-mobility",
+      "category": "industrial",
+      "jobSector": "Automotive & Embedded Systems",
+      "title": "Automotive & Mobility",
+      "heroTagline": "Software-Defined Vehicles. Autonomous Driving. Electrified Powertrains.",
+      "shortDesc": "ISO 26262 ASIL-D functional safety pods, AUTOSAR Classic/Adaptive stacks, and drive-by-wire RTOS firmware development.",
+      "fullDesc": "Driving the future of mobility through engineering expertise, digital innovation, and specialized talent. We support automotive OEMs and mobility innovators in advancing connected vehicle technologies, software-defined vehicle (SDV) architectures, and next-generation transportation solutions.",
+      "bgImage": "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80",
+      "icon": "directions_car",
+      "badgeText": "ASIL-D Certified",
+      "badgeColor": "rgba(79, 70, 229, 0.15)",
+      "badgeDot": "#4F46E5",
+      "podsDeployed": "26+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "ISO 26262 ASIL-D Pass"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Embedded Specialist Match"
+        },
+        {
+          "value": "50",
+          "unit": "+",
+          "label": "ECU Firmware Stacks Deployed"
+        },
+        {
+          "value": "98.8",
+          "unit": "%",
+          "label": "Pod Retention"
+        }
+      ],
+      "compliance": [
+        "ISO 26262 ASIL-D",
+        "AUTOSAR Classic & Adaptive",
+        "ASPICE Level 3",
+        "MISRA C / C++",
+        "UN ECE R155 / R156 (Cybersecurity)"
+      ],
+      "complianceText": "ISO 26262 ASIL-D, AUTOSAR, ASPICE Level 3, MISRA C++",
+      "placements": [
+        "Embedded RTOS Leads",
+        "AUTOSAR Architects",
+        "CAN/LIN/Ethernet Engineers",
+        "ADAS Simulation Techs"
+      ],
+      "solutions": [
+        {
+          "title": "AUTOSAR & Embedded Systems Architecture",
+          "desc": "Specialists in AUTOSAR Classic and Adaptive platforms, microcontrollers (Infineon AURIX, NXP S32), and low-level device drivers.",
+          "icon": "memory"
+        },
+        {
+          "title": "Electric Vehicle (EV) Powertrain & BMS",
+          "desc": "Firmware engineers developing Battery Management Systems (BMS), motor control inverters, and high-voltage safety monitoring systems.",
+          "icon": "electric_bolt"
+        },
+        {
+          "title": "ADAS & Autonomous Driving Algorithms",
+          "desc": "Computer vision and sensor fusion engineers integrating LiDAR, radar, and cameras for Level 2+ / Level 3 automated driving assistance.",
+          "icon": "radar"
+        },
+        {
+          "title": "Connected Car & In-Vehicle Infotainment (IVI)",
+          "desc": "Android Automotive OS (AAOS), Qt/QML, and telematics specialists building over-the-air (OTA) updates and connected fleet services.",
+          "icon": "wifi_tethering"
+        },
+        {
+          "title": "Functional Safety & Automotive Cybersecurity",
+          "desc": "ISO 26262 safety managers and UN ECE R155 cybersecurity engineers conducting HARA, safety case development, and threat modeling.",
+          "icon": "verified"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Protocols & Busses",
+          "skills": [
+            "CAN / CAN-FD",
+            "LIN",
+            "FlexRay",
+            "Automotive Ethernet (100BASE-T1)",
+            "SOME/IP",
+            "DoIP"
+          ]
+        },
+        {
+          "name": "Embedded OS & Stacks",
+          "skills": [
+            "Vector DaVinci",
+            "Elektrobit Tresos",
+            "FreeRTOS",
+            "QNX Neutrino",
+            "Embedded Linux / Yocto"
+          ]
+        },
+        {
+          "name": "Standards & Tools",
+          "skills": [
+            "CANoe / CANalyzer",
+            "dSPACE HIL Testing",
+            "Polyspace Static Analysis",
+            "Matlab / Simulink"
+          ]
+        }
+      ]
+    },
+    "telecommunications": {
+      "id": "telecom",
+      "slug": "telecommunications",
+      "category": "telecom",
+      "jobSector": "Telecommunications & 5G",
+      "title": "Telecommunications",
+      "heroTagline": "Next-Gen Connectivity. 5G Core & Open RAN. Resilient Network Infrastructure.",
+      "shortDesc": "5G standalone core, Open RAN disaggregation, edge computing nodes, and cloud-native network function virtualization (NFV).",
+      "fullDesc": "Enabling a more connected world through specialized talent and next-generation technology capabilities. We help telecommunications providers, telco equipment vendors, and tower infrastructure operators modernize networks, strengthen digital infrastructure, and accelerate the adoption of emerging connectivity solutions.",
+      "bgImage": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1200&q=80",
+      "icon": "cell_tower",
+      "badgeText": "5G Open RAN Calibrated",
+      "badgeColor": "rgba(6, 182, 212, 0.15)",
+      "badgeDot": "#06B6D4",
+      "podsDeployed": "19+",
+      "stats": [
+        {
+          "value": "99.999",
+          "unit": "%",
+          "label": "Carrier-Grade Uptime Alignment"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Telecom SME Matching"
+        },
+        {
+          "value": "25",
+          "unit": "+",
+          "label": "5G Core & Edge Deployments"
+        },
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Network Outages during Cutover"
+        }
+      ],
+      "compliance": [
+        "3GPP Rel 17 & 18",
+        "O-RAN Alliance Standards",
+        "ETSI NFV Architectural Framework",
+        "NEBS Level 3",
+        "C-band Spectrum FCC Guidelines"
+      ],
+      "complianceText": "3GPP Rel 17/18, O-RAN Alliance, ETSI NFV, NEBS Level 3",
+      "placements": [
+        "5G Core Protocol Engineers",
+        "Open RAN Integration Leads",
+        "Cloud-Native CNF Architects",
+        "RF Optimization Specialists"
+      ],
+      "solutions": [
+        {
+          "title": "5G Standalone Core & Open RAN Architecture",
+          "desc": "Engineers designing cloud-native 5G Core network functions (AMF, SMF, UPF) and O-RAN disaggregated radio units (RU, DU, CU).",
+          "icon": "settings_input_antenna"
+        },
+        {
+          "title": "Network Function Virtualization (NFV) & CNFs",
+          "desc": "Specialists in containerized network functions, Kubernetes telco operators, SR-IOV, and DPDK for packet-processing speed.",
+          "icon": "cloud_sync"
+        },
+        {
+          "title": "Multi-Access Edge Computing (MEC)",
+          "desc": "Deploying edge compute clusters near cell towers for ultra-reliable low-latency communications (URLLC) applications.",
+          "icon": "dns"
+        },
+        {
+          "title": "Optical Transport & Fiber Infrastructure",
+          "desc": "Engineers planning DWDM, OTN, and high-bandwidth optical backhaul routes to support exponentially growing cellular data traffic.",
+          "icon": "cable"
+        },
+        {
+          "title": "Telco OSS / BSS & Billing Modernization",
+          "desc": "Architects integrating real-time charging systems (OCS), automated SIM activation portals, and network telemetry dashboards.",
+          "icon": "receipt_long"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Protocols & Cellular Stacks",
+          "skills": [
+            "SCTP / Diameter",
+            "HTTP/2 REST (5G SBI)",
+            "SIP / IMS",
+            "GTP-U / PFCP",
+            "eCPRI / O-RAN 7-2x"
+          ]
+        },
+        {
+          "name": "Telco Cloud Platforms",
+          "skills": [
+            "Red Hat OpenShift Telco",
+            "Wind River Studio",
+            "AWS Wavelength",
+            "VMware Telco Cloud"
+          ]
+        },
+        {
+          "name": "Performance & Optimization",
+          "skills": [
+            "DPDK Acceleration",
+            "eBPF Network Observability",
+            "Wireshark Protocol Tracing",
+            "Spirent / Keysight Testing"
+          ]
+        }
+      ]
+    },
+    "retail-ecommerce": {
+      "id": "retail",
+      "slug": "retail-ecommerce",
+      "category": "retail",
+      "jobSector": "E-Commerce & Digital Retail",
+      "title": "Retail & E-commerce",
+      "heroTagline": "Headless Commerce. Omnichannel Fulfillment. Hyper-Personalization.",
+      "shortDesc": "Headless architectures, microservices checkout pipelines, inventory ledger sync, and high-concurrency peak event stability.",
+      "fullDesc": "Transforming the retail landscape through digital capabilities, specialized talent, and customer-centric solutions. We help businesses elevate consumer experiences, streamline omnichannel logistics, and scale confidently during Black Friday and festive peak traffic spikes.",
+      "bgImage": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+      "icon": "shopping_bag",
+      "badgeText": "MACH Architecture Cleared",
+      "badgeColor": "rgba(236, 72, 153, 0.15)",
+      "badgeDot": "#EC4899",
+      "podsDeployed": "31+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "Peak Cyber Week Uptime"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Commerce SME Sourcing"
+        },
+        {
+          "value": "40",
+          "unit": "%",
+          "label": "Average Page Speed Boost"
+        },
+        {
+          "value": "25",
+          "unit": "+",
+          "label": "Headless Transitions"
+        }
+      ],
+      "compliance": [
+        "PCI-DSS Level 1",
+        "GDPR & CCPA Privacy",
+        "WCAG 2.1 AA Accessibility",
+        "MACH Alliance Guidelines"
+      ],
+      "complianceText": "PCI-DSS Level 1, WCAG 2.1 AA, GDPR, MACH Standards",
+      "placements": [
+        "Shopify Plus / Commercetools Leads",
+        "Headless Next.js Architects",
+        "Inventory Sync Engineers",
+        "Search & Recommendation SMEs"
+      ],
+      "solutions": [
+        {
+          "title": "Headless & Composable Commerce (MACH)",
+          "desc": "Decoupled frontends powered by Next.js, Remix, and Algolia connected to Commercetools, BigCommerce, or Shopify Plus via GraphQL APIs.",
+          "icon": "storefront"
+        },
+        {
+          "title": "High-Concurrency Checkout & Payment Gateways",
+          "desc": "Zero-downtime checkout funnels, dynamic currency conversion, Apple Pay / Google Pay integrations, and fraud prevention engines.",
+          "icon": "point_of_sale"
+        },
+        {
+          "title": "Omnichannel Warehouse & Order Management (OMS)",
+          "desc": "Real-time inventory synchronization across physical retail stores, regional distribution hubs, and online fulfillment channels.",
+          "icon": "local_shipping"
+        },
+        {
+          "title": "AI Product Search & Personalization Engines",
+          "desc": "Vector embeddings and collaborative filtering algorithms delivering individualized product discovery and predictive cross-selling.",
+          "icon": "recommend"
+        },
+        {
+          "title": "Mobile Commerce & Progressive Web Apps (PWA)",
+          "desc": "High-converting iOS and Android apps and offline-capable PWAs engineered for lightning-fast sub-second load times.",
+          "icon": "smartphone"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Commerce Platforms",
+          "skills": [
+            "commercetools",
+            "Shopify Plus / Hydrogen",
+            "Adobe Commerce (Magento)",
+            "Salesforce Commerce Cloud (SFCC)"
+          ]
+        },
+        {
+          "name": "Search & Data",
+          "skills": [
+            "Algolia",
+            "Elasticsearch / OpenSearch",
+            "Kafka Inventory Events",
+            "Snowflake Retail Analytics"
+          ]
+        },
+        {
+          "name": "Payment & Logistics",
+          "skills": [
+            "Stripe Checkout",
+            "Adyen Drop-in",
+            "Manhattan Associates OMS",
+            "FedEx/UPS API Integrations"
+          ]
+        }
+      ]
+    },
+    "energy-utilities": {
+      "id": "energy",
+      "slug": "energy-utilities",
+      "category": "energy",
+      "jobSector": "Energy, Oil & CleanTech",
+      "title": "Energy & Utilities",
+      "heroTagline": "Grid Modernization. Renewable Systems. Decarbonized Power Infrastructure.",
+      "shortDesc": "Smart grid SCADA telemetries, renewable asset monitoring, energy trading and risk management (ETRM), and decarbonization tracking.",
+      "fullDesc": "Powering the energy transition with specialized expertise and future-ready business solutions. We support digital modernization, operational excellence, and sustainable innovation across the evolving global energy and utilities landscape.",
+      "bgImage": "https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1200&q=80",
+      "icon": "bolt",
+      "badgeText": "CleanTech & NERC CIP",
+      "badgeColor": "rgba(16, 185, 129, 0.15)",
+      "badgeDot": "#10B981",
+      "podsDeployed": "17+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "NERC CIP Compliance Pass"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Grid SME Turnaround"
+        },
+        {
+          "value": "12",
+          "unit": "GW",
+          "label": "Renewable Capacity Managed"
+        },
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Critical Telemetry Failures"
+        }
+      ],
+      "compliance": [
+        "NERC CIP (Critical Infrastructure)",
+        "ISO 50001 (Energy Management)",
+        "FERC Regulatory Standards",
+        "ESG Carbon Reporting Guidelines"
+      ],
+      "complianceText": "NERC CIP, ISO 50001, FERC, ESG Guidelines",
+      "placements": [
+        "Grid SCADA Architects",
+        "ETRM Platform Specialists",
+        "Renewable IoT Engineers",
+        "Substation Automation Leads"
+      ],
+      "solutions": [
+        {
+          "title": "Smart Grid & Advanced Metering (AMI)",
+          "desc": "Engineers deploying smart meter data ingestion, substation automation, and automated fault location, isolation, and restoration (FLIR).",
+          "icon": "electrical_services"
+        },
+        {
+          "title": "Renewable Energy Asset Management",
+          "desc": "Real-time telemetry and predictive performance modeling for wind turbine arrays, solar farms, and battery energy storage systems (BESS).",
+          "icon": "solar_power"
+        },
+        {
+          "title": "Energy Trading & Risk Management (ETRM)",
+          "desc": "Specialists implementing Openlink Endur, Allegro, and custom algorithmic platforms for power and gas commodity trading.",
+          "icon": "trending_up"
+        },
+        {
+          "title": "Cybersecurity for Critical Infrastructure",
+          "desc": "Hardening air-gapped utility operational technology (OT) against state-sponsored intrusion and ransomware.",
+          "icon": "shield"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Protocols & OT",
+          "skills": [
+            "DNP3",
+            "Modbus TCP",
+            "IEC 61850",
+            "IEEE 1547 (Inverters)",
+            "OSIsoft PI Historian"
+          ]
+        },
+        {
+          "name": "Trading & Forecasting",
+          "skills": [
+            "Openlink Endur",
+            "Allegro ETRM",
+            "Load Forecasting Models",
+            "Carbon Accounting APIs"
+          ]
+        }
+      ]
+    },
+    "education-edtech": {
+      "id": "edtech",
+      "slug": "education-edtech",
+      "category": "consulting",
+      "jobSector": "EdTech & Education",
+      "title": "Education & EdTech",
+      "heroTagline": "Interactive Learning. Scalable Platforms. Adaptive AI Tutoring.",
+      "shortDesc": "Learning management systems (LMS), adaptive learning algorithms, real-time video classrooms, and student data privacy compliance.",
+      "fullDesc": "Redefining learning through technology, talent, and forward-thinking solutions. We help educational institutions and EdTech innovators develop engaging digital experiences, expand accessibility, and build scalable global learning ecosystems.",
+      "bgImage": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+      "icon": "school",
+      "badgeText": "FERPA & COPPA Cleared",
+      "badgeColor": "rgba(245, 158, 11, 0.15)",
+      "badgeDot": "#F59E0B",
+      "podsDeployed": "18+",
+      "stats": [
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "Student Data Privacy Adherence"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "EdTech Talent Matching"
+        },
+        {
+          "value": "5M",
+          "unit": "+",
+          "label": "Active Students Scaled"
+        },
+        {
+          "value": "99.5",
+          "unit": "%",
+          "label": "Interactive Video Uptime"
+        }
+      ],
+      "compliance": [
+        "FERPA (Student Privacy)",
+        "COPPA (Children Online Privacy)",
+        "WCAG 2.1 AA Accessibility",
+        "SCORM & xAPI Standards"
+      ],
+      "complianceText": "FERPA, COPPA, WCAG 2.1 AA, SCORM / xAPI",
+      "placements": [
+        "LMS Platform Architects",
+        "WebRTC Video Engineers",
+        "Adaptive Learning Devs",
+        "Instructional Designers"
+      ],
+      "solutions": [
+        {
+          "title": "Custom LMS & Virtual Classrooms",
+          "desc": "Scalable learning platforms featuring low-latency interactive video, collaborative whiteboards, and assignment management.",
+          "icon": "co_present"
+        },
+        {
+          "title": "AI Adaptive Learning & Assessment",
+          "desc": "Machine learning algorithms that adjust difficulty, suggest personalized study paths, and automate proctored exam evaluation.",
+          "icon": "auto_stories"
+        },
+        {
+          "title": "Gamified & Micro-Learning Systems",
+          "desc": "Engaging consumer mobile apps with streak counters, social leaderboards, and bite-sized pedagogical modules.",
+          "icon": "sports_esports"
+        }
+      ],
+      "domains": [
+        {
+          "name": "EdTech Architecture",
+          "skills": [
+            "Canvas API",
+            "Moodle Stacks",
+            "LTI (Learning Tools Interoperability)",
+            "WebRTC / LiveKit",
+            "xAPI / TinCan"
+          ]
+        }
+      ]
+    },
+    "professional-services": {
+      "id": "consulting",
+      "slug": "professional-services",
+      "category": "consulting",
+      "jobSector": "Consulting & Professional Services",
+      "title": "Professional Services & Consulting",
+      "heroTagline": "Strategic Execution. High-Caliber Advisory. Flexible Capability Scaling.",
+      "shortDesc": "Strategic advisory squads, fractional architecture leads, and PMO transformation teams for Big-4 and boutique consulting firms.",
+      "fullDesc": "Enabling professional service firms to deliver greater value through strategic talent solutions and business expertise. We help organizations strengthen delivery capabilities, adapt to evolving client expectations, and accelerate business growth.",
+      "bgImage": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80",
+      "icon": "business_center",
+      "badgeText": "Enterprise Advisory Cleared",
+      "badgeColor": "rgba(59, 130, 246, 0.15)",
+      "badgeDot": "#3B82F6",
+      "podsDeployed": "27+",
+      "stats": [
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Executive Consultant Onboarding"
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "Client Satisfaction Index"
+        },
+        {
+          "value": "80",
+          "unit": "+",
+          "label": "Advisory Engagements Delivered"
+        },
+        {
+          "value": "98",
+          "unit": "%",
+          "label": "Engagement Extension Rate"
+        }
+      ],
+      "compliance": [
+        "SOC 1 & SOC 2 Type II",
+        "ISO 9001 Quality",
+        "PMBOK & Agile Certifications",
+        "Confidentiality & Non-Compete Clearance"
+      ],
+      "complianceText": "SOC 1/2, ISO 9001, PMBOK, Strict IP NDAs",
+      "placements": [
+        "Enterprise Agile Coaches",
+        "Fractional Chief Architects",
+        "Digital Transformation Directors",
+        "Business Strategy SMEs"
+      ],
+      "solutions": [
+        {
+          "title": "Augmented Consulting Pods",
+          "desc": "Deploy senior technical SMEs alongside your strategy leads to conduct architectural assessments and validate digital blueprints.",
+          "icon": "group_work"
+        },
+        {
+          "title": "Project PMO & Change Management",
+          "desc": "Seasoned program managers and change champions ensuring multi-million dollar transformation programs land on-time and within budget.",
+          "icon": "task_alt"
+        },
+        {
+          "title": "Fractional C-Suite & Strategic Advisory",
+          "desc": "Experienced fractional CTOs, CISOs, and Chief Data Officers guiding high-stakes vendor selection, M&A due diligence, and IPO readiness.",
+          "icon": "military_tech"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Advisory Frameworks",
+          "skills": [
+            "TOGAF Architecture",
+            "SAFe Agile",
+            "ITIL v4",
+            "M&A Tech Due Diligence",
+            "Cloud Economics / FinOps"
+          ]
+        }
+      ]
+    },
+    "aerospace-defense": {
+      "id": "defense",
+      "slug": "aerospace-defense",
+      "category": "energy",
+      "jobSector": "Aerospace & Defense",
+      "title": "Aerospace & Defense",
+      "heroTagline": "Mission-Critical Engineering. Avionics Integrity. ITAR-Compliant Talent.",
+      "shortDesc": "DO-178C avionics software, air-gapped SCADA telemetries, and ITAR-cleared aerospace engineering units.",
+      "fullDesc": "Supporting advanced engineering and mission-critical innovation through specialized talent and technical expertise. We help organizations strengthen engineering capabilities, advance technological development, and pursue operational excellence in demanding, zero-failure environments.",
+      "bgImage": "https://images.unsplash.com/photo-1517976487507-5b3b11329241?auto=format&fit=crop&w=1200&q=80",
+      "icon": "shield",
+      "badgeText": "ITAR / DO-178C Cleared",
+      "badgeColor": "rgba(15, 23, 42, 0.25)",
+      "badgeDot": "#0F172A",
+      "podsDeployed": "16+",
+      "stats": [
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Tolerance for Software Failure"
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "ITAR Clearance Adherence"
+        },
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Vetted Defense SME Turnaround"
+        },
+        {
+          "value": "20",
+          "unit": "+",
+          "label": "Flight-Critical Subsystems Cleared"
+        }
+      ],
+      "compliance": [
+        "DO-178C Level A (Avionics)",
+        "DO-254 (Hardware Design)",
+        "ITAR Clearance Regulations",
+        "NIST SP 800-171 & CMMC 2.0"
+      ],
+      "complianceText": "DO-178C Level A, DO-254, ITAR Clearance, NIST SP 800-171",
+      "placements": [
+        "Avionics Software Leads",
+        "SCADA Security SMEs",
+        "Guidance & Navigation Engineers",
+        "FPGA Hardware Engineers"
+      ],
+      "solutions": [
+        {
+          "title": "DO-178C Flight Software Engineering",
+          "desc": "Safety-critical embedded software engineered and verified to FAA and EASA DO-178C Level A standards using Ada, C, and C++.",
+          "icon": "flight_takeoff"
+        },
+        {
+          "title": "Avionics Hardware & FPGA Verification",
+          "desc": "DO-254 compliant hardware design, VHDL/Verilog synthesis, and bit-level simulation for flight control computers and radar units.",
+          "icon": "memory"
+        },
+        {
+          "title": "Guidance, Navigation & Control (GNC)",
+          "desc": "Algorithm engineers implementing Kalman filters, orbital mechanics simulations, and autonomous navigation for UAVs and satellites.",
+          "icon": "explore"
+        },
+        {
+          "title": "Air-Gapped Telemetry & Cybersecurity",
+          "desc": "Defending mission-critical satellite ground stations and classified military networks in accordance with NIST SP 800-171 and CMMC.",
+          "icon": "security"
+        }
+      ],
+      "domains": [
+        {
+          "name": "Avionics Standards",
+          "skills": [
+            "DO-178C / DO-254",
+            "ARINC 429 / 664 (AFDX)",
+            "MIL-STD-1553",
+            "Ada 95/2012",
+            "Embedded C / MISRA"
+          ]
+        },
+        {
+          "name": "Simulation & Systems",
+          "skills": [
+            "VxWorks 653 RTOS",
+            "MATLAB / Simulink Coder",
+            "FPGA (Xilinx / Altera)",
+            "Telemetry Ingestion"
+          ]
+        }
+      ]
+    }
   }
 }

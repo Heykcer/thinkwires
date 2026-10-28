@@ -1,6 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSectorCatalog } from '../../store/slices/industriesSlice';
+import { Link } from 'react-router-dom';
+import {
+  fetchIndustriesPageData,
+  fetchSectorCatalog,
+  INDUSTRY_TABS,
+  getAllIndustries,
+} from '../../store/slices/industriesSlice';
 import ScrollReveal from '../common/ScrollReveal';
 
 const SectorCatalog = () => {
@@ -9,43 +15,29 @@ const SectorCatalog = () => {
     (state) => state.industries
   );
 
-  const [activeTab, setActiveTab] = React.useState('all');
+  const [activeTab, setActiveTab] = useState('all');
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchSectorCatalog());
+      dispatch(fetchIndustriesPageData());
     }
   }, [status, dispatch]);
 
   const tabs =
-    sectorTabs && sectorTabs.length > 0
-      ? sectorTabs
-      : [
-          { key: 'all', label: 'All Sectors' },
-          { key: 'tech', label: 'Tech & Digital' },
-          { key: 'financial', label: 'Financial Services' },
-          { key: 'healthcare', label: 'Healthcare & Life Sciences' },
-          { key: 'industrial', label: 'Industrial & Engineering' },
-          { key: 'defense', label: 'Defense & Public' },
-        ];
+    sectorTabs && sectorTabs.length > 0 ? sectorTabs : INDUSTRY_TABS;
+
+  const displaySectors =
+    sectors && sectors.length > 0 ? sectors : getAllIndustries();
 
   const filteredSectors =
     activeTab === 'all'
-      ? sectors || []
-      : (sectors || []).filter((s) => (s.filter || s.id) === activeTab);
-
-  if (status === 'loading') {
-    return (
-      <section className="SectorCatalog-section" id="sectors-catalog">
-        <div className="SectorCatalog-loading">
-          <div className="SectorCatalog-spinner"></div>
-          <span className="SectorCatalog-loadingText">
-            Loading industries...
-          </span>
-        </div>
-      </section>
-    );
-  }
+      ? displaySectors
+      : displaySectors.filter(
+          (s) =>
+            s.category === activeTab ||
+            s.filter === activeTab ||
+            s.id === activeTab
+        );
 
   return (
     <section className="SectorCatalog-section" id="sectors-catalog">
@@ -54,6 +46,11 @@ const SectorCatalog = () => {
           <div>
             <span className="SectorCatalog-badge">Specialized Practices</span>
             <h2 className="SectorCatalog-title">Industries We Serve</h2>
+            <p className="SectorCatalog-subtitle">
+              Browse our domain-calibrated practices across 11 core industries.
+              Click any sector card to explore deep delivery capabilities, technical
+              stacks, and active hiring pods.
+            </p>
           </div>
         </div>
 
@@ -69,7 +66,9 @@ const SectorCatalog = () => {
               role="tab"
               aria-selected={activeTab === tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`SectorCatalog-tabBtn ${activeTab === tab.key ? 'SectorCatalog-tabBtn--active' : ''}`}
+              className={`SectorCatalog-tabBtn ${
+                activeTab === tab.key ? 'SectorCatalog-tabBtn--active' : ''
+              }`}
             >
               {tab.label}
             </button>
@@ -77,100 +76,113 @@ const SectorCatalog = () => {
         </div>
       </ScrollReveal>
 
-      {/* Cards Grid */}
+      {/* Cards Grid with Themed Background Images */}
       <div className="SectorCatalog-grid">
         {filteredSectors.map((sector, index) => {
-          const bgColor = sector.iconBg || 'rgba(37, 99, 235, 0.1)';
-          const textColor = sector.iconColor || 'var(--color-primary)';
-          const badgeBgColor = sector.badgeColor || 'rgba(37, 99, 235, 0.1)';
-          const badgeDotColor = sector.badgeDot || 'var(--color-cobalt-bright)';
+          const targetSlug = sector.slug || 'information-technology';
+          const bgImg =
+            sector.bgImage ||
+            'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80';
 
           return (
             <ScrollReveal
-              key={sector.id || index}
+              key={sector.slug || sector.id || index}
               direction="up"
-              delay={(index % 3) * 0.1}
+              delay={(index % 3) * 0.08}
+              className="SectorCatalog-cardWrapper"
             >
-              <article className="SectorCatalog-card" data-sector={sector.id}>
+              <article
+                className="SectorCatalog-card SectorCatalog-card--imageThemed group"
+                data-sector={sector.slug || sector.id}
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(15, 23, 42, 0.42) 0%, rgba(15, 23, 42, 0.88) 55%, #0f172a 100%), url("${bgImg}")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <Link
+                  to={`/industries/${targetSlug}`}
+                  className="SectorCatalog-cardFullOverlayLink"
+                  aria-label={`View ${sector.title} details`}
+                />
+
                 <div className="SectorCatalog-cardTop">
                   <div className="SectorCatalog-cardHeader">
-                    <div
-                      className="SectorCatalog-cardIconWrap"
-                      style={{ backgroundColor: bgColor, color: textColor }}
-                    >
+                    <div className="SectorCatalog-cardIconWrap SectorCatalog-cardIconWrap--glass">
                       <span className="material-symbols-outlined SectorCatalog-cardIcon">
                         {sector.icon || 'star'}
                       </span>
                     </div>
-                    <span
-                      className="SectorCatalog-cardBadge"
-                      style={{
-                        backgroundColor: badgeBgColor,
-                        color: textColor,
-                      }}
-                    >
+                    <span className="SectorCatalog-cardBadge SectorCatalog-cardBadge--glass">
                       <span
                         className="SectorCatalog-cardBadgeDot"
-                        style={{ backgroundColor: badgeDotColor }}
+                        style={{
+                          backgroundColor:
+                            sector.badgeDot || 'var(--color-cobalt-bright, #2563EB)',
+                        }}
                       ></span>
-                      {sector.badgeText || sector.badge}
+                      {sector.badgeText || sector.badge || 'Domain Verified'}
                     </span>
                   </div>
 
-                  <h3 className="SectorCatalog-cardTitle">{sector.title}</h3>
-                  <p className="SectorCatalog-cardDesc">
-                    {sector.desc || sector.description}
+                  <h3 className="SectorCatalog-cardTitle SectorCatalog-cardTitle--light">
+                    {sector.title}
+                  </h3>
+                  <p className="SectorCatalog-cardDesc SectorCatalog-cardDesc--light">
+                    {sector.shortDesc || sector.desc || sector.description}
                   </p>
 
-                  {/* Compliance Box */}
-                  <div className="SectorCatalog-complianceBox">
-                    <div className="SectorCatalog-complianceHeader">
-                      <span
-                        className="material-symbols-outlined SectorCatalog-complianceIcon"
-                        style={{ color: textColor }}
-                      >
+                  {/* Mandatory Compliance Stacks */}
+                  <div className="SectorCatalog-complianceBox SectorCatalog-complianceBox--glass">
+                    <div className="SectorCatalog-complianceHeader SectorCatalog-complianceHeader--light">
+                      <span className="material-symbols-outlined SectorCatalog-complianceIcon">
                         verified_user
                       </span>
                       Mandatory Compliance Stacks
                     </div>
-                    <p className="SectorCatalog-complianceText">
-                      {sector.complianceText || sector.compliance}
+                    <p className="SectorCatalog-complianceText SectorCatalog-complianceText--light">
+                      {sector.complianceText ||
+                        (Array.isArray(sector.compliance)
+                          ? sector.compliance.slice(0, 4).join(', ')
+                          : 'SOC 2, ISO 27001, Domain Regulations')}
                     </p>
                   </div>
 
-                  {/* Placements */}
+                  {/* High-Demand Placements */}
                   <div className="SectorCatalog-placementsSection">
-                    <span className="SectorCatalog-placementsLabel">
+                    <span className="SectorCatalog-placementsLabel SectorCatalog-placementsLabel--light">
                       High-Demand Placements
                     </span>
                     <div className="SectorCatalog-tags">
-                      {sector.placements &&
-                        sector.placements.map((placement, i) => (
-                          <span key={i} className="SectorCatalog-tag">
-                            {placement}
-                          </span>
-                        ))}
+                      {(sector.placements || []).slice(0, 4).map((placement, i) => (
+                        <span
+                          key={i}
+                          className="SectorCatalog-tag SectorCatalog-tag--glass"
+                        >
+                          {placement}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
 
                 {/* Card Footer */}
-                <div className="SectorCatalog-cardFooter">
-                  <span className="SectorCatalog-podsCount">
+                <div className="SectorCatalog-cardFooter SectorCatalog-cardFooter--glass">
+                  <span className="SectorCatalog-podsCount SectorCatalog-podsCount--light">
                     Pods Deployed:{' '}
                     <strong>
                       {sector.podsDeployed || sector.pods || '20+'}
                     </strong>
                   </span>
-                  <a
-                    className="SectorCatalog-deployLink"
-                    href="#capability-briefing"
+                  <Link
+                    to={`/industries/${targetSlug}`}
+                    className="SectorCatalog-deployLink SectorCatalog-deployLink--glass"
                   >
-                    Deploy Talent
-                    <span className="material-symbols-outlined">
+                    <span>Explore Domain</span>
+                    <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
                       arrow_forward
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </article>
             </ScrollReveal>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
 import VisualSectionEditor from './VisualSectionEditor';
+import { getAllIndustries } from '../store/slices/industriesSlice';
 import {
   PlusIcon,
   EyeIcon,
@@ -45,7 +46,29 @@ const PagesManager = () => {
     adminApi
       .getCmsPages()
       .then((res) => {
-        setPages(res.pages || []);
+        const existingPages = res.pages || [];
+        const industryDefaults = getAllIndustries()
+          .map((ind) => {
+            const pageSlug = `industries/${ind.slug}`;
+            const existing = existingPages.find(
+              (p) => p.slug === pageSlug || p.slug === ind.slug
+            );
+            if (existing) return null;
+            return {
+              _id: `default-${ind.slug}`,
+              title: ind.title,
+              slug: pageSlug,
+              category: 'Industry Sectors',
+              data: ind,
+              metaTitle: `${ind.title} | Thinkwires`,
+              metaDescription: ind.shortDesc || '',
+              status: 'published',
+              isSystemDefault: true,
+            };
+          })
+          .filter(Boolean);
+
+        setPages([...existingPages, ...industryDefaults]);
         setLoading(false);
       })
       .catch((err) => {
@@ -174,7 +197,7 @@ const PagesManager = () => {
       status: formData.status,
     };
 
-    if (editingPage) {
+    if (editingPage && !editingPage.isSystemDefault) {
       adminApi
         .updateCmsPage(editingPage.id || editingPage._id, payload)
         .then(() => {
@@ -187,7 +210,7 @@ const PagesManager = () => {
       adminApi
         .createCmsPage(payload)
         .then(() => {
-          showToast(`Page '${formData.title}' created successfully.`);
+          showToast(`Page '${formData.title}' saved to database successfully.`);
           setEditorOpen(false);
           fetchPages();
         })

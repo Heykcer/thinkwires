@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchOpenings } from '../store/slices/homeSlice';
+import { getIndustryBySlug, getSearchTermForIndustry } from '../store/slices/industriesSlice';
 
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -51,8 +52,13 @@ const JobPage = () => {
   const [selectedJobForModal, setSelectedJobForModal] = useState(null);
   const [selectedJobForSpec, setSelectedJobForSpec] = useState(null);
 
+  const [searchParams] = useSearchParams();
+  const industrySlugParam = searchParams.get('industry');
+
   // Search & Filter state
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => {
+    return industrySlugParam ? getSearchTermForIndustry(industrySlugParam) : '';
+  });
   const [locationFilter, setLocationFilter] = useState('All');
   const [experienceFilter, setExperienceFilter] = useState('All');
   const [workMode, setWorkMode] = useState('All Modes');
@@ -60,6 +66,12 @@ const JobPage = () => {
   const [noticePeriod, setNoticePeriod] = useState('All Notice');
   const [departmentFilter, setDepartmentFilter] = useState('All Roles');
   const [sortBy, setSortBy] = useState('Newest First');
+
+  useEffect(() => {
+    if (industrySlugParam) {
+      setSearchQuery(getSearchTermForIndustry(industrySlugParam));
+    }
+  }, [industrySlugParam]);
 
   // Dispatch Redux thunk to fetch openings dynamically from backend
   const loadJobsFromBackend = useCallback(() => {

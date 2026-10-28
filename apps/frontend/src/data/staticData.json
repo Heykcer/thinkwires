@@ -181,44 +181,66 @@
   "industries": [
     {
       "id": 1,
-      "name": "Information Tech",
-      "desc": "Cloud, DevOps & Full Stack",
+      "name": "Information Technology",
+      "slug": "information-technology",
+      "desc": "Cloud, AI/ML & Enterprise Systems",
       "icon": "monitor",
       "color": "blue"
     },
     {
       "id": 2,
-      "name": "Banking & Fintech",
-      "desc": "Ledger & ACH Systems",
+      "name": "BFSI & FinTech",
+      "slug": "bfsi",
+      "desc": "Core Banking, ACH & ISO 20022 Rails",
       "icon": "building",
       "color": "blue"
     },
     {
       "id": 3,
-      "name": "Life Sciences",
-      "desc": "HIPAA & Digital Health",
+      "name": "Healthcare & Life Sciences",
+      "slug": "healthcare-life-sciences",
+      "desc": "HIPAA, FHIR & Biomedical Research",
       "icon": "medical",
       "color": "green"
     },
     {
       "id": 4,
-      "name": "Automation",
-      "desc": "Robotics & Industrial IoT",
+      "name": "Automobile & Manufacturing",
+      "slug": "automobile-manufacturing",
+      "desc": "Smart Factory & Industrial IoT",
       "icon": "robot",
       "color": "purple"
     },
     {
       "id": 5,
-      "name": "Aerospace",
-      "desc": "PLM & Embedded Tech",
-      "icon": "plane",
+      "name": "Automotive & Mobility",
+      "slug": "automotive-mobility",
+      "desc": "Software-Defined Vehicles & EV Systems",
+      "icon": "robot",
       "color": "blue"
     },
     {
       "id": 6,
-      "name": "Telecom & Infra",
-      "desc": "5G, Networks & Optical",
+      "name": "Telecommunications",
+      "slug": "telecommunications",
+      "desc": "5G Core, Open RAN & Edge Networks",
       "icon": "antenna",
+      "color": "blue"
+    },
+    {
+      "id": 7,
+      "name": "Retail & E-Commerce",
+      "slug": "retail-ecommerce",
+      "desc": "Headless Commerce & Fulfillment",
+      "icon": "monitor",
+      "color": "purple"
+    },
+    {
+      "id": 8,
+      "name": "Aerospace & Defense",
+      "slug": "aerospace-defense",
+      "desc": "DO-178C Avionics & Mission-Critical Tech",
+      "icon": "plane",
       "color": "blue"
     }
   ],

@@ -1,6 +1,47 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { getIndustrySlugByJobSector } from '../../store/slices/industriesSlice';
 
 const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
+  const industrySlug =
+    job.industrySlug ||
+    getIndustrySlugByJobSector(
+      [job.industrySector, job.category, job.title, job.department, job.company]
+        .filter(Boolean)
+        .join(' ')
+    );
+
+  const getIndustryDisplayName = (slug) => {
+    switch (slug) {
+      case 'information-technology':
+        return 'Tech & Cloud';
+      case 'bfsi':
+        return 'BFSI & FinTech';
+      case 'healthcare-life-sciences':
+        return 'Healthcare & Bio';
+      case 'automobile-manufacturing':
+        return 'Industrial & Mfg';
+      case 'automotive-mobility':
+        return 'Automotive & Mobility';
+      case 'telecommunications':
+        return 'Telecom & 5G';
+      case 'retail-ecommerce':
+        return 'Retail & Commerce';
+      case 'energy-utilities':
+        return 'Energy & CleanTech';
+      case 'education-edtech':
+        return 'EdTech';
+      case 'professional-services':
+        return 'Consulting';
+      case 'aerospace-defense':
+        return 'Aerospace & Defense';
+      default:
+        return 'Enterprise Sector';
+    }
+  };
+
+  const industryName = job.industrySector || getIndustryDisplayName(industrySlug);
+
   const getBadgeStyle = (badgeColor = 'green') => {
     if (badgeColor === 'green') {
       return {
@@ -48,11 +89,38 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
 
   return (
     <div className="JobCard-figmaCard">
-      {/* Top Header Row: Category & Status Badge */}
+      {/* Top Header Row: Category, Industry Domain & Status Badge */}
       <div className="JobCard-topCategoryRow">
-        <span className="JobCard-categoryText">
-          {job.category || 'ENTERPRISE SYSTEMS • CONTRACT'}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span className="JobCard-categoryText">
+            {job.category || 'ENTERPRISE SYSTEMS • CONTRACT'}
+          </span>
+          <Link
+            to={`/industries/${industrySlug}`}
+            className="JobCard-industryPill"
+            onClick={(e) => e.stopPropagation()}
+            title={`Explore ${industryName} practice details and hiring pods`}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              padding: '0.15rem 0.55rem',
+              borderRadius: '9999px',
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              background: 'rgba(37, 99, 235, 0.08)',
+              color: '#1d4ed8',
+              border: '1px solid rgba(37, 99, 235, 0.22)',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+              domain
+            </span>
+            <span>{industryName}</span>
+          </Link>
+        </div>
         <div
           style={{
             display: 'flex',

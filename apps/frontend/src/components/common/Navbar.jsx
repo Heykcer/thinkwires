@@ -35,8 +35,12 @@ const Navbar = () => {
     setIsApplyModalOpen(true);
   };
 
-  const isActive = (path) =>
-    location.pathname === path ? 'Navbar-active' : '';
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/' ? 'Navbar-active' : '';
+    return location.pathname === path || location.pathname.startsWith(`${path}/`)
+      ? 'Navbar-active'
+      : '';
+  };
 
   return (
     <>
