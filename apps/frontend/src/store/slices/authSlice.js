@@ -159,6 +159,12 @@ const authSlice = createSlice({
     clearSuccessMessage: (state) => {
       state.successMessage = null;
     },
+    setUserAvatar: (state, action) => {
+      if (state.user) {
+        state.user.avatarUrl = action.payload.avatarUrl;
+        state.user.avatarType = action.payload.avatarType;
+      }
+    },
   },
   extraReducers: (builder) => {
     // Check Session
@@ -245,5 +251,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError, clearSuccessMessage } = authSlice.actions;
+export const { clearAuthError, clearSuccessMessage, setUserAvatar } =
+  authSlice.actions;
 export default authSlice.reducer;

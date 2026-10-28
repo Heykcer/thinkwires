@@ -8,6 +8,7 @@ import {
   CloseIcon,
   AlertCircleIcon,
 } from './AdminIcons';
+import CandidateEvaluationModal from './CandidateEvaluationModal';
 
 const PIPELINE_STAGES = [
   'Applied',
@@ -29,6 +30,7 @@ const CandidatesView = () => {
   // Modals & Drawers
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [evaluationModalCandidateId, setEvaluationModalCandidateId] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   // Form State
@@ -428,19 +430,44 @@ const CandidatesView = () => {
                             ))}
                           </select>
 
-                          <button
-                            onClick={() => setSelectedCandidate(cand)}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              color: '#008F68',
-                              fontSize: '0.72rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            Details
-                          </button>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <button
+                              type="button"
+                              onClick={() => setEvaluationModalCandidateId(cand.id || cand._id)}
+                              style={{
+                                background: '#EFF6FF',
+                                border: '1px solid #BFDBFE',
+                                borderRadius: '4px',
+                                color: '#1D4ED8',
+                                fontSize: '0.7rem',
+                                fontWeight: 600,
+                                padding: '0.15rem 0.45rem',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.2rem',
+                              }}
+                              title="View AI Evaluation Dossier"
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: '0.85rem' }}>
+                                psychology
+                              </span>
+                              Dossier
+                            </button>
+                            <button
+                              onClick={() => setSelectedCandidate(cand)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#008F68',
+                                fontSize: '0.72rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              Details
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))
@@ -470,9 +497,39 @@ const CandidatesView = () => {
                 {candidates.map((cand) => (
                   <tr key={cand.id || cand._id}>
                     <td data-label="Candidate">
-                      <div style={{ fontWeight: 600 }}>{cand.name}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
-                        {cand.email}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div
+                          style={{
+                            width: '34px',
+                            height: '34px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            background: '#E2E8F0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 700,
+                            fontSize: '0.78rem',
+                            color: '#0037B0',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {cand.avatarUrl ? (
+                            <img
+                              src={cand.avatarUrl}
+                              alt={cand.name}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                          ) : (
+                            (cand.name?.slice(0, 2) || 'TW').toUpperCase()
+                          )}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{cand.name}</div>
+                          <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
+                            {cand.email}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td data-label="Current Role & Exp">
@@ -566,8 +623,18 @@ const CandidatesView = () => {
                     <td data-label="Actions" style={{ textAlign: 'right' }}>
                       <div
                         className="tw-action-btn-group"
-                        style={{ justifyContent: 'flex-end' }}
+                        style={{ justifyContent: 'flex-end', alignItems: 'center' }}
                       >
+                        <button
+                          className="tw-action-icon-btn"
+                          style={{ color: '#0037B0' }}
+                          onClick={() => setEvaluationModalCandidateId(cand.id || cand._id)}
+                          title="View Full AI Evaluation Dossier & Download"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: '1.05rem' }}>
+                            psychology
+                          </span>
+                        </button>
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => setSelectedCandidate(cand)}
@@ -667,6 +734,37 @@ const CandidatesView = () => {
                   {selectedCandidate.expectedSalary}
                 </div>
               </div>
+
+              {/* Open AI Dossier Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  const id = selectedCandidate.id || selectedCandidate._id;
+                  setEvaluationModalCandidateId(id);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '8px',
+                  background: '#0037B0',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.86rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  marginBottom: '1rem',
+                  boxShadow: '0 2px 4px rgba(0, 55, 176, 0.2)',
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>
+                  psychology
+                </span>
+                <span>Open Full AI Evaluation Dossier & Download</span>
+              </button>
 
               {/* AI Screening Assessment & ATS Fit */}
               <div
@@ -1099,6 +1197,16 @@ const CandidatesView = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Full AI Evaluation Dossier Modal */}
+      {evaluationModalCandidateId && (
+        <CandidateEvaluationModal
+          isOpen={Boolean(evaluationModalCandidateId)}
+          onClose={() => setEvaluationModalCandidateId(null)}
+          candidateId={evaluationModalCandidateId}
+          showToast={showToast}
+        />
       )}
     </div>
   );

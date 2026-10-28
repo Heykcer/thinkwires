@@ -6,6 +6,7 @@ import { logoutUser } from '../../store/slices/authSlice';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
+import CandidateDossierModal from '../../components/candidate/CandidateDossierModal';
 import '../auth/auth.css';
 
 const CandidateDashboardPage = () => {
@@ -17,6 +18,7 @@ const CandidateDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [assessmentModalApp, setAssessmentModalApp] = useState(null);
+  const [selectedDossierApp, setSelectedDossierApp] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,12 +85,42 @@ const CandidateDashboardPage = () => {
       <main className="tw-portal-container">
         {/* Top Header */}
         <div className="tw-portal-topheader">
-          <div className="tw-portal-welcome">
-            <h1>Welcome, {candidateProfile.name || 'Candidate'}</h1>
-            <p>
-              {candidateProfile.currentRole || 'Software Professional'} •{' '}
-              {candidateProfile.email}
-            </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div
+              style={{
+                width: '52px',
+                height: '52px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                background: '#EFF6FF',
+                border: '2px solid #0037B0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: '1.2rem',
+                color: '#0037B0',
+                flexShrink: 0,
+              }}
+            >
+              {candidateProfile.avatarUrl ? (
+                <img
+                  src={candidateProfile.avatarUrl}
+                  alt={candidateProfile.name || 'Candidate'}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                (candidateProfile.name?.slice(0, 2) || 'TW').toUpperCase()
+              )}
+            </div>
+
+            <div className="tw-portal-welcome">
+              <h1>Welcome, {candidateProfile.name || 'Candidate'}</h1>
+              <p>
+                {candidateProfile.currentRole || 'Software Professional'} •{' '}
+                {candidateProfile.email}
+              </p>
+            </div>
           </div>
 
           <div
@@ -469,38 +501,48 @@ const CandidateDashboardPage = () => {
                           : 'Recent'}
                       </td>
                       <td>
-                        {app.fitScore != null ? (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDossierApp(app)}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.25rem 0.6rem',
+                            borderRadius: '6px',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            border: '1px solid transparent',
+                            cursor: 'pointer',
+                            background:
+                              app.fitScore >= 75
+                                ? '#DCFCE7'
+                                : app.fitScore >= 50
+                                  ? '#FEF9C3'
+                                  : '#FEE2E2',
+                            color:
+                              app.fitScore >= 75
+                                ? '#166534'
+                                : app.fitScore >= 50
+                                  ? '#854D0E'
+                                  : '#991B1B',
+                            borderColor:
+                              app.fitScore >= 75
+                                ? '#BBF7D0'
+                                : app.fitScore >= 50
+                                  ? '#FEF08A'
+                                  : '#FECDD3',
+                          }}
+                          title="Click to view AI Evaluation Dossier"
+                        >
                           <span
-                            style={{
-                              display: 'inline-block',
-                              padding: '0.2rem 0.55rem',
-                              borderRadius: '6px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              background:
-                                app.fitScore >= 75
-                                  ? '#DCFCE7'
-                                  : app.fitScore >= 50
-                                    ? '#FEF9C3'
-                                    : '#FEE2E2',
-                              color:
-                                app.fitScore >= 75
-                                  ? '#166534'
-                                  : app.fitScore >= 50
-                                    ? '#854D0E'
-                                    : '#991B1B',
-                            }}
+                            className="material-symbols-outlined"
+                            style={{ fontSize: '0.95rem' }}
                           >
-                            {app.fitScore}%{' '}
-                            {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                            psychology
                           </span>
-                        ) : (
-                          <span
-                            style={{ color: '#94A3B8', fontSize: '0.82rem' }}
-                          >
-                            Calculated
-                          </span>
-                        )}
+                          <span>{app.fitScore != null ? `${app.fitScore}%` : 'View Dossier'}</span>
+                        </button>
                       </td>
                       <td>
                         {app.assessmentStatus === 'Completed' ||
@@ -547,7 +589,13 @@ const CandidateDashboardPage = () => {
                               boxShadow: '0 1px 2px rgba(37,99,235,0.2)',
                             }}
                           >
-                            <span>📝 Take Test</span>
+                            <span
+                              className="material-symbols-outlined"
+                              style={{ fontSize: '0.95rem' }}
+                            >
+                              assignment
+                            </span>
+                            <span>Take Test</span>
                           </button>
                         )}
                       </td>
@@ -608,6 +656,16 @@ const CandidateDashboardPage = () => {
               });
               setAssessmentModalApp(null);
             }}
+          />
+        )}
+
+        {/* Candidate Evaluation Dossier Modal */}
+        {selectedDossierApp && (
+          <CandidateDossierModal
+            isOpen={Boolean(selectedDossierApp)}
+            onClose={() => setSelectedDossierApp(null)}
+            applicationId={selectedDossierApp._id || selectedDossierApp.id}
+            applicationData={selectedDossierApp}
           />
         )}
       </main>

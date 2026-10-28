@@ -22,7 +22,7 @@ const getTransporter = () => {
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
   const secure = process.env.SMTP_SECURE === 'true' || port === 465;
 
-  if (!host || !user) {
+  if (!host || !user || !pass || pass.includes('your_smtp_app_password_here') || pass.includes('placeholder')) {
     return null;
   }
 
@@ -106,7 +106,7 @@ export const buildRecruitmentEmailHtml = (data) => {
           RESUME
         </h2>
         <div style="background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 14px; display: inline-block;">
-          <span style="font-size: 13px; font-weight: 600; color: #0f172a;">📄 ${escapeHtml(resumeFileName || 'Resume Attached')}</span>
+          <span style="font-size: 13px; font-weight: 600; color: #0f172a;">${escapeHtml(resumeFileName || 'Resume Attached')}</span>
         </div>
       </td>
     </tr>
@@ -292,7 +292,7 @@ export const sendRecruitmentNotificationEmail = async (
 
     if (!transport) {
       console.log('----------------------------------------------------');
-      console.log('📧 [MOCK EMAIL SERVICE] SMTP credentials not set.');
+      console.log('[MOCK EMAIL SERVICE] SMTP credentials not set or using placeholder.');
       console.log(`To: ${recipient}`);
       console.log(`Subject: ${subject}`);
       console.log(
@@ -319,7 +319,7 @@ export const sendRecruitmentNotificationEmail = async (
     });
 
     console.log(
-      `✅ [EMAIL SENT] Recruitment notification delivered to ${recipient}: ${info.messageId}`
+      `[EMAIL SENT] Recruitment notification delivered to ${recipient}: ${info.messageId}`
     );
     return {
       success: true,
@@ -329,7 +329,7 @@ export const sendRecruitmentNotificationEmail = async (
     };
   } catch (error) {
     console.error(
-      '❌ [EMAIL ERROR] Failed to send recruitment notification email:',
+      '[EMAIL ERROR] Failed to send recruitment notification email:',
       error.message
     );
     return {

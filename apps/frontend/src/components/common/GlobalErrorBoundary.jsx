@@ -24,7 +24,7 @@ class GlobalErrorBoundary extends Component {
   componentDidCatch(error, errorInfo) {
     this.setState({ errorInfo });
 
-    console.error('🚨 [GlobalErrorBoundary] Caught rendering exception:', {
+    console.error('[GlobalErrorBoundary] Caught rendering exception:', {
       error,
       errorInfo,
       time: new Date().toISOString(),

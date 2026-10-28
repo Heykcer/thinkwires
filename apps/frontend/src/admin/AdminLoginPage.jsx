@@ -157,7 +157,9 @@ const AdminLoginPage = () => {
                 gap: '0.6rem',
               }}
             >
-              <span>⚠️</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>
+                warning
+              </span>
               <span>{error}</span>
             </div>
           )}

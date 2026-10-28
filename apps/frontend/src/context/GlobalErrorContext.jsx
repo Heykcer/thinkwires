@@ -86,7 +86,7 @@ export const GlobalErrorProvider = ({ children }) => {
         return;
       }
 
-      console.error('⚡ [GlobalErrorContext] Unhandled Promise Rejection:', event.reason);
+      console.error('[GlobalErrorContext] Unhandled Promise Rejection:', event.reason);
 
       const message =
         event.reason?.message ||
@@ -115,7 +115,7 @@ export const GlobalErrorProvider = ({ children }) => {
         return;
       }
 
-      console.error('⚡ [GlobalErrorContext] Uncaught Global Window Error:', {
+      console.error('[GlobalErrorContext] Uncaught Global Window Error:', {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,

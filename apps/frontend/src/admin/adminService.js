@@ -369,6 +369,23 @@ export const adminApi = {
     return json;
   },
 
+  async getCandidateDossier(id) {
+    const res = await adminFetch(`/candidates/${id}/dossier`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async reEvaluateCandidate(id, jdText = '') {
+    const res = await adminFetch(`/candidates/${id}/re-evaluate`, {
+      method: 'POST',
+      body: JSON.stringify({ jdText }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
   // Clients
   async getClients(params = {}) {
     const query = new URLSearchParams(params).toString();

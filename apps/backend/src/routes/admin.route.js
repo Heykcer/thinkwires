@@ -7,6 +7,8 @@ import {
   updateEmployee,
   deleteEmployee,
   getCandidates,
+  getCandidateDossier,
+  reEvaluateCandidate,
   createCandidate,
   updateCandidateStatus,
   updateCandidate,
@@ -105,6 +107,8 @@ router.put('/employees/:id', manpowerGuard, updateEmployee);
 router.delete('/employees/:id', manpowerGuard, deleteEmployee);
 
 router.get('/candidates', manpowerGuard, getCandidates);
+router.get('/candidates/:id/dossier', manpowerGuard, getCandidateDossier);
+router.post('/candidates/:id/re-evaluate', manpowerGuard, reEvaluateCandidate);
 router.post('/candidates', manpowerGuard, createCandidate);
 router.put('/candidates/:id', manpowerGuard, updateCandidate);
 router.patch('/candidates/:id/status', manpowerGuard, updateCandidateStatus);

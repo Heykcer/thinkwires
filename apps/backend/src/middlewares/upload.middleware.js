@@ -94,3 +94,51 @@ export const resumeUpload = multer({
   },
   fileFilter,
 });
+
+// Avatar image upload setup
+const avatarDir = process.env.VERCEL
+  ? path.resolve('/tmp', 'uploads', 'avatars')
+  : path.resolve(process.cwd(), 'uploads/avatars');
+
+if (!fs.existsSync(avatarDir)) {
+  try {
+    fs.mkdirSync(avatarDir, { recursive: true });
+  } catch (err) {
+    console.warn('[AvatarUpload] Directory init notice:', err.message);
+  }
+}
+
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, avatarDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const rawExt = path.extname(file.originalname || '').toLowerCase();
+    const safeExt = ['.jpg', '.jpeg', '.png', '.webp'].includes(rawExt)
+      ? rawExt
+      : '.jpg';
+    cb(null, `avatar-${uniqueSuffix}${safeExt}`);
+  },
+});
+
+const avatarFileFilter = (req, file, cb) => {
+  const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
+  const ext = path.extname(file.originalname || '').toLowerCase();
+  if (!allowed.includes(ext)) {
+    return cb(
+      new Error('Invalid image format. Only JPG, JPEG, PNG, and WebP are permitted.'),
+      false
+    );
+  }
+  cb(null, true);
+};
+
+export const avatarUpload = multer({
+  storage: avatarStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: avatarFileFilter,
+});
+

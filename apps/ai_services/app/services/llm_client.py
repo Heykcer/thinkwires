@@ -208,19 +208,19 @@ async def execute_chat_completion_with_fallback(
                         content = choices[0].get("message", {}).get("content", "")
                         parsed = extract_json_from_llm_response(content)
                         if parsed:
-                            logger.info(f"✔ [LLM Engine] Successfully parsed structured response from '{provider.name}'")
+                            logger.info(f"[LLM Engine] Successfully parsed structured response from '{provider.name}'")
                             return parsed
                         else:
                             logger.warning(
-                                f"⚠️ [LLM Engine] '{provider.name}' returned non-JSON text. Falling back to next provider."
+                                f"[LLM Engine] '{provider.name}' returned non-JSON text. Falling back to next provider."
                             )
                 else:
                     logger.warning(
-                        f"⚠️ [LLM Engine] '{provider.name}' responded with HTTP {response.status_code}: "
+                        f"[LLM Engine] '{provider.name}' responded with HTTP {response.status_code}: "
                         f"{response.text[:200]}. Cascading to fallback provider..."
                     )
         except Exception as e:
-            logger.warning(f"⚠️ [LLM Engine] Error communicating with '{provider.name}': {e}. Cascading to fallback...")
+            logger.warning(f"[LLM Engine] Error communicating with '{provider.name}': {e}. Cascading to fallback...")
 
-    logger.warning("❌ [LLM Engine] All configured LLM providers failed or returned unparseable output.")
+    logger.warning("[LLM Engine] All configured LLM providers failed or returned unparseable output.")
     return None

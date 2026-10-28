@@ -53,9 +53,9 @@ export const seedDatabase = async () => {
         designation: 'Superadmin',
         isActive: true,
       });
-      console.log(`✅ [MongoDB] Initial Superadmin bootstrapped: ${adminEmail}`);
+      console.log(`[MongoDB] Initial Superadmin bootstrapped: ${adminEmail}`);
     } else {
-      console.log(`ℹ️ [MongoDB] Superadmin account present: ${adminEmail}`);
+      console.log(`[MongoDB] Superadmin account present: ${adminEmail}`);
     }
   }
 
@@ -73,12 +73,12 @@ export const seedDatabase = async () => {
         designation: 'Superadmin',
         isActive: true,
       });
-      console.log(`✅ [PostgreSQL] Initial Superadmin bootstrapped: ${adminEmail}`);
+      console.log(`[PostgreSQL] Initial Superadmin bootstrapped: ${adminEmail}`);
     } else {
-      console.log(`ℹ️ [PostgreSQL] Superadmin account present: ${adminEmail}`);
+      console.log(`[PostgreSQL] Superadmin account present: ${adminEmail}`);
     }
   } catch (pgErr) {
-    console.log(`ℹ️ [PostgreSQL] User table bootstrap bypassed: ${pgErr.message}`);
+    console.log(`[PostgreSQL] User table bootstrap bypassed: ${pgErr.message}`);
   }
 
   for (const cli of adminData.clients || []) {
@@ -375,11 +375,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     })
     .catch(async (err) => {
       console.error(
-        '❌ MongoDB connection failed during standalone seed execution:',
+        '[MongoDB] Connection failed during standalone seed execution:',
         err.message
       );
       console.log(
-        'ℹ️ Please verify that MONGODB_URI is reachable in your .env file.'
+        '[MongoDB] Please verify that MONGODB_URI is reachable in your .env file.'
       );
       try {
         await sequelize.close();

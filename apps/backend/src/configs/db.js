@@ -57,7 +57,7 @@ export const connectDB = async () => {
       `[PostgreSQL] Connection established successfully (${target}, SSL: ${enableSsl}).`
     );
   } catch (error) {
-    console.error('❌ Unable to connect to the database:', error);
+    console.error('[PostgreSQL] Unable to connect to the database:', error);
     throw error;
   }
 };

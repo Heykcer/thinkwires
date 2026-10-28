@@ -990,8 +990,11 @@ const AdminDashboard = () => {
                         <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>
                           {cand.name}
                         </span>
-                        <span className="tw-fit-badge-high">
-                          ⚡ {cand.calculatedScore}% {cand.matchBadge}
+                        <span className="tw-fit-badge-high" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '0.85rem' }}>
+                            bolt
+                          </span>
+                          <span>{cand.calculatedScore}% {cand.matchBadge}</span>
                         </span>
                         <span
                           style={{

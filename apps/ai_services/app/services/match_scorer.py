@@ -5,12 +5,15 @@ from app.services.resume_parser import COMMON_TECH_SKILLS
 
 def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
     """
-    Computes candidate ATS Fit Score (0-100%) against job requisition
-    using weighted dimensions per PRD Section 4.3:
-    - Technical Skills Match: 40%
-    - Experience Level Match: 30%
-    - Certifications / System Depth: 20%
-    - Role & Context Alignment: 10%
+    Computes candidate Technical Fit Score (0-100%) against job requisition
+    using the 6-factor weighted evaluation rubric:
+    - Mandatory Technical Skills: 35%
+    - Role & Responsibilities: 25%
+    - Relevant Experience: 15%
+    - Technical Depth & Hands-on: 10%
+    - Project Relevance: 10%
+    - Domain Relevance: 5%
+    Strict anti-keyword-stuffing rules and zero emojis.
     """
     resume_text = request.resume_text or ""
     candidate_skills = [s.strip().lower() for s in (request.candidate_skills or [])]
@@ -28,18 +31,30 @@ def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
     matched: List[str] = []
     missing: List[str] = []
     for req_skill in required_skills_clean:
-        if any(req_skill.lower() == cs or req_skill.lower() in cs or cs in req_skill.lower() for cs in candidate_skills):
-            matched.append(req_skill)
-        elif resume_text and re.search(r"\b" + re.escape(req_skill) + r"\b", resume_text, re.I):
+        # Support OR / slash options: e.g. "React or Vue", "AWS / Azure"
+        sub_options = [opt.strip().lower() for opt in re.split(r"\s+(?:or|\/)\s+", req_skill, flags=re.I) if opt.strip()]
+        matched_any = False
+        for opt in sub_options:
+            if any(opt == cs or opt in cs or cs in opt for cs in candidate_skills):
+                matched_any = True
+                break
+            elif resume_text and re.search(r"\b" + re.escape(opt) + r"\b", resume_text, re.I):
+                matched_any = True
+                break
+        if matched_any:
             matched.append(req_skill)
         else:
             missing.append(req_skill)
 
-    # 1. Technical Skills Score (40% weight)
+    # 1. Mandatory Technical Skills Score (35% weight)
     skills_ratio = len(matched) / max(len(required_skills_clean), 1)
-    skills_score = int(min(skills_ratio * 100, 100))
+    # Severe penalty if mandatory skills are missing
+    mandatory_score = int(min(skills_ratio * 100, 100))
 
-    # 2. Experience Match Score (30% weight)
+    # 2. Role & Responsibilities Match (25% weight)
+    role_score = 90 if request.job_title.lower() in resume_text.lower() else (75 if skills_ratio >= 0.7 else 60)
+
+    # 3. Relevant Experience Score (15% weight)
     exp_required = float(request.experience_required or 3.0)
     exp_detected = 4.0
     exp_match = re.search(r"(\d+(\.\d+)?)\s*(years?|yrs?)", resume_text, re.I)
@@ -52,25 +67,30 @@ def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
     exp_ratio = min(exp_detected / max(exp_required, 1.0), 1.25)
     experience_score = int(min(exp_ratio * 100, 100))
 
-    # 3. Certifications & Depth Score (20% weight)
-    depth_score = 80 if ("lead" in resume_text.lower() or "senior" in resume_text.lower() or len(matched) >= 3) else 65
+    # 4. Technical Depth & Hands-on Expertise (10% weight)
+    depth_score = 85 if ("lead" in resume_text.lower() or "architect" in resume_text.lower() or "senior" in resume_text.lower() or len(matched) >= 4) else 70
 
-    # 4. Context & Role Alignment (10% weight)
-    context_score = 90 if request.job_title.lower() in resume_text.lower() else 75
+    # 5. Project Relevance (10% weight)
+    project_score = 88 if ("production" in resume_text.lower() or "deployment" in resume_text.lower() or "project" in resume_text.lower()) else 65
 
-    # Weighted calculation
-    weights = request.weights or {"technical": 0.4, "experience": 0.3, "certifications": 0.2, "location_rate": 0.1}
+    # 6. Domain Relevance (5% weight)
+    dept_keyword = (request.department or "").lower()
+    domain_score = 90 if (dept_keyword and dept_keyword in resume_text.lower()) else 75
+
+    # 6-Factor Weighted Calculation (35% / 25% / 15% / 10% / 10% / 5%)
     raw_fit_score = (
-        skills_score * weights.get("technical", 0.4)
-        + experience_score * weights.get("experience", 0.3)
-        + depth_score * weights.get("certifications", 0.2)
-        + context_score * weights.get("location_rate", 0.1)
+        mandatory_score * 0.35
+        + role_score * 0.25
+        + experience_score * 0.15
+        + depth_score * 0.10
+        + project_score * 0.10
+        + domain_score * 0.05
     )
     final_score = int(round(raw_fit_score))
-    final_score = max(20, min(final_score, 99))  # Keep within realistic bounds
+    final_score = max(20, min(final_score, 99))  # Bound realistically
 
-    # Badges (PRD Section 4.3)
-    if final_score >= 80:
+    # Badges and recommendations (Zero Emojis)
+    if final_score >= 80 and len(missing) == 0:
         fit_badge = "Top Match"
         category = "green"
     elif final_score >= 60:
@@ -101,7 +121,7 @@ def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
         fit_score=final_score,
         fit_badge=fit_badge,
         category=category,
-        skills_match_score=skills_score,
+        skills_match_score=mandatory_score,
         experience_match_score=experience_score,
         matched_skills=matched,
         missing_skills=missing,

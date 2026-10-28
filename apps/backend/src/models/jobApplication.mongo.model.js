@@ -61,26 +61,36 @@ const jobApplicationSchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
+    avatarUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    anonymousCode: {
+      type: String,
+      default: '',
+      trim: true,
+    },
 
     // Basic Information
     lastName: {
       type: String,
-      required: [true, 'Last name is required'],
+      default: '',
       trim: true,
     },
     firstName: {
       type: String,
-      required: [true, 'First name is required'],
+      default: '',
       trim: true,
     },
     mobileNumber: {
       type: String,
-      required: [true, 'Mobile number is required'],
+      default: '',
       trim: true,
     },
     email: {
       type: String,
-      required: [true, 'Email address is required'],
+      default: '',
       lowercase: true,
       trim: true,
     },
@@ -241,6 +251,10 @@ const jobApplicationSchema = new mongoose.Schema(
       strengths: { type: [String], default: [] },
       growthAreas: { type: [String], default: [] },
       recommendation: { type: String, default: '' },
+    },
+    evaluationReport: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
     },
     assessment: {
       testId: { type: String, default: '' },

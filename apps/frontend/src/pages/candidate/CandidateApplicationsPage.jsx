@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
+import CandidateDossierModal from '../../components/candidate/CandidateDossierModal';
 import '../auth/auth.css';
 
 const CandidateApplicationsPage = () => {
@@ -19,6 +20,7 @@ const CandidateApplicationsPage = () => {
       : ''
   );
   const [assessmentModalApp, setAssessmentModalApp] = useState(null);
+  const [selectedDossierApp, setSelectedDossierApp] = useState(null);
   const [withdrawingId, setWithdrawingId] = useState(null);
   const [currentTime, setCurrentTime] = useState(() => Date.now());
 
@@ -353,38 +355,48 @@ const CandidateApplicationsPage = () => {
                         <td>{app.department || 'Engineering'}</td>
                         <td>{app.location || 'Remote'}</td>
                         <td>
-                          {app.fitScore != null ? (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedDossierApp(app)}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              padding: '0.25rem 0.6rem',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              border: '1px solid transparent',
+                              cursor: 'pointer',
+                              background:
+                                app.fitScore >= 75
+                                  ? '#DCFCE7'
+                                  : app.fitScore >= 50
+                                    ? '#FEF9C3'
+                                    : '#FEE2E2',
+                              color:
+                                app.fitScore >= 75
+                                  ? '#166534'
+                                  : app.fitScore >= 50
+                                    ? '#854D0E'
+                                    : '#991B1B',
+                              borderColor:
+                                app.fitScore >= 75
+                                  ? '#BBF7D0'
+                                  : app.fitScore >= 50
+                                    ? '#FEF08A'
+                                    : '#FECDD3',
+                            }}
+                            title="Click to view AI Evaluation Dossier"
+                          >
                             <span
-                              style={{
-                                display: 'inline-block',
-                                padding: '0.2rem 0.55rem',
-                                borderRadius: '6px',
-                                fontSize: '0.8rem',
-                                fontWeight: 600,
-                                background:
-                                  app.fitScore >= 75
-                                    ? '#DCFCE7'
-                                    : app.fitScore >= 50
-                                      ? '#FEF9C3'
-                                      : '#FEE2E2',
-                                color:
-                                  app.fitScore >= 75
-                                    ? '#166534'
-                                    : app.fitScore >= 50
-                                      ? '#854D0E'
-                                      : '#991B1B',
-                              }}
+                              className="material-symbols-outlined"
+                              style={{ fontSize: '0.95rem' }}
                             >
-                              {app.fitScore}%{' '}
-                              {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                              psychology
                             </span>
-                          ) : (
-                            <span
-                              style={{ color: '#94A3B8', fontSize: '0.82rem' }}
-                            >
-                              Calculated
-                            </span>
-                          )}
+                            <span>{app.fitScore != null ? `${app.fitScore}%` : 'View Dossier'}</span>
+                          </button>
                         </td>
                         <td>
                           {isWithdrawn ? (
@@ -574,6 +586,16 @@ const CandidateApplicationsPage = () => {
               );
               setNoticeMessage('Assessment submitted successfully.');
             }}
+          />
+        )}
+
+        {/* Candidate Evaluation Dossier Modal */}
+        {selectedDossierApp && (
+          <CandidateDossierModal
+            isOpen={Boolean(selectedDossierApp)}
+            onClose={() => setSelectedDossierApp(null)}
+            applicationId={selectedDossierApp._id || selectedDossierApp.id}
+            applicationData={selectedDossierApp}
           />
         )}
       </main>

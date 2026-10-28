@@ -8,12 +8,16 @@ import {
   getApplicationAssessment,
   submitApplicationAssessment,
   withdrawApplication,
+  getApplicationDossier,
+  uploadAvatar,
+  setAvatarPreset,
+  removeAvatar,
 } from '../controllers/candidatePortal.controller.js';
 import {
   requireCandidateAuth,
   optionalCandidateAuth,
 } from '../middlewares/auth.middleware.js';
-import { resumeUpload } from '../middlewares/upload.middleware.js';
+import { resumeUpload, avatarUpload } from '../middlewares/upload.middleware.js';
 import { isAllowedOrigin } from '../middlewares/csrf.middleware.js';
 import rateLimit from 'express-rate-limit';
 
@@ -83,5 +87,11 @@ router.post(
   '/applications/:applicationId/assessment/submit',
   submitApplicationAssessment
 );
+
+// Evaluation Dossier & Avatar Routes
+router.get('/applications/:applicationId/dossier', getApplicationDossier);
+router.post('/avatar/upload', avatarUpload.single('avatar'), uploadAvatar);
+router.put('/avatar/preset', setAvatarPreset);
+router.delete('/avatar', removeAvatar);
 
 export default router;

@@ -376,6 +376,38 @@ export const applyForJob = async (req, res) => {
         );
       }
 
+      let evaluationReportResult = null;
+      try {
+        evaluationReportResult = await aiService.evaluateCandidate(
+          {
+            candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
+            skills: parsedSkills,
+            resumeText:
+              candidateNote ||
+              coverLetter ||
+              `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
+            experience: totalExperienceYears || experience || 3,
+            totalExperienceYears: totalExperienceYears || experience || 3,
+            noticePeriod,
+            expectedSalary: expectedCTC || '',
+          },
+          {
+            jobTitle,
+            department: department || 'Engineering',
+            company: 'Thinkwires Enterprise Client',
+            requiredSkills: parsedSkills,
+            experienceRequired: Number(totalExperienceYears) || 3,
+          }
+        );
+      } catch (evalErr) {
+        console.warn('AI Evaluation report non-blocking warning:', evalErr.message);
+      }
+
+      const deptPrefix = (department || 'ENG').substring(0, 3).toUpperCase();
+      const randomSuffix = Math.floor(100 + Math.random() * 900);
+      const generatedAnonymousCode = `TW-${deptPrefix}-${randomSuffix}`;
+      const candidateAvatar = (candidate && candidate.avatarUrl) || '';
+
       const application = await JobApplication.create({
         candidate: candidateId,
         jobId: String(jobId),
@@ -388,6 +420,8 @@ export const applyForJob = async (req, res) => {
         resumeFileName,
         resumePath,
         resumeUrl: finalResumeUrl,
+        avatarUrl: candidateAvatar,
+        anonymousCode: generatedAnonymousCode,
         lastName: resolvedLastName,
         firstName: resolvedFirstName,
         mobileNumber: resolvedMobile,
@@ -418,17 +452,18 @@ export const applyForJob = async (req, res) => {
           ? `${totalExperienceYears} Years`
           : experience || '3 - 5 Years',
         coverLetter: candidateNote || coverLetter || '',
-        fitScore: matchScoreResult.fit_score,
-        fitBadge: matchScoreResult.fit_badge,
+        fitScore: (evaluationReportResult && evaluationReportResult.overallMatchScore) || matchScoreResult.fit_score,
+        fitBadge: (evaluationReportResult && evaluationReportResult.overallMatchTier === 'Strong Fit') ? 'Top Match' : matchScoreResult.fit_badge,
         aiAnalysis: {
           skillsMatch: matchScoreResult.skills_match_score || 0,
           experienceMatch: matchScoreResult.experience_match_score || 0,
           matchedSkills: matchScoreResult.matched_skills || [],
           missingSkills: matchScoreResult.missing_skills || [],
-          strengths: matchScoreResult.strengths || [],
-          growthAreas: matchScoreResult.growth_areas || [],
-          recommendation: matchScoreResult.recommendation || '',
+          strengths: (evaluationReportResult && evaluationReportResult.strengths) || matchScoreResult.strengths || [],
+          growthAreas: (evaluationReportResult && evaluationReportResult.gapsAndRisks?.technicalGaps) || matchScoreResult.growth_areas || [],
+          recommendation: (evaluationReportResult && evaluationReportResult.recommendation) || matchScoreResult.recommendation || '',
         },
+        evaluationReport: evaluationReportResult || {},
         assessment: assessmentResult || {},
         assessmentStatus: 'Not Started',
         status: 'Applied',
@@ -912,3 +947,213 @@ export const withdrawApplication = async (req, res) => {
     });
   }
 };
+
+/**
+ * Retrieve Candidate Evaluation Dossier for a specific application
+ * GET /api/candidate/applications/:applicationId/dossier
+ */
+export const getApplicationDossier = async (req, res) => {
+  try {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+    const { applicationId } = req.params;
+
+    let application = null;
+    if (mongoose.connection.readyState === 1) {
+      application = await JobApplication.findOne({
+        _id: applicationId,
+        $or: [{ candidate: candidateId }, { email: req.candidate?.email }],
+      });
+    } else {
+      application = localDevApplications.find(
+        (a) =>
+          (String(a._id) === String(applicationId) ||
+            String(a.id) === String(applicationId)) &&
+          String(a.candidate) === String(candidateId)
+      );
+    }
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        error: 'Application not found or unauthorized to view this dossier.',
+      });
+    }
+
+    // If evaluationReport does not exist yet, generate it on demand
+    let dossier = application.evaluationReport;
+    if (!dossier || !dossier.overallMatchScore) {
+      dossier = await aiService.evaluateCandidate(
+        {
+          candidateName:
+            application.candidateName ||
+            `${application.firstName || ''} ${application.lastName || ''}`.trim(),
+          skills: application.skills || [],
+          resumeText: application.candidateNote || application.coverLetter || '',
+          experience:
+            application.totalExperienceYears || application.experience || 3,
+          noticePeriod: application.noticePeriod,
+          expectedSalary: application.expectedCTC,
+        },
+        {
+          jobTitle: application.jobTitle,
+          department: application.department,
+          company: 'Thinkwires Enterprise Client',
+          requiredSkills: application.skills || [],
+          experienceRequired: 3,
+        }
+      );
+
+      if (mongoose.connection.readyState === 1) {
+        await JobApplication.findByIdAndUpdate(application._id, {
+          evaluationReport: dossier,
+          fitScore: dossier.overallMatchScore,
+        });
+      }
+      application.evaluationReport = dossier;
+    }
+
+    return res.status(200).json({
+      success: true,
+      dossier,
+      candidate: {
+        name:
+          application.candidateName ||
+          `${application.firstName || ''} ${application.lastName || ''}`.trim(),
+        avatarUrl: req.candidate?.avatarUrl || application.avatarUrl || '',
+        avatarType: req.candidate?.avatarType || 'initials',
+        email: application.email,
+        jobTitle: application.jobTitle,
+        department: application.department,
+        appliedAt: application.createdAt || application.appliedAt,
+      },
+    });
+  } catch (error) {
+    console.error('Get application dossier error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve evaluation dossier.',
+    });
+  }
+};
+
+/**
+ * Upload Custom Profile Avatar Photo
+ * POST /api/candidate/avatar/upload
+ */
+export const uploadAvatar = async (req, res) => {
+  try {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please select an image file (JPG, PNG, WebP) to upload.',
+      });
+    }
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+    if (mongoose.connection.readyState === 1) {
+      await Candidate.findByIdAndUpdate(candidateId, {
+        avatarUrl,
+        avatarType: 'upload',
+      });
+      // Also update candidate applications
+      await JobApplication.updateMany(
+        { candidate: candidateId },
+        { avatarUrl }
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Avatar photo uploaded successfully.',
+      avatarUrl,
+      avatarType: 'upload',
+    });
+  } catch (error) {
+    console.error('Upload avatar error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to upload avatar photo.',
+    });
+  }
+};
+
+/**
+ * Select from Curated Engineer Preset Avatars
+ * PUT /api/candidate/avatar/preset
+ */
+export const setAvatarPreset = async (req, res) => {
+  try {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+    const { presetId, presetUrl } = req.body;
+
+    if (!presetUrl && !presetId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Preset identifier is required.',
+      });
+    }
+
+    const targetUrl = presetUrl || `/avatars/presets/${presetId}.svg`;
+
+    if (mongoose.connection.readyState === 1) {
+      await Candidate.findByIdAndUpdate(candidateId, {
+        avatarUrl: targetUrl,
+        avatarType: 'preset',
+      });
+      await JobApplication.updateMany(
+        { candidate: candidateId },
+        { avatarUrl: targetUrl }
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Avatar preset selected successfully.',
+      avatarUrl: targetUrl,
+      avatarType: 'preset',
+    });
+  } catch (error) {
+    console.error('Set avatar preset error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update avatar preset.',
+    });
+  }
+};
+
+/**
+ * Remove Avatar Photo (Reset to Dynamic Initials Monogram)
+ * DELETE /api/candidate/avatar
+ */
+export const removeAvatar = async (req, res) => {
+  try {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+
+    if (mongoose.connection.readyState === 1) {
+      await Candidate.findByIdAndUpdate(candidateId, {
+        avatarUrl: '',
+        avatarType: 'initials',
+      });
+      await JobApplication.updateMany(
+        { candidate: candidateId },
+        { avatarUrl: '' }
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Avatar reset to initials monogram.',
+      avatarUrl: '',
+      avatarType: 'initials',
+    });
+  } catch (error) {
+    console.error('Remove avatar error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to reset avatar.',
+    });
+  }
+};
+

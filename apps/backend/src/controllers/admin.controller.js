@@ -15,6 +15,7 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
+import aiService from '../services/ai.service.js';
 import {
   hashPassword,
   comparePassword,
@@ -56,7 +57,7 @@ try {
   }
 } catch (e) {
   console.warn(
-    '⚠️ Could not load adminSeedData.json into in-memory store:',
+    '[Admin Seed] Could not load adminSeedData.json into in-memory store:',
     e.message
   );
 }
@@ -749,6 +750,10 @@ export const getCandidates = async (req, res) => {
           screeningPassed: app.screeningPassed ?? false,
           fitScore: app.fitScore || (cand && cand.fitScore) || 85,
           fitBadge: app.fitBadge || 'Top Match',
+          avatarUrl: app.avatarUrl || (cand && cand.avatarUrl) || '',
+          avatarType: (cand && cand.avatarType) || 'initials',
+          anonymousCode: app.anonymousCode || (cand && cand.benchAvatarCode) || 'TW-ENG-01',
+          evaluationReport: app.evaluationReport || null,
           resumeUrl: app.resumeUrl || (cand && cand.resumeUrl) || '',
           resumeOriginalName: app.resumeOriginalName || '',
           notes: app.candidateNote || app.notes || (cand && cand.bio) || '',
@@ -779,6 +784,10 @@ export const getCandidates = async (req, res) => {
           assessmentScore: cand.assessmentScore || null,
           fitScore: cand.fitScore || 85,
           fitBadge: 'Top Match',
+          avatarUrl: cand.avatarUrl || '',
+          avatarType: cand.avatarType || 'initials',
+          anonymousCode: cand.benchAvatarCode || 'TW-CAND-01',
+          evaluationReport: null,
           resumeUrl: cand.resumeUrl || '',
           notes: cand.notes || cand.bio || '',
           createdAt: cand.createdAt || new Date().toISOString(),
@@ -820,6 +829,209 @@ export const getCandidates = async (req, res) => {
     res.json({ success: true, candidates: items });
   } catch (err) {
     console.error('getCandidates error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+/**
+ * Retrieve Full Unredacted Candidate Evaluation Dossier for Admins
+ * GET /api/admin/candidates/:id/dossier
+ */
+export const getCandidateDossier = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    let candidate = null;
+    let application = null;
+
+    if (isMongoActive()) {
+      application = await JobApplication.findById(id).populate('candidate').lean();
+      if (!application) {
+        candidate = await Candidate.findById(id).lean();
+        if (candidate) {
+          application = await JobApplication.findOne({ candidate: id }).sort({ createdAt: -1 }).lean();
+        }
+      } else {
+        candidate = application.candidate;
+      }
+    } else {
+      application = inMemoryData.candidates.find(
+        (c) => String(c.id) === String(id) || String(c._id) === String(id)
+      );
+    }
+
+    if (!application && !candidate) {
+      return res.status(404).json({ success: false, error: 'Candidate or Application record not found.' });
+    }
+
+    let dossier = application?.evaluationReport;
+    if (!dossier || !dossier.overallMatchScore) {
+      const candName = (application?.candidateName || candidate?.name || 'Applicant Candidate').trim();
+      const skills = (application?.skills && application.skills.length > 0)
+        ? application.skills
+        : (candidate?.technicalSkills || []);
+      const resumeText = application?.candidateNote || application?.coverLetter || candidate?.bio || '';
+      const exp = application?.totalExperienceYears || candidate?.experience || 4;
+      const targetRole = application?.jobTitle || candidate?.currentRole || 'Software Professional';
+      const dept = application?.department || 'Engineering';
+
+      dossier = await aiService.evaluateCandidate(
+        {
+          candidateName: candName,
+          skills,
+          resumeText,
+          experience: exp,
+          noticePeriod: application?.noticePeriod || candidate?.noticePeriod || '30 Days',
+          expectedSalary: application?.expectedCTC || candidate?.expectedSalary || 'Market Standard',
+        },
+        {
+          jobTitle: targetRole,
+          department: dept,
+          company: 'Thinkwires Client Mandate',
+          requiredSkills: skills.length > 0 ? skills : ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+          experienceRequired: Math.max(3, Number(exp) - 1),
+        }
+      );
+
+      if (isMongoActive() && application?._id) {
+        await JobApplication.findByIdAndUpdate(application._id, {
+          evaluationReport: dossier,
+          fitScore: dossier.overallMatchScore,
+        });
+      }
+    }
+
+    const candidateSummary = {
+      id: String(application?._id || candidate?._id || id),
+      name: (application?.candidateName || candidate?.name || 'Applicant Candidate').trim(),
+      email: application?.email || candidate?.email || '',
+      phone: application?.mobileNumber || candidate?.phone || '',
+      avatarUrl: application?.avatarUrl || candidate?.avatarUrl || '',
+      avatarType: candidate?.avatarType || 'initials',
+      anonymousCode: application?.anonymousCode || candidate?.benchAvatarCode || 'TW-DE-01',
+      jobTitle: application?.jobTitle || candidate?.currentRole || 'Software Professional',
+      department: application?.department || 'Engineering',
+      currentEmployer: application?.currentEmployer || 'Private Global Enterprise',
+      expectedSalary: application?.expectedCTC || candidate?.expectedSalary || 'Market Standard',
+      noticePeriod: application?.noticePeriod || candidate?.noticePeriod || '30 Days',
+      resumeUrl: application?.resumeUrl || candidate?.resumeUrl || '',
+    };
+
+    return res.json({
+      success: true,
+      candidate: candidateSummary,
+      dossier,
+    });
+  } catch (err) {
+    console.error('getCandidateDossier error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+/**
+ * Re-Evaluate Candidate Dossier Incorporating Recruiter Notes
+ * POST /api/admin/candidates/:id/re-evaluate
+ */
+export const reEvaluateCandidate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { recruiterNotes } = req.body;
+
+    let application = null;
+    let candidate = null;
+
+    if (isMongoActive()) {
+      application = await JobApplication.findById(id).populate('candidate');
+      if (!application) {
+        candidate = await Candidate.findById(id);
+        if (candidate) {
+          application = await JobApplication.findOne({ candidate: id }).sort({ createdAt: -1 });
+        }
+      } else {
+        candidate = application.candidate;
+      }
+    }
+
+    const candName = (application?.candidateName || candidate?.name || 'Applicant Candidate').trim();
+    const skills = (application?.skills && application.skills.length > 0)
+      ? application.skills
+      : (candidate?.technicalSkills || []);
+    const resumeText = `${application?.candidateNote || application?.coverLetter || candidate?.bio || ''} ${recruiterNotes || ''}`;
+    const exp = application?.totalExperienceYears || candidate?.experience || 4;
+    const targetRole = application?.jobTitle || candidate?.currentRole || 'Software Professional';
+    const dept = application?.department || 'Engineering';
+
+    const updatedDossier = await aiService.evaluateCandidate(
+      {
+        candidateName: candName,
+        skills,
+        resumeText,
+        experience: exp,
+        noticePeriod: application?.noticePeriod || candidate?.noticePeriod || '30 Days',
+        expectedSalary: application?.expectedCTC || candidate?.expectedSalary || 'Market Standard',
+      },
+      {
+        jobTitle: targetRole,
+        department: dept,
+        company: 'Thinkwires Client Mandate',
+        requiredSkills: skills.length > 0 ? skills : ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+        experienceRequired: Math.max(3, Number(exp) - 1),
+      },
+      recruiterNotes || ''
+    );
+
+    if (isMongoActive() && application?._id) {
+      await JobApplication.findByIdAndUpdate(
+        application._id,
+        {
+          $set: {
+            evaluationReport: updatedDossier,
+            fitScore: updatedDossier.overallMatchScore,
+          },
+        },
+        { runValidators: false, new: true }
+      );
+      if (candidate?._id) {
+        await Candidate.findByIdAndUpdate(
+          candidate._id,
+          { $set: { fitScore: updatedDossier.overallMatchScore } },
+          { runValidators: false }
+        );
+      }
+    } else {
+      const inMemTalent = inMemoryData.candidates?.find(
+        (c) => c.id === id || c.code === id
+      );
+      if (inMemTalent) {
+        inMemTalent.dossier = updatedDossier;
+        inMemTalent.fitScore = updatedDossier.overallMatchScore;
+      }
+    }
+
+    const candidateSummary = {
+      id: String(application?._id || candidate?._id || id),
+      name: candName,
+      email: application?.email || candidate?.email || '',
+      phone: application?.mobileNumber || candidate?.phone || '',
+      avatarUrl: application?.avatarUrl || candidate?.avatarUrl || '',
+      avatarType: candidate?.avatarType || 'initials',
+      anonymousCode: application?.anonymousCode || candidate?.benchAvatarCode || 'TW-CAND',
+      jobTitle: targetRole,
+      department: dept,
+      currentEmployer: application?.currentEmployer || 'Private Global Enterprise',
+      expectedSalary: application?.expectedCTC || candidate?.expectedSalary || 'Market Standard',
+      noticePeriod: application?.noticePeriod || candidate?.noticePeriod || '30 Days',
+      resumeUrl: application?.resumeUrl || candidate?.resumeUrl || '',
+    };
+
+    return res.json({
+      success: true,
+      message: 'Candidate dossier re-evaluated successfully incorporating recruiter notes.',
+      candidate: candidateSummary,
+      dossier: updatedDossier,
+    });
+  } catch (err) {
+    console.error('reEvaluateCandidate error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 };

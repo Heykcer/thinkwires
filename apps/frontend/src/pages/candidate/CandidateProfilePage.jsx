@@ -7,6 +7,7 @@ import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import './candidate.css';
 import '../auth/auth.css';
+import AvatarManagerModal from '../../components/candidate/AvatarManagerModal';
 
 const POPULAR_SKILL_SUGGESTIONS = [
   'React',
@@ -52,6 +53,7 @@ const CandidateProfilePage = () => {
   const [resumeNotice, setResumeNotice] = useState('');
   const [resumeError, setResumeError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
 
   // Compute profile initials
   const initials = useMemo(() => {
@@ -474,32 +476,99 @@ const CandidateProfilePage = () => {
         {/* Profile Identity & Completeness Hero */}
         <div className="tw-profile-hero">
           <div className="tw-profile-identity">
-            <div className="tw-profile-avatar">
-              {initials}
+            <div
+              className="tw-profile-avatar"
+              style={{
+                position: 'relative',
+                cursor: 'pointer',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onClick={() => setIsAvatarModalOpen(true)}
+              title="Click to manage profile avatar"
+            >
+              {user?.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={formData.name || 'Candidate Avatar'}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                initials
+              )}
               <span
                 className="tw-avatar-status-dot"
                 title="Profile Active"
               ></span>
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundColor: 'rgba(15, 23, 42, 0.45)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0,
+                  transition: 'opacity 0.2s ease',
+                  borderRadius: '50%',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ color: '#FFFFFF', fontSize: '1.25rem' }}
+                >
+                  photo_camera
+                </span>
+              </div>
             </div>
             <div className="tw-profile-names">
-              <h1>
-                {formData.name || user?.name || 'Candidate Profile'}
-                <span className="tw-profile-verified-badge">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Verified Talent
-                </span>
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <h1>
+                  {formData.name || user?.name || 'Candidate Profile'}
+                  <span className="tw-profile-verified-badge">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Verified Talent
+                  </span>
+                </h1>
+                <button
+                  type="button"
+                  onClick={() => setIsAvatarModalOpen(true)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '20px',
+                    border: '1px solid #CBD5E1',
+                    background: '#FFFFFF',
+                    color: '#0037B0',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                  title="Change avatar or photo"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '0.95rem' }}>
+                    palette
+                  </span>
+                  Avatar
+                </button>
+              </div>
               <p className="tw-profile-subline">
                 <span>
                   {formData.currentRole ||
@@ -1384,6 +1453,12 @@ const CandidateProfilePage = () => {
             </div>
           </div>
         </form>
+
+        {/* Avatar Manager Modal */}
+        <AvatarManagerModal
+          isOpen={isAvatarModalOpen}
+          onClose={() => setIsAvatarModalOpen(false)}
+        />
       </main>
 
       <Footer />

@@ -8,7 +8,9 @@ import JobRequirement from '../models/job.mongo.model.js';
 import Article from '../models/article.mongo.model.js';
 import Page from '../models/page.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
+import JobApplication from '../models/jobApplication.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
+import aiService from '../services/ai.service.js';
 import { logger } from '../utils/logger.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
@@ -967,7 +969,7 @@ router.post('/contact/message', publicSubmissionRateLimiter, (req, res) => {
       .status(400)
       .json({ error: 'Full name, work email, and inquiry type are required' });
   }
-  console.log('📨 New Contact Us Submission:', req.body);
+  console.log('[Contact Us] New Submission:', req.body);
   res.json({
     success: true,
     message:
@@ -1383,6 +1385,75 @@ router.get('/bench/talents/:id', async (req, res) => {
   }
 });
 
+router.get('/bench/dossier/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const benchSource = await getPageDataBySlug('bench', bench);
+    const rawCandidates = benchSource.candidates || benchSource.talents || [];
+    const talent = rawCandidates.find(
+      (t) => t.id === id || t.code === id
+    );
+
+    let application = null;
+    let candidate = null;
+
+    if (isMongoActive()) {
+      const isValidId = mongoose.isValidObjectId(id);
+      application = await JobApplication.findOne({
+        $or: [{ anonymousCode: id }, { _id: isValidId ? id : null }],
+      }).lean();
+
+      if (!application && isValidId) {
+        candidate = await Candidate.findById(id).lean();
+      }
+    }
+
+    const targetRole = talent?.role || application?.jobTitle || candidate?.currentRole || 'Technical Specialist';
+    const code = talent?.code || application?.anonymousCode || id;
+
+    let rawDossier = application?.evaluationReport || talent?.dossier;
+    if (!rawDossier || !rawDossier.overallMatchScore) {
+      rawDossier = await aiService.evaluateCandidate(
+        {
+          candidateName: `Candidate ${code}`,
+          skills: talent?.skills || application?.skills || candidate?.technicalSkills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+          resumeText: talent?.engineeringProof || application?.candidateNote || candidate?.bio || '',
+          experience: talent?.years || candidate?.experience || 5,
+          noticePeriod: talent?.noticePeriod || candidate?.noticePeriod || 'Immediate',
+        },
+        {
+          jobTitle: targetRole,
+          department: talent?.specialty || application?.department || 'Engineering',
+          company: 'Thinkwires Talent Cloud',
+          requiredSkills: talent?.skills || application?.skills || candidate?.technicalSkills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+          experienceRequired: 5,
+        }
+      );
+    }
+
+    const sanitizedDossier = aiService.sanitizeDossierForBench(rawDossier, code, targetRole);
+
+    res.json({
+      success: true,
+      talent: {
+        id: code,
+        code,
+        role: targetRole,
+        initials: talent?.initials || 'TW',
+        location: talent?.location || candidate?.location || 'Remote Global',
+        experience: talent?.yearsExp || talent?.experience || `${candidate?.experience || 5}+ Yrs Exp`,
+        noticePeriod: talent?.noticePeriod || candidate?.noticePeriod || 'Immediate',
+        hourlyRate: talent?.hourlyRate || '$65 - $85/hr',
+        skills: talent?.skills || application?.skills || candidate?.technicalSkills || [],
+      },
+      dossier: sanitizedDossier,
+    });
+  } catch (err) {
+    console.error('Bench dossier error:', err);
+    res.status(500).json({ success: false, error: 'Failed to retrieve bench dossier.' });
+  }
+});
+
 router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => {
   const {
     talentId,
@@ -1397,7 +1468,7 @@ router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => 
       .status(400)
       .json({ error: 'Talent code and work email are required' });
   }
-  console.log('⚡ Bench Interview Booked:', {
+  console.log('[Bench] Interview Booked:', {
     talentId,
     talentCode,
     workEmail,
@@ -1789,7 +1860,7 @@ const handleConsultationSubmission = async (req, res) => {
   };
 
   consultationSubmissions.push(submission);
-  logger.info('⚡ Strategy Consultation Scheduled:', submission);
+  logger.info('[Consultation] Strategy Scheduled:', submission);
 
   if (isMongoActive()) {
     try {
@@ -1867,7 +1938,7 @@ router.post('/payroll/consultation', publicSubmissionRateLimiter, (req, res) => 
       .status(400)
       .json({ error: 'Company name, full name, and email are required.' });
   }
-  console.log('📋 New Payroll Outsourcing Consultation Request:', {
+  console.log('[Payroll] New Consultation Request:', {
     companyName,
     fullName,
     employeeSize,
@@ -1925,7 +1996,7 @@ router.post('/eor/consultation', publicSubmissionRateLimiter, (req, res) => {
       .status(400)
       .json({ error: 'Full name, work email, and company name are required.' });
   }
-  console.log('🌐 New EOR Consultation Request:', {
+  console.log('[EOR] New Consultation Request:', {
     fullName,
     workEmail,
     companyName,
@@ -1988,7 +2059,7 @@ router.post('/staff-augmentation/consultation', publicSubmissionRateLimiter, (re
       .status(400)
       .json({ error: 'Name, email, and company name are required.' });
   }
-  console.log('🚀 New Staff Augmentation Workforce Strategy Request:', {
+  console.log('[Staff Augmentation] New Strategy Request:', {
     name,
     email,
     phone,
@@ -2068,7 +2139,7 @@ router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (re
       .status(400)
       .json({ error: 'Full name, work email, and company name are required.' });
   }
-  console.log('🏛️ New Executive Search Mandate Request:', {
+  console.log('[Executive Search] New Mandate Request:', {
     fullName,
     workEmail,
     companyName,
@@ -2101,7 +2172,7 @@ router.post('/executive-search/consultation', publicSubmissionRateLimiter, (req,
       .status(400)
       .json({ error: 'Full name, work email, and company name are required.' });
   }
-  console.log('🏛️ New Executive Search Mandate Request:', {
+  console.log('[Executive Search] New Mandate Request:', {
     fullName,
     workEmail,
     companyName,

@@ -54,6 +54,19 @@ const candidateSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    avatarUrl: {
+      type: String,
+      default: '',
+    },
+    avatarType: {
+      type: String,
+      enum: ['upload', 'preset', 'monogram', 'initials'],
+      default: 'initials',
+    },
+    benchAvatarCode: {
+      type: String,
+      default: 'TW',
+    },
     portfolioUrl: {
       type: String,
       default: '',

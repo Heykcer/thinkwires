@@ -913,7 +913,7 @@ const RequisitionsView = () => {
                                 textDecoration: 'none',
                               }}
                             >
-                              📞 {reqItem.contactPhone}
+                              <span className="material-symbols-outlined" style={{ fontSize: '0.8rem', verticalAlign: 'middle' }}>call</span> {reqItem.contactPhone}
                             </a>
                           )}
                         </div>
@@ -1249,7 +1249,7 @@ const RequisitionsView = () => {
                               href={`tel:${reqItem.contactPhone}`}
                               style={{ color: '#64748B', textDecoration: 'none' }}
                             >
-                              📞 {reqItem.contactPhone}
+                              <span className="material-symbols-outlined" style={{ fontSize: '0.8rem', verticalAlign: 'middle' }}>call</span> {reqItem.contactPhone}
                             </a>
                           )}
                         </div>
@@ -1486,7 +1486,7 @@ const RequisitionsView = () => {
                           marginTop: '0.15rem',
                         }}
                       >
-                        🏢 <strong>{approvalModalReq.client}</strong>
+                        <span className="material-symbols-outlined" style={{ fontSize: '0.85rem', verticalAlign: 'middle', marginRight: '3px' }}>domain</span><strong>{approvalModalReq.client}</strong>
                         {approvalModalReq.contactPerson
                           ? ` • Lead: ${approvalModalReq.contactPerson}`
                           : ''}
@@ -2312,8 +2312,9 @@ const RequisitionsView = () => {
                         >
                           {cand.name}
                         </span>
-                        <span className="tw-fit-badge-high">
-                          ⚡ {cand.calculatedScore}% {cand.matchBadge}
+                        <span className="tw-fit-badge-high" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '0.85rem' }}>bolt</span>
+                          <span>{cand.calculatedScore}% {cand.matchBadge}</span>
                         </span>
                         <span
                           style={{
