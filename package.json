@@ -8,16 +8,21 @@
   "packageManager": "npm@11.7.0",
   "scripts": {
     "start": "npm --prefix apps/backend start",
-    "build": "turbo build",
+    "build": "npm run build:frontend",
     "build:frontend": "npm --prefix apps/frontend run build",
     "build:backend": "npm --prefix apps/backend run build",
     "vercel-build": "npm run build:frontend",
-    "dev": "turbo dev",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm --prefix apps/backend run dev\" \"npm --prefix apps/frontend run dev\"",
+    "dev:all": "concurrently -n backend,frontend,ai -c blue,green,magenta \"npm --prefix apps/backend run dev\" \"npm --prefix apps/frontend run dev\" \"npm --prefix apps/ai_services run dev\"",
+    "dev:backend": "npm --prefix apps/backend run dev",
+    "dev:frontend": "npm --prefix apps/frontend run dev",
+    "dev:ai": "npm --prefix apps/ai_services run dev",
     "seed": "npm --prefix apps/backend run seed",
-    "lint": "turbo lint",
-    "test": "turbo test",
-    "test:e2e": "turbo test:e2e",
-    "test:system": "turbo test:system",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:unit": "npm --prefix apps/backend run test:unit",
+    "test:e2e": "npm --prefix apps/frontend run test:e2e",
+    "test:system": "npm --prefix apps/backend run test:system",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate": "npm --prefix apps/backend run migrate",
@@ -57,8 +62,8 @@
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
-    "prettier": "^3.9.9",
-    "turbo": "^2.11.7"
+    "concurrently": "^9.1.2",
+    "prettier": "^3.9.9"
   },
   "optionalDependencies": {
     "@rolldown/binding-darwin-arm64": "^1.2.11",
