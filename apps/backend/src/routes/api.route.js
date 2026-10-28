@@ -23,17 +23,17 @@ const __dirname = path.dirname(__filename);
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
 // Robustly load mockData across environments (local, tests, monorepo, Vercel Serverless)
-const mockData = loadSeedJson('mockData.json');
+const mockData = loadSeedJson('mockData.json', {}) || {};
 const {
-  initialTechStack,
-  initialOpenings,
-  industriesData,
-  processData,
-  capabilitiesData,
-  reportsData,
-  statsData,
-  benefitsData,
-  faqsData,
+  initialTechStack = [],
+  initialOpenings = [],
+  industriesData = [],
+  processData = [],
+  capabilitiesData = [],
+  reportsData = [],
+  statsData = {},
+  benefitsData = [],
+  faqsData = [],
   articlesData = [],
   featuredArticleData = null,
   researchersData = [],
@@ -81,13 +81,13 @@ const publicSubmissionRateLimiter = rateLimit({
 });
 
 // Mutable in-memory state for fallback & instant local responses
-let techStack = [...initialTechStack];
-let openings = [...initialOpenings];
-let stats = { ...statsData };
-let industries = [...industriesData];
-let processSteps = [...processData];
-let capabilities = [...capabilitiesData];
-let reports = [...reportsData];
+let techStack = [...(initialTechStack || [])];
+let openings = [...(initialOpenings || [])];
+let stats = { ...(statsData || {}) };
+let industries = [...(industriesData || [])];
+let processSteps = [...(processData || [])];
+let capabilities = [...(capabilitiesData || [])];
+let reports = [...(reportsData || [])];
 let benefits = benefitsData ? [...benefitsData] : [];
 let faqs = faqsData ? [...faqsData] : [];
 let articles = articlesData ? [...articlesData] : [];

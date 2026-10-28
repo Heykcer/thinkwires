@@ -1,9 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
+
+// Static require allows @vercel/nft to trace and bundle these JSON seed files into the serverless deployment artifact
+let staticMockData = null;
+try {
+  staticMockData = require('../seeds/mockData.json');
+} catch {
+  // Handled dynamically if missing
+}
+
+let staticAdminData = null;
+try {
+  staticAdminData = require('../seeds/adminSeedData.json');
+} catch {
+  // Handled dynamically if missing
+}
 
 /**
  * Robustly resolves and loads JSON seed files across various execution environments:
@@ -14,6 +31,13 @@ const __dirname = path.dirname(__filename);
  * @returns {Object} Parsed JSON data or defaultValue
  */
 export const loadSeedJson = (filename, defaultValue = {}) => {
+  if (filename === 'mockData.json' && staticMockData) {
+    return staticMockData;
+  }
+  if (filename === 'adminSeedData.json' && staticAdminData) {
+    return staticAdminData;
+  }
+
   const candidatePaths = [
     // Standard relative path from src/utils -> src/seeds
     path.resolve(__dirname, '..', 'seeds', filename),
@@ -43,4 +67,3 @@ export const loadSeedJson = (filename, defaultValue = {}) => {
 };
 
 export default loadSeedJson;
-
