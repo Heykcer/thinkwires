@@ -1,8 +1,8 @@
+import API_BASE from '../../utils/apiConfig';
 import React, { useState } from 'react';
 import ApplyModal from './ApplyModal';
 
-const API_BASE =
-  import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
+// API_BASE is imported from apiConfig
 
 const CTA = () => {
   const [email, setEmail] = useState('');

@@ -1,6 +1,8 @@
+import API_BASE from '../../utils/apiConfig';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+// Resolved safely via apiConfig (defaults to relative '/api' on production)
+// API_BASE is imported above
 
 export const fallbackStaffAugmentationData = {
   hero: {
