@@ -102,13 +102,21 @@ apps/ai_services/
 
 Settings are centralized in `app/config.py` and loaded via `python-dotenv`:
 
-| Environment Variable | Default Value | Description                                      |
-| -------------------- | ------------- | ------------------------------------------------ |
-| `HOST`               | `0.0.0.0`     | Network interface binding for Uvicorn            |
-| `PORT`               | `8000`        | Port on which the AI microservice listens        |
-| `DEBUG`              | `false`       | Enables verbose debug logging and auto-reloading |
-| `OPENAI_API_KEY`     | `""`          | OpenAI API Secret Key for GPT-4o-mini invocation |
-| `OPENAI_MODEL`       | `gpt-4o-mini` | Targeted LLM model for structured parsing        |
+| Environment Variable   | Default Value                           | Description                                                          |
+| ---------------------- | --------------------------------------- | -------------------------------------------------------------------- |
+| `HOST`                 | `0.0.0.0`                               | Network interface binding for Uvicorn                                |
+| `PORT`                 | `8000`                                  | Port on which the AI microservice listens                            |
+| `DEBUG`                | `false`                                 | Enables verbose debug logging and auto-reloading                     |
+| `PRIMARY_LLM_PROVIDER` | `auto`                                  | Primary provider preference (`auto`, `groq`, `gemini`, `openrouter`) |
+| `GROQ_API_KEY`         | `""`                                    | Free Groq Cloud API key (Meta Llama 3.3 70B / 3.1 8B)                |
+| `GROQ_MODEL`           | `llama-3.3-70b-versatile`               | Targeted Groq model                                                  |
+| `GEMINI_API_KEY`       | `""`                                    | Free Google Gemini API key (Google AI Studio)                        |
+| `GEMINI_MODEL`         | `gemini-1.5-flash`                      | Targeted Gemini model                                                |
+| `OPENROUTER_API_KEY`   | `""`                                    | Free OpenRouter API key (Free models)                                |
+| `OPENROUTER_MODEL`     | `meta-llama/llama-3.2-3b-instruct:free` | Targeted OpenRouter model                                            |
+| `OLLAMA_ENABLED`       | `false`                                 | Set `true` to use local Ollama offline without API keys              |
+| `OLLAMA_BASE_URL`      | `http://localhost:11434/v1`             | Local Ollama service endpoint                                        |
+| `OPENAI_API_KEY`       | `""`                                    | Optional OpenAI API key fallback                                     |
 
 ### CORS Configuration
 

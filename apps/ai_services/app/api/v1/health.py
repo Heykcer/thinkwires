@@ -11,6 +11,8 @@ def get_service_status():
         "service": settings.APP_TITLE,
         "version": settings.APP_VERSION,
         "openai_configured": settings.is_openai_configured,
+        "llm_configured": settings.is_llm_configured,
+        "active_llm_providers": settings.active_llm_providers,
         "endpoints": [
             "POST /api/resume/parse",
             "POST /api/resume/match-score",

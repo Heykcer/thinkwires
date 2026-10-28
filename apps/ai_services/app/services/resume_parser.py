@@ -10,6 +10,7 @@ except ImportError:
 import httpx
 
 from app.config import settings, logger
+from app.services.llm_client import execute_chat_completion_with_fallback
 
 COMMON_TECH_SKILLS = [
     "JavaScript", "TypeScript", "Python", "React", "Next.js", "Node.js", "Express",
@@ -289,51 +290,53 @@ async def parse_resume_content(
         )
 
     parsed_data = None
-    if settings.is_openai_configured:
-        try:
-            async with httpx.AsyncClient(timeout=15.0) as client:
-                prompt = f"""
-                You are an expert HR ATS Resume Parser. Extract structured details from the following resume text:
-                Resume Text:
-                {extracted_text[:4000]}
+    if settings.is_llm_configured:
+        prompt = f"""
+        You are an expert HR ATS Resume Parser. Extract structured details from the following resume text:
+        Resume Text:
+        {extracted_text[:4000]}
 
-                Respond STRICTLY with a valid JSON object matching this schema:
-                {{
-                  "candidate_name": "Full Name",
-                  "first_name": "First",
-                  "last_name": "Last",
-                  "email": "email",
-                  "phone": "phone",
-                  "location": "location",
-                  "headline": "Professional Headline",
-                  "current_role": "Current Job Role",
-                  "total_experience_years": 4.5,
-                  "skills": ["Skill1", "Skill2"],
-                  "linkedin_url": "url",
-                  "github_url": "url",
-                  "summary": "Short 2-line summary"
-                }}
-                """
-                response = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {settings.OPENAI_API_KEY}"},
-                    json={
-                        "model": settings.OPENAI_MODEL,
-                        "messages": [{"role": "user", "content": prompt}],
-                        "temperature": 0.1,
-                        "response_format": {"type": "json_object"},
-                    },
-                )
-                if response.status_code == 200:
-                    result = response.json()
-                    content_str = result["choices"][0]["message"]["content"]
-                    parsed_data = json.loads(content_str)
-                    parsed_data["skill_set"] = ", ".join(parsed_data.get("skills", []))
-        except Exception as e:
-            logger.warning(f"OpenAI parsing failed, falling back to heuristic: {e}")
+        Respond STRICTLY with a valid JSON object matching this schema:
+        {{
+          "candidate_name": "Full Name",
+          "first_name": "First",
+          "last_name": "Last",
+          "email": "email",
+          "phone": "phone",
+          "location": "location",
+          "headline": "Professional Headline",
+          "current_role": "Current Job Role",
+          "total_experience_years": 4.5,
+          "skills": ["Skill1", "Skill2"],
+          "linkedin_url": "url",
+          "github_url": "url",
+          "summary": "Short 2-line summary"
+        }}
+        """
+        parsed_data = await execute_chat_completion_with_fallback(
+            prompt=prompt,
+            system_instruction="You are an expert HR ATS resume parsing engine that outputs valid JSON only.",
+            timeout_seconds=15.0,
+            temperature=0.1,
+        )
+        if parsed_data:
+            if isinstance(parsed_data.get("skills"), list):
+                parsed_data["skill_set"] = ", ".join(parsed_data.get("skills", []))
+            elif isinstance(parsed_data.get("skills"), str):
+                parsed_data["skill_set"] = parsed_data["skills"]
+                parsed_data["skills"] = [s.strip() for s in parsed_data["skills"].split(",") if s.strip()]
 
     if not parsed_data:
         parsed_data = heuristic_parse_resume(extracted_text, links=extracted_links)
+    elif extracted_links:
+        # Merge any PDF annotation links discovered
+        for link in extracted_links:
+            if "linkedin.com/in" in link and not parsed_data.get("linkedin_url"):
+                parsed_data["linkedin_url"] = link
+            elif "github.com/" in link and not parsed_data.get("github_url"):
+                parsed_data["github_url"] = link
+            elif not parsed_data.get("portfolio_url"):
+                parsed_data["portfolio_url"] = link
 
     return {
         "raw_text": extracted_text[:3000],

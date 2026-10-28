@@ -95,9 +95,19 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
 
   describe('Cookie Security Attributes (Production Environment Simulation)', () => {
     const originalEnv = process.env.NODE_ENV;
+    const originalSameSite = process.env.COOKIE_SAME_SITE;
+
+    beforeEach(() => {
+      delete process.env.COOKIE_SAME_SITE;
+    });
 
     afterEach(() => {
       process.env.NODE_ENV = originalEnv;
+      if (originalSameSite !== undefined) {
+        process.env.COOKIE_SAME_SITE = originalSameSite;
+      } else {
+        delete process.env.COOKIE_SAME_SITE;
+      }
     });
 
     it('sets Secure and SameSite=Strict attributes in production environment', () => {
