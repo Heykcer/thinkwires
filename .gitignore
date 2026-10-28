@@ -61,3 +61,6 @@ apps/backend/uploads/*
 apps/backend/uploads/resumes/*
 !apps/backend/uploads/resumes/.gitkeep
 
+Industries/
+
+thinkwires_policies_md/
