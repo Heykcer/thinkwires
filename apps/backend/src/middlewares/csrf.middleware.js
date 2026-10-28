@@ -48,8 +48,13 @@ export const getAllowedOrigins = () => {
     'http://127.0.0.1:3000',
   ];
 
+  const defaultProductionOrigins = [
+    'https://thinkwires.vercel.app',
+    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+  ];
+
   if (process.env.NODE_ENV === 'production') {
-    return envOrigins;
+    return Array.from(new Set([...defaultProductionOrigins, ...envOrigins]));
   }
   return Array.from(new Set([...devOrigins, ...envOrigins]));
 };

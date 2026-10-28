@@ -67,6 +67,15 @@ if (!fs.existsSync(uploadsDir)) {
 }
 app.use('/uploads', express.static(uploadsDir));
 
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: 'Thinkwires Enterprise Core Backend',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'production',
+  });
+});
+
 app.get('/api/health', (req, res) => {
   const mongoStatusMap = {
     0: 'disconnected',

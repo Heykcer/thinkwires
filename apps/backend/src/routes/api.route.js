@@ -12,6 +12,7 @@ import JobApplication from '../models/jobApplication.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import aiService from '../services/ai.service.js';
 import { logger } from '../utils/logger.js';
+import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
@@ -21,10 +22,8 @@ const __dirname = path.dirname(__filename);
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
-// Adjust path since this is now in src/routes
-const mockData = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8')
-);
+// Robustly load mockData across environments (local, tests, monorepo, Vercel Serverless)
+const mockData = loadSeedJson('mockData.json');
 const {
   initialTechStack,
   initialOpenings,
@@ -262,11 +261,7 @@ router.get('/openings', async (req, res) => {
   } else {
     // Fallback to fresh mockData.json read if Mongo not active
     try {
-      const rawData = fs.readFileSync(
-        path.join(__dirname, '..', 'seeds', 'mockData.json'),
-        'utf8'
-      );
-      const parsed = JSON.parse(rawData);
+      const parsed = loadSeedJson('mockData.json', {});
       if (
         Array.isArray(parsed.initialOpenings) &&
         parsed.initialOpenings.length > 0
@@ -495,15 +490,7 @@ router.post('/industries', adminAuthGuard, async (req, res) => {
   }
 });
 
-const getMockData = () => {
-  try {
-    return JSON.parse(
-      fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8')
-    );
-  } catch (e) {
-    return mockData;
-  }
-};
+const getMockData = () => loadSeedJson('mockData.json', mockData);
 
 // --- Industries Page Full Dynamic Data (Hero, Sector Tabs, Sectors, Comparison, Case Studies, Briefing) ---
 let currentIndustriesPageData = industriesPageData

@@ -47,16 +47,12 @@
   ],
   "rewrites": [
     {
-      "source": "/api",
-      "destination": "/api/index.js"
-    },
-    {
       "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/api"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/api"
     },
     {
       "source": "/(.*)",

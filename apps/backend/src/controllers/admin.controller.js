@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadSeedJson } from '../utils/seedLoader.js';
 import mongoose from 'mongoose';
 
 import Employee from '../models/employee.mongo.model.js';
@@ -35,8 +36,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // In-Memory store initialized from adminSeedData.json for seamless offline demo resilience
-const seedFilePath = path.join(__dirname, '..', 'seeds', 'adminSeedData.json');
-let inMemoryData = {
+let inMemoryData = loadSeedJson('adminSeedData.json', {
   users: [],
   employees: [],
   candidates: [],
@@ -48,19 +48,7 @@ let inMemoryData = {
   media: [],
   announcements: [],
   activities: [],
-};
-
-try {
-  if (fs.existsSync(seedFilePath)) {
-    const raw = fs.readFileSync(seedFilePath, 'utf8');
-    inMemoryData = JSON.parse(raw);
-  }
-} catch (e) {
-  console.warn(
-    '[Admin Seed] Could not load adminSeedData.json into in-memory store:',
-    e.message
-  );
-}
+});
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
