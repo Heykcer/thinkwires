@@ -7,6 +7,7 @@
     "dev": "node run.js --dev",
     "build": "node -e \"console.log('FastAPI ready')\"",
     "setup": "node setup.js",
+    "install:requirements": "node setup.js",
     "test": "node test.js tests",
     "test:watch": "node test.js tests -f",
     "test:unit": "node test.js tests/unit",

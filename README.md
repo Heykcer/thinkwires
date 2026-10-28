@@ -99,10 +99,27 @@ thinkwires/
 
 ### 2. Install Dependencies
 
-Run from the root directory to install JavaScript dependencies across all monorepo workspaces:
+You can install all JavaScript workspace dependencies and the Python AI microservice requirements in a single command from the root:
 
 ```bash
+# Complete setup: installs npm dependencies across all workspaces + sets up Python venv & requirements.txt
+npm run setup
+# or
+npm run install:all
+```
+
+Alternatively, install dependencies individually from the root:
+
+```bash
+# Install npm dependencies across all workspaces (apps/*)
 npm install
+
+# Install Python requirements.txt for the AI microservice into venv
+npm run install:requirements
+
+# Or install individual app dependencies directly from root:
+npm run install:frontend
+npm run install:backend
 ```
 
 ### 3. Configure Environment Variables
@@ -145,6 +162,7 @@ npm run setup:ai
 Alternatively, set it up manually:
 
 **Windows (PowerShell / Command Prompt):**
+
 ```powershell
 cd apps/ai_services
 python -m venv venv
@@ -154,6 +172,7 @@ cd ../..
 ```
 
 **Linux / macOS (Bash / Zsh):**
+
 ```bash
 cd apps/ai_services
 python3 -m venv venv

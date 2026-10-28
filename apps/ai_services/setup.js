@@ -61,7 +61,7 @@ if (!fs.existsSync(venvDir) || !fs.existsSync(venvPy)) {
   const createResult = spawnSync(basePy, ['-m', 'venv', 'venv'], {
     cwd: __dirname,
     stdio: 'inherit',
-    shell: isWin,
+    shell: false,
   });
 
   if (createResult.status !== 0) {
@@ -81,15 +81,13 @@ if (!fs.existsSync(venvDir) || !fs.existsSync(venvPy)) {
 // 3. Upgrade pip and install dependencies
 if (fs.existsSync(requirementsFile)) {
   console.log('\n📥 Installing requirements from requirements.txt...');
-  const pipTarget = fs.existsSync(venvPip) ? venvPip : basePy;
-  const pipArgs = fs.existsSync(venvPip)
-    ? ['install', '-r', requirementsFile]
-    : ['-m', 'pip', 'install', '-r', requirementsFile];
+  const pyRunner = fs.existsSync(venvPy) ? venvPy : basePy;
+  const pipArgs = ['-m', 'pip', 'install', '-r', requirementsFile];
 
-  const installResult = spawnSync(pipTarget, pipArgs, {
+  const installResult = spawnSync(pyRunner, pipArgs, {
     cwd: __dirname,
     stdio: 'inherit',
-    shell: isWin,
+    shell: false,
   });
 
   if (installResult.status !== 0) {
