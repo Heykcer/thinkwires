@@ -153,4 +153,24 @@ if (resolvedDist) {
   });
 }
 
+// 404 handler for unmatched /api routes
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: `API endpoint not found: ${req.method} ${req.originalUrl || req.url}`,
+  });
+});
+
+// Global central error handler for API
+app.use((err, req, res, next) => {
+  console.error('[Unhandled API Error]:', err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal Server Error',
+  });
+});
+
 export default app;

@@ -9,7 +9,9 @@ try {
   // pdf-parse optional fallback
 }
 
-const AI_SERVICE_URL = config.AI_SERVICE_URL || 'http://localhost:8000';
+// Resilient AI service base URL resolver with dynamic runtime binding support
+const getAIServiceBaseUrl = () =>
+  process.env.AI_SERVICE_URL || config.AI_SERVICE_URL || 'http://localhost:8000';
 
 const COMMON_TECH_SKILLS = [
   'JavaScript',
@@ -82,7 +84,20 @@ const COMMON_TECH_SKILLS = [
  */
 class AIServiceClient {
   constructor() {
-    this.baseUrl = AI_SERVICE_URL;
+    // Dynamic service binding: base URL is resolved dynamically at runtime per request
+  }
+
+  /**
+   * Resolves target URL dynamically using runtime injected binding (AI_SERVICE_URL)
+   * Uses URL constructor to handle trailing slashes and relative paths safely.
+   * @param {string} endpointPath
+   * @returns {string}
+   */
+  resolveUrl(endpointPath) {
+    const rawBase = getAIServiceBaseUrl();
+    const baseWithSlash = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+    const cleanPath = endpointPath.startsWith('/') ? endpointPath.slice(1) : endpointPath;
+    return new URL(cleanPath, baseWithSlash).toString();
   }
 
   /**
@@ -104,7 +119,7 @@ class AIServiceClient {
         formData.append('file', blob, originalname || 'resume.pdf');
         if (rawText) formData.append('raw_text', rawText);
 
-        const response = await fetch(`${this.baseUrl}/api/resume/parse`, {
+        const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
           body: formData,
           signal: AbortSignal.timeout(10000),
@@ -122,7 +137,7 @@ class AIServiceClient {
         const formData = new FormData();
         formData.append('raw_text', rawText);
 
-        const response = await fetch(`${this.baseUrl}/api/resume/parse`, {
+        const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
           body: formData,
           signal: AbortSignal.timeout(10000),
@@ -167,7 +182,7 @@ class AIServiceClient {
     };
 
     try {
-      const response = await fetch(`${this.baseUrl}/api/resume/match-score`, {
+      const response = await fetch(this.resolveUrl('api/resume/match-score'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -202,7 +217,7 @@ class AIServiceClient {
     };
 
     try {
-      const response = await fetch(`${this.baseUrl}/api/screening/evaluate-candidate`, {
+      const response = await fetch(this.resolveUrl('api/screening/evaluate-candidate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -285,7 +300,7 @@ class AIServiceClient {
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/screening/generate-test`,
+        this.resolveUrl('api/screening/generate-test'),
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -320,7 +335,7 @@ class AIServiceClient {
 
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/screening/evaluate-test`,
+        this.resolveUrl('api/screening/evaluate-test'),
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -1,12 +1,27 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build:frontend",
-  "outputDirectory": "apps/frontend/dist",
-  "cleanUrls": true,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "apps/backend/src/seeds/**",
-      "maxDuration": 15
+  "services": {
+    "ai_services": {
+      "root": "apps/ai_services",
+      "framework": "fastapi",
+      "entrypoint": "main.py"
+    },
+    "backend": {
+      "root": "apps/backend",
+      "framework": "express",
+      "entrypoint": "src/app.js",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "ai_services",
+          "format": "url",
+          "env": "AI_SERVICE_URL"
+        }
+      ]
+    },
+    "frontend": {
+      "root": "apps/frontend",
+      "framework": "vite"
     }
   },
   "headers": [
@@ -47,16 +62,28 @@
   ],
   "rewrites": [
     {
+      "source": "/api",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": {
+        "service": "backend"
+      }
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "/api"
+      "destination": {
+        "service": "backend"
+      }
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": {
+        "service": "frontend"
+      }
     }
   ]
 }
