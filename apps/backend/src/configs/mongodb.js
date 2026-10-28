@@ -21,7 +21,7 @@ const MONGO_OPTIONS = {
   maxPoolSize: isServerless ? 5 : (isLocalMongo ? 5 : 10),
   minPoolSize: isServerless || isLocalMongo ? 0 : 2,
   socketTimeoutMS: 45000,
-  serverSelectionTimeoutMS: isServerless ? 8000 : (isLocalMongo ? 5000 : 15000),
+  serverSelectionTimeoutMS: isServerless ? 3000 : (isLocalMongo ? 5000 : 15000),
   heartbeatFrequencyMS: 10000,
   maxIdleTimeMS: 30000,
   family: 4,

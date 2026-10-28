@@ -2,6 +2,9 @@ import { Sequelize } from 'sequelize';
 import config from './dotenv.js';
 
 const isProduction = config.NODE_ENV === 'production';
+const isServerless = Boolean(
+  process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
+);
 
 // Auto-detect cloud providers (Neon, Supabase, RDS) to configure SSL defaults
 // while leaving local dev/docker connections unencrypted unless DB_SSL is explicitly set.
@@ -30,7 +33,7 @@ export const sequelize = new Sequelize(config.DATABASE_URL, {
   protocol: 'postgres',
   logging: process.env.DB_LOGGING === 'true' ? console.log : false,
   dialectOptions: {
-    connectTimeout: isCloudManaged ? 10000 : 5000,
+    connectTimeout: isServerless ? 3000 : (isCloudManaged ? 10000 : 5000),
     ...(enableSsl
       ? {
           ssl: {

@@ -11,7 +11,9 @@ const ensureDbConnected = async () => {
 
   isDbConnecting = true;
   try {
-    await Promise.allSettled([connectMongoDB(), connectDB()]);
+    const connectPromise = Promise.allSettled([connectMongoDB(), connectDB()]);
+    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000));
+    await Promise.race([connectPromise, timeoutPromise]);
   } catch (err) {
     console.warn('[Vercel Serverless] DB connection notice:', err.message);
   } finally {

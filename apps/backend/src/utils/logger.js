@@ -1,11 +1,15 @@
 import pino from 'pino';
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isServerless = Boolean(
+  process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
+);
+const isDevelopment = process.env.NODE_ENV !== 'production' && !isServerless;
 
 /**
  * High-performance Structured Pino Logger for Thinkwires Backend
- * - In development: uses pino-pretty for clean, human-readable colorized console logs
- * - In production: uses high-speed structured JSON logs with ISO timestamps
+ * - In local development: uses pino-pretty for clean, human-readable colorized console logs
+ * - In production & Serverless (Vercel Lambda): uses high-speed structured JSON logs with ISO timestamps
+ *   (avoids worker threads that can crash or hang serverless containers)
  */
 export const logger = pino({
   level: process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info'),
