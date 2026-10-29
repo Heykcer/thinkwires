@@ -3275,6 +3275,7 @@ export const loginAdmin = async (req, res) => {
     return res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
+      token,
       csrfToken,
       user: {
         id: user._id ? user._id.toString() : user.id,

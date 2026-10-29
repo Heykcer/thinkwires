@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 
 const CandidateDossierModal = ({ isOpen, onClose, applicationId, applicationData }) => {
   const [dossier, setDossier] = useState(null);
@@ -12,7 +13,9 @@ const CandidateDossierModal = ({ isOpen, onClose, applicationId, applicationData
     setLoading(true);
     setError('');
 
-    fetch(`/api/candidate/applications/${applicationId}/dossier`, {
+    const apiBase = getApiBaseUrl();
+    fetch(`${apiBase}/candidate/applications/${applicationId}/dossier`, {
+      headers: getCandidateAuthHeaders({ Accept: 'application/json' }),
       credentials: 'include',
     })
       .then((res) => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 
 /**
  * ScreeningAssessmentModal
@@ -45,9 +46,11 @@ const ScreeningAssessmentModal = ({
       setLoading(true);
       setError('');
       try {
+        const apiBase = getApiBaseUrl();
         const res = await fetch(
-          `/api/candidate/applications/${applicationId}/assessment`,
+          `${apiBase}/candidate/applications/${applicationId}/assessment`,
           {
+            headers: getCandidateAuthHeaders({ Accept: 'application/json' }),
             credentials: 'include',
           }
         );
@@ -118,11 +121,12 @@ const ScreeningAssessmentModal = ({
     setError('');
 
     try {
+      const apiBase = getApiBaseUrl();
       const res = await fetch(
-        `/api/candidate/applications/${applicationId}/assessment/submit`,
+        `${apiBase}/candidate/applications/${applicationId}/assessment/submit`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
           credentials: 'include',
           body: JSON.stringify({ answers }),
         }

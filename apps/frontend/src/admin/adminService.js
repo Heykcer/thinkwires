@@ -1,19 +1,7 @@
 import { getApiBaseUrl } from '../utils/apiConfig.js';
 
-// Admin and CMS API Client with Secure HttpOnly Cookie Authentication & Anti-CSRF
+// Admin and CMS API Client with Secure Dual-Mode Authentication (HttpOnly Cookie + Bearer Token) & Anti-CSRF
 const getAdminApiBase = () => `${getApiBaseUrl()}/admin`;
-
-// Security hygiene: Purge any legacy tokens from localStorage/sessionStorage
-try {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('tw_admin_token');
-  }
-  if (typeof sessionStorage !== 'undefined') {
-    sessionStorage.removeItem('tw_admin_token');
-  }
-} catch {
-  // Ignore in restricted environments
-}
 
 // In-memory Anti-CSRF Token state
 let currentCsrfToken = null;
@@ -46,6 +34,13 @@ export const getCsrfToken = () => {
  * and are never accessible to client-side scripts.
  */
 export const getAdminToken = () => {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('tw_admin_token');
+    }
+  } catch {
+    // Ignore restricted environments
+  }
   return null;
 };
 
@@ -65,15 +60,22 @@ export const getAdminRole = () => {
 };
 
 export const setAdminSession = (param1, param2) => {
-  // Support both setAdminSession(user) and legacy setAdminSession(token, user)
+  const token =
+    typeof param1 === 'string'
+      ? param1
+      : param1?.token || param2?.token || null;
   const user =
-    param2 ||
-    (param1 && typeof param1 === 'object' && !param1.token ? param1 : null);
+    param2 && typeof param2 === 'object' && !param2.token
+      ? param2
+      : param1 && typeof param1 === 'object' && !param1.token
+        ? param1
+        : param1?.user || param2?.user || null;
 
-  // Security: Ensure admin token is NEVER stored in localStorage or sessionStorage
   try {
     if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('tw_admin_token');
+      if (token) {
+        localStorage.setItem('tw_admin_token', token);
+      }
       if (user) {
         localStorage.setItem('tw_admin_user', JSON.stringify(user));
         localStorage.setItem(
@@ -81,9 +83,6 @@ export const setAdminSession = (param1, param2) => {
           user.role ? user.role.toLowerCase() : ''
         );
       }
-    }
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.removeItem('tw_admin_token');
     }
   } catch (e) {
     console.warn('Could not update admin session storage:', e);
@@ -192,6 +191,12 @@ const adminFetch = async (endpoint, options = {}) => {
     }
   }
 
+  const adminToken = getAdminToken();
+  if (adminToken) {
+    headers['Authorization'] = `Bearer ${adminToken}`;
+    headers['x-admin-token'] = adminToken;
+  }
+
   const res = await fetch(`${getAdminApiBase()}${endpoint}`, {
     ...options,
     method,
@@ -224,7 +229,9 @@ export const adminApi = {
     if (json.csrfToken) {
       setCsrfToken(json.csrfToken);
     }
-    if (json.user) {
+    if (json.token && json.user) {
+      setAdminSession(json.token, json.user);
+    } else if (json.user) {
       setAdminSession(json.user);
     }
     return json;
