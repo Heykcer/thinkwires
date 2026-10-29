@@ -42,6 +42,18 @@
   ],
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://thinkwires.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://thinkwires.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://thinkwires.onrender.com/health"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

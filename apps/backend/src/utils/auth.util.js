@@ -106,7 +106,7 @@ export const hashResetToken = (rawToken) => {
 export const setAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie('thinkwires_candidate_jwt', token, {
     httpOnly: true,
     secure: isProduction,
@@ -119,7 +119,7 @@ export const setAuthCookie = (res, token) => {
 export const clearAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie('thinkwires_candidate_jwt', '', {
     httpOnly: true,
     secure: isProduction,
@@ -211,7 +211,7 @@ export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
     secure: isProduction,
@@ -224,7 +224,7 @@ export const setAdminAuthCookie = (res, token) => {
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie(ADMIN_COOKIE_NAME, '', {
     httpOnly: true,
     secure: isProduction,

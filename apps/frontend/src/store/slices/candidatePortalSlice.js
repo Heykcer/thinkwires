@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getApiBaseUrl } from '../../utils/apiConfig';
 
 export const fallbackCandidatePortalData = {
   profile: {
@@ -68,35 +69,43 @@ export const fallbackCandidatePortalData = {
       title: 'Live Bench Syndication',
       desc: 'Candidate profile syndicated to 740+ verified enterprise client accounts.',
       status: 'Visible to 740+ Enterprises',
-      isActive: true,
+      isDone: true,
     },
     {
       stage: 4,
-      title: 'Offer & EOR Onboarding',
-      desc: 'Contract execution, multi-currency payroll escrow, and day-1 IP compliance.',
-      status: 'In Progress (2 Pending Offers)',
+      title: 'Client Mandate Alignment',
+      desc: 'Direct dispatch to US FinTech or Healthcare engineering pods.',
+      status: 'Final Offer Stage (Active)',
+      isActive: true,
+    },
+    {
+      stage: 5,
+      title: 'Contract Signing & Milestone Escrow',
+      desc: 'Bi-weekly payout escrow lock and milestone verification.',
+      status: 'Pending Stage 4 Completion',
+      isPending: true,
     },
   ],
-  pipelines: [
+  pipeline: [
     {
       id: 'p1',
-      badge: 'AP',
-      role: 'Staff Platform Engineer',
-      status: 'Final CTO Round Today (18:30 IST)',
-      statusType: 'urgent',
-      company: 'Aura Payments • San Francisco, CA (Remote Pod)',
-      sla: 'SLA: 48h Offer Turnaround',
-      panel: 'Panel: VP of Infrastructure + CTO',
+      badge: 'VC',
+      role: 'Staff Infrastructure Architect',
+      status: 'Executive CTO Round Scheduled',
+      statusType: 'interview',
+      company: 'Vantage Cloud Systems • San Francisco (Remote US)',
+      sla: 'Interview: Today at 5:30 PM IST (Zoom)',
+      panel: 'Panel: Alex Chen (VP Eng) & Sarah Lin (Staff Arch)',
       canJoin: true,
     },
     {
       id: 'p2',
       badge: 'NL',
-      role: 'Lead Kubernetes & Cloud Architect',
-      status: 'Client Feedback Pending (Passed Tech Screen)',
-      statusType: 'pending',
-      company: 'Nordic Logistics Cloud • Toronto, ON (Dual-Zone Remote)',
-      sla: 'SLA: Next round scheduled in 2 days',
+      role: 'Lead Distributed Systems Engineer',
+      status: 'Panel Feedback: Strong Hire (98.4%)',
+      statusType: 'review',
+      company: 'Nexus Ledger Labs • New York (Hybrid EST)',
+      sla: 'HR Compensation Discussion Pending',
       panel: 'Interviewer rating: 4.9 / 5.0',
       canJoin: false,
     },
@@ -166,7 +175,10 @@ export const fetchCandidatePortalData = createAsyncThunk(
   'candidatePortal/fetchData',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/candidate-portal');
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/candidate-portal`, {
+        credentials: 'include',
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch Candidate Portal data');
       }
@@ -182,11 +194,13 @@ export const submitCandidateTimesheet = createAsyncThunk(
   'candidatePortal/submitTimesheet',
   async (timesheetData, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/candidate-portal/timesheet', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/candidate-portal/timesheet`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(timesheetData),
       });
       const data = await response.json();

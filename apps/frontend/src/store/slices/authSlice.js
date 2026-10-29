@@ -1,4 +1,31 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getApiBaseUrl } from '../../utils/apiConfig';
+
+/**
+ * Safely parse JSON response from server, preventing syntax crashes if the endpoint
+ * returns HTML (e.g. 404/502 from proxy or static host).
+ */
+const safeParseJson = async (response, defaultErrorMessage = 'Request failed') => {
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      return await response.json();
+    } catch {
+      // JSON parse failed
+    }
+  }
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(
+        'Backend service unreachable (404 Not Found). Please verify your backend API URL.'
+      );
+    }
+    throw new Error(
+      `${defaultErrorMessage} (HTTP ${response.status} ${response.statusText})`
+    );
+  }
+  return {};
+};
 
 /**
  * Check and restore session on page load using HttpOnly cookie
@@ -7,7 +34,8 @@ export const checkAuthSession = createAsyncThunk(
   'auth/checkAuthSession',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/me', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/auth/me`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // transmits HttpOnly cookies
@@ -17,7 +45,7 @@ export const checkAuthSession = createAsyncThunk(
         return rejectWithValue('Not authenticated');
       }
 
-      const data = await response.json();
+      const data = await safeParseJson(response, 'Session verification failed');
       if (data.authenticated && data.candidate) {
         return data.candidate;
       }
@@ -35,14 +63,21 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await safeParseJson(response, 'Login failed');
+      } catch (parseErr) {
+        return rejectWithValue(parseErr.message);
+      }
+
       if (!response.ok) {
         return rejectWithValue(
           data.error || 'Login failed. Please check your credentials.'
@@ -66,14 +101,21 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ name, email, password, confirmPassword, phone }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await safeParseJson(response, 'Registration failed');
+      } catch (parseErr) {
+        return rejectWithValue(parseErr.message);
+      }
+
       if (!response.ok) {
         return rejectWithValue(data.error || 'Registration failed.');
       }
@@ -94,14 +136,15 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/auth/logout', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/auth/logout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
 
       if (!response.ok) {
-        const data = await response.json();
+        const data = await safeParseJson(response, 'Logout failed');
         return rejectWithValue(data.error || 'Logout failed');
       }
 
@@ -119,14 +162,15 @@ export const updateProfile = createAsyncThunk(
   'auth/updateProfile',
   async (profileData, { rejectWithValue }) => {
     try {
-      const response = await fetch('/api/candidate/profile', {
+      const apiBase = getApiBaseUrl();
+      const response = await fetch(`${apiBase}/candidate/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(profileData),
       });
 
-      const data = await response.json();
+      const data = await safeParseJson(response, 'Failed to update profile');
       if (!response.ok) {
         return rejectWithValue(data.error || 'Failed to update profile');
       }
