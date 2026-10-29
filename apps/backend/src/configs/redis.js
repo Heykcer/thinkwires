@@ -7,6 +7,8 @@ let isRedisReady = false;
 
 const isTest = config.NODE_ENV === 'test' || process.env.NODE_ENV === 'test';
 
+export const isRedisConnected = () => isRedisReady;
+
 export const setMockRedisClient = (client) => {
   redisClient = client;
   isRedisReady = Boolean(client);
@@ -108,4 +110,4 @@ export const closeRedis = async () => {
   }
 };
 
-export default { getRedisClient, closeRedis, setMockRedisClient };
+export default { getRedisClient, closeRedis, setMockRedisClient, isRedisConnected };

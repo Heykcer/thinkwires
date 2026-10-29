@@ -2,7 +2,7 @@ import app from './app.js';
 import { connectDB, sequelize } from './configs/db.js';
 import { connectMongoDB, disconnectMongoDB } from './configs/mongodb.js';
 import config from './configs/dotenv.js';
-import { closeRedis } from './configs/redis.js';
+import { getRedisClient, closeRedis } from './configs/redis.js';
 import { getJwtSecret } from './utils/auth.util.js';
 
 const PORT = config.PORT || 5000;
@@ -55,6 +55,15 @@ const startServer = async () => {
       );
     });
 
+  // Redis (Upstash / Local) - Graceful non-blocking connection
+  getRedisClient()
+    .catch((error) => {
+      console.warn(
+        '[Redis] Startup connection notice:',
+        error.message || error
+      );
+    });
+
   // Graceful shutdown handling for container orchestrators (Docker, Kubernetes, Render)
   const gracefulShutdown = (signal) => {
     console.log(`[Server] Received ${signal}. Starting graceful shutdown...`);
@@ -89,4 +98,3 @@ const startServer = async () => {
 };
 
 startServer();
-

@@ -13,6 +13,7 @@ import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
 import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
 import { sequelize } from './configs/db.js';
+import { isRedisConnected } from './configs/redis.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -96,6 +97,7 @@ app.get('/api/health', (req, res) => {
     databases: {
       mongodb: mongoStatusMap[mongoose.connection.readyState] || 'unknown',
       postgresql: isPostgresReady ? 'connected' : 'optional/fallback',
+      redis: isRedisConnected() ? 'connected' : 'in-memory fallback',
     },
     memoryUsage: {
       rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
@@ -123,6 +125,9 @@ app.get('/', (req, res) => {
     },
   });
 });
+
+// Mute browser automatic favicon probing
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // Central 404 JSON responder for unmatched routes
 app.use((req, res) => {

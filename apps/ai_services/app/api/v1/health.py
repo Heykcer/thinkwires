@@ -1,7 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from app.config import settings
 
 router = APIRouter(tags=["Health & Status"])
+
+@router.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    """Mute browser automatic favicon probing."""
+    return Response(status_code=204)
 
 @router.get("/")
 def get_service_status():

@@ -1,5 +1,7 @@
+import { getApiBaseUrl } from '../utils/apiConfig.js';
+
 // Admin and CMS API Client with Secure HttpOnly Cookie Authentication & Anti-CSRF
-const API_BASE = '/api/admin';
+const getAdminApiBase = () => `${getApiBaseUrl()}/admin`;
 
 // Security hygiene: Purge any legacy tokens from localStorage/sessionStorage
 try {
@@ -171,7 +173,7 @@ const adminFetch = async (endpoint, options = {}) => {
     let csrfToken = getCsrfToken();
     if (!csrfToken) {
       try {
-        const tokenRes = await fetch(`${API_BASE}/auth/csrf-token`, {
+        const tokenRes = await fetch(`${getAdminApiBase()}/auth/csrf-token`, {
           credentials: 'include',
         });
         if (tokenRes.ok) {
@@ -190,7 +192,7 @@ const adminFetch = async (endpoint, options = {}) => {
     }
   }
 
-  const res = await fetch(`${API_BASE}${endpoint}`, {
+  const res = await fetch(`${getAdminApiBase()}${endpoint}`, {
     ...options,
     method,
     headers,
@@ -208,7 +210,7 @@ const adminFetch = async (endpoint, options = {}) => {
 export const adminApi = {
   // Authentication
   async login(email, password) {
-    const res = await fetch(`${API_BASE}/auth/login`, {
+    const res = await fetch(`${getAdminApiBase()}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
