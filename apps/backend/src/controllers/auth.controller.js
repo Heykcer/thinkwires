@@ -100,6 +100,7 @@ export const registerCandidate = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: 'Registration successful! Welcome to Thinkwires.',
+      token,
       candidate: {
         id: candidate._id || candidate.id,
         name: candidate.name,
@@ -166,6 +167,7 @@ export const loginCandidate = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Login successful.',
+      token,
       candidate: {
         id: candidate._id || candidate.id,
         name: candidate.name,

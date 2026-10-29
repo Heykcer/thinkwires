@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
+import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
@@ -25,10 +26,16 @@ const CandidateDashboardPage = () => {
 
     const fetchDashboard = async () => {
       try {
-        const response = await fetch('/api/candidate/dashboard', {
+        const apiBase = getApiBaseUrl();
+        const response = await fetch(`${apiBase}/candidate/dashboard`, {
+          headers: getCandidateAuthHeaders({ Accept: 'application/json' }),
           credentials: 'include',
         });
-        const data = await response.json();
+        const contentType = response.headers.get('content-type') || '';
+        let data = {};
+        if (contentType.includes('application/json')) {
+          data = await response.json();
+        }
         if (response.ok) {
           setDashboardData(data);
         } else {

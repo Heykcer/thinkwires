@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getApiBaseUrl } from '../../utils/apiConfig';
+import {
+  getApiBaseUrl,
+  getCandidateAuthHeaders,
+  setCandidateToken,
+  clearCandidateToken,
+} from '../../utils/apiConfig';
 
 /**
  * Safely parse JSON response from server, preventing syntax crashes if the endpoint
@@ -28,7 +33,7 @@ const safeParseJson = async (response, defaultErrorMessage = 'Request failed') =
 };
 
 /**
- * Check and restore session on page load using HttpOnly cookie
+ * Check and restore session on page load using HttpOnly cookie + Bearer token fallback
  */
 export const checkAuthSession = createAsyncThunk(
   'auth/checkAuthSession',
@@ -37,7 +42,7 @@ export const checkAuthSession = createAsyncThunk(
       const apiBase = getApiBaseUrl();
       const response = await fetch(`${apiBase}/auth/me`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include', // transmits HttpOnly cookies
       });
 
@@ -84,6 +89,11 @@ export const loginUser = createAsyncThunk(
         );
       }
 
+      // Store Bearer token as resilient fallback for cross-domain requests
+      if (data.token) {
+        setCandidateToken(data.token);
+      }
+
       return data.candidate;
     } catch (err) {
       return rejectWithValue(err.message || 'Network error during login.');
@@ -120,6 +130,10 @@ export const registerUser = createAsyncThunk(
         return rejectWithValue(data.error || 'Registration failed.');
       }
 
+      if (data.token) {
+        setCandidateToken(data.token);
+      }
+
       return data.candidate;
     } catch (err) {
       return rejectWithValue(
@@ -139,9 +153,11 @@ export const logoutUser = createAsyncThunk(
       const apiBase = getApiBaseUrl();
       const response = await fetch(`${apiBase}/auth/logout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
       });
+
+      clearCandidateToken();
 
       if (!response.ok) {
         const data = await safeParseJson(response, 'Logout failed');
@@ -150,6 +166,7 @@ export const logoutUser = createAsyncThunk(
 
       return true;
     } catch (err) {
+      clearCandidateToken();
       return rejectWithValue(err.message || 'Logout failed');
     }
   }
@@ -165,7 +182,7 @@ export const updateProfile = createAsyncThunk(
       const apiBase = getApiBaseUrl();
       const response = await fetch(`${apiBase}/candidate/profile`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
         body: JSON.stringify(profileData),
       });

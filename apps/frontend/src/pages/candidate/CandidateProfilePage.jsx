@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/slices/authSlice';
+import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import './candidate.css';
@@ -137,10 +138,12 @@ const CandidateProfilePage = () => {
     setParsingResume(true);
 
     try {
+      const apiBase = getApiBaseUrl();
       const parseData = new FormData();
       parseData.append('resume', file);
-      const res = await fetch('/api/candidate/parse-resume', {
+      const res = await fetch(`${apiBase}/candidate/parse-resume`, {
         method: 'POST',
+        headers: getCandidateAuthHeaders(),
         credentials: 'include',
         body: parseData,
       });

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
+import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
@@ -44,10 +45,16 @@ const CandidateApplicationsPage = () => {
 
     const fetchApplications = async () => {
       try {
-        const response = await fetch('/api/candidate/applications', {
+        const apiBase = getApiBaseUrl();
+        const response = await fetch(`${apiBase}/candidate/applications`, {
+          headers: getCandidateAuthHeaders({ Accept: 'application/json' }),
           credentials: 'include',
         });
-        const data = await response.json();
+        const contentType = response.headers.get('content-type') || '';
+        let data = {};
+        if (contentType.includes('application/json')) {
+          data = await response.json();
+        }
         if (response.ok) {
           setApplications(data.applications || []);
         } else {
@@ -68,8 +75,10 @@ const CandidateApplicationsPage = () => {
     setWithdrawingId(appId);
     setError('');
     try {
-      const res = await fetch(`/api/candidate/applications/${appId}/withdraw`, {
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/candidate/applications/${appId}/withdraw`, {
         method: 'POST',
+        headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
         credentials: 'include',
       });
       const data = await res.json();

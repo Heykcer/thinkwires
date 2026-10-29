@@ -32,4 +32,50 @@ export const getApiBaseUrl = () => {
 };
 
 export const API_BASE = getApiBaseUrl();
+
+const CANDIDATE_TOKEN_KEY = 'thinkwires_candidate_jwt';
+
+export const getCandidateToken = () => {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(CANDIDATE_TOKEN_KEY);
+    }
+  } catch {
+    // Ignore in private/restricted storage modes
+  }
+  return null;
+};
+
+export const setCandidateToken = (token) => {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      if (token) {
+        localStorage.setItem(CANDIDATE_TOKEN_KEY, token);
+      } else {
+        localStorage.removeItem(CANDIDATE_TOKEN_KEY);
+      }
+    }
+  } catch {
+    // Ignore in private/restricted storage modes
+  }
+};
+
+export const clearCandidateToken = () => {
+  setCandidateToken(null);
+};
+
+/**
+ * Returns authorization headers including Bearer token if available.
+ * Transmits credentials in dual-mode (HttpOnly cookie + Authorization header)
+ * for maximum resilience across cross-domain deployments.
+ */
+export const getCandidateAuthHeaders = (additionalHeaders = {}) => {
+  const headers = { ...additionalHeaders };
+  const token = getCandidateToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+};
+
 export default API_BASE;
