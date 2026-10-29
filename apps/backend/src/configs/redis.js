@@ -15,7 +15,8 @@ export const setMockRedisClient = (client) => {
 
 /**
  * Initializes and retrieves the singleton Redis client.
- * Includes graceful connection handling and automatic fallback.
+ * Supports Upstash Redis (rediss:// TLS), cloud Redis, and local Redis.
+ * Includes graceful connection handling and automatic in-memory fallback.
  */
 export const getRedisClient = async () => {
   if (redisClient && isRedisReady) {
@@ -32,29 +33,33 @@ export const getRedisClient = async () => {
     const redisUrl =
       process.env.REDIS_URL || config.REDIS_URL || 'redis://localhost:6379';
 
+    const isTls = redisUrl.startsWith('rediss://');
+    const isUpstash = redisUrl.includes('upstash.io');
+
     try {
       redisClient = createClient({
         url: redisUrl,
         socket: {
+          tls: isTls,
           reconnectStrategy: (retries) => {
-            if (retries > 2) {
+            if (retries > 5) {
               return false; // Cease retrying if Redis is not running
             }
-            return Math.min(retries * 50, 300);
+            return Math.min(retries * 100, 1000);
           },
-          connectTimeout: 2000,
+          connectTimeout: 10000,
         },
       });
 
       redisClient.on('error', (err) => {
         isRedisReady = false;
-        // Suppress repeated connection logs if local Redis daemon is absent
       });
 
       redisClient.on('ready', () => {
         isRedisReady = true;
         isRedisConnecting = false;
-        console.log('[Redis] Connected: token revocation cache active.');
+        const provider = isUpstash ? 'Upstash Cloud' : isTls ? 'Cloud TLS' : 'Local';
+        console.log(`[Redis] Connected: token revocation cache active (${provider}).`);
       });
 
       redisClient.on('end', () => {
@@ -102,3 +107,5 @@ export const closeRedis = async () => {
     }
   }
 };
+
+export default { getRedisClient, closeRedis, setMockRedisClient };

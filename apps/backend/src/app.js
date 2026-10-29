@@ -110,51 +110,22 @@ app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', apiRoutes);
 
-// Resolve built frontend assets across monorepo layouts (Render, Docker, standalone)
-const possibleDistPaths = [
-  path.resolve(__dirname, '../../frontend/dist'),
-  path.resolve(process.cwd(), 'apps/frontend/dist'),
-  path.resolve(process.cwd(), '../frontend/dist'),
-  path.resolve(process.cwd(), 'dist'),
-];
-
-const resolvedDist =
-  process.env.NODE_ENV !== 'test'
-    ? possibleDistPaths.find((p) => fs.existsSync(p))
-    : null;
-
-if (resolvedDist) {
-  app.use(
-    express.static(resolvedDist, {
-      maxAge: '1d',
-      setHeaders: (res, filePath) => {
-        const normalizedPath = filePath.replace(/\\/g, '/');
-        if (normalizedPath.includes('/assets/')) {
-          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-        }
-      },
-    })
-  );
-
-  // Express 5 / path-to-regexp v7 breaks on un-named wildcard routes like app.get('*').
-  // Use catch-all middleware fallback for SPA client-side routing.
-  app.use((req, res, next) => {
-    if (req.method !== 'GET') {
-      return next();
-    }
-    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
-      return next();
-    }
-    res.sendFile(path.join(resolvedDist, 'index.html'));
+// Root entrypoint status for pure API service
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: 'Thinkwires Enterprise Core Backend',
+    message: 'API is running...',
+    endpoints: {
+      api: '/api',
+      health: '/api/health',
+      openings: '/api/openings',
+    },
   });
-} else {
-  app.get('/', (req, res) => {
-    res.send('API is running...');
-  });
-}
+});
 
-// 404 handler for unmatched /api routes
-app.use('/api', (req, res) => {
+// Central 404 JSON responder for unmatched routes
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: `API endpoint not found: ${req.method} ${req.originalUrl || req.url}`,
