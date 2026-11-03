@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   fetchIndustriesPageData,
-  fetchSectorCatalog,
   INDUSTRY_TABS,
   getAllIndustries,
+  getIndustrySlugByJobSector,
 } from '../../store/slices/industriesSlice';
+import { fetchOpenings } from '../../store/slices/homeSlice';
 import ScrollReveal from '../common/ScrollReveal';
 
 const SectorCatalog = () => {
@@ -14,6 +15,7 @@ const SectorCatalog = () => {
   const { sectors, sectorTabs, status } = useSelector(
     (state) => state.industries
   );
+  const { openings = [] } = useSelector((state) => state.home);
 
   const [activeTab, setActiveTab] = useState('all');
 
@@ -22,6 +24,27 @@ const SectorCatalog = () => {
       dispatch(fetchIndustriesPageData());
     }
   }, [status, dispatch]);
+
+  useEffect(() => {
+    if (!openings || openings.length === 0) {
+      dispatch(fetchOpenings());
+    }
+  }, [dispatch, openings]);
+
+  // Helper to calculate verified active job count for a sector slug
+  const getActiveJobsCount = (targetSlug) => {
+    if (!openings || openings.length === 0 || !targetSlug) return 0;
+    return openings.filter((job) => {
+      const jobSlug =
+        job.industrySlug ||
+        getIndustrySlugByJobSector(
+          [job.industrySector, job.category, job.title, job.department, job.company]
+            .filter(Boolean)
+            .join(' ')
+        );
+      return jobSlug === targetSlug;
+    }).length;
+  };
 
   const tabs =
     sectorTabs && sectorTabs.length > 0 ? sectorTabs : INDUSTRY_TABS;
@@ -107,22 +130,55 @@ const SectorCatalog = () => {
                 />
 
                 <div className="SectorCatalog-cardTop">
-                  <div className="SectorCatalog-cardHeader">
-                    <div className="SectorCatalog-cardIconWrap SectorCatalog-cardIconWrap--glass">
-                      <span className="material-symbols-outlined SectorCatalog-cardIcon">
-                        {sector.icon || 'star'}
+                  <div className="SectorCatalog-cardHeader flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <div className="SectorCatalog-cardIconWrap SectorCatalog-cardIconWrap--glass">
+                        <span className="material-symbols-outlined SectorCatalog-cardIcon">
+                          {sector.icon || 'star'}
+                        </span>
+                      </div>
+                      <span className="SectorCatalog-cardBadge SectorCatalog-cardBadge--glass">
+                        <span
+                          className="SectorCatalog-cardBadgeDot"
+                          style={{
+                            backgroundColor:
+                              sector.badgeDot || 'var(--color-cobalt-bright, #2563EB)',
+                          }}
+                        ></span>
+                        {sector.badgeText || sector.badge || 'Domain Verified'}
                       </span>
                     </div>
-                    <span className="SectorCatalog-cardBadge SectorCatalog-cardBadge--glass">
-                      <span
-                        className="SectorCatalog-cardBadgeDot"
-                        style={{
-                          backgroundColor:
-                            sector.badgeDot || 'var(--color-cobalt-bright, #2563EB)',
-                        }}
-                      ></span>
-                      {sector.badgeText || sector.badge || 'Domain Verified'}
-                    </span>
+
+                    {/* Active Jobs Badge (Clickable, links to /hot-jobs?industry={slug}) */}
+                    {(() => {
+                      const activeCount = getActiveJobsCount(targetSlug);
+                      return (
+                        <Link
+                          to={`/hot-jobs?industry=${encodeURIComponent(targetSlug)}`}
+                          className="SectorCatalog-hiringBadge"
+                          aria-label={
+                            activeCount > 0
+                              ? `View ${activeCount} active openings in ${sector.title}`
+                              : `Explore hiring opportunities in ${sector.title}`
+                          }
+                          title={
+                            activeCount > 0
+                              ? `${activeCount} Verified Open Roles in ${sector.title}`
+                              : `Explore opportunities in ${sector.title}`
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="SectorCatalog-hiringBadgeIcon" aria-hidden="true">
+                            ⚡
+                          </span>
+                          <span>
+                            {activeCount > 0
+                              ? `${activeCount} Active ${activeCount === 1 ? 'Opening' : 'Openings'}`
+                              : 'Explore Opportunities'}
+                          </span>
+                        </Link>
+                      );
+                    })()}
                   </div>
 
                   <h3 className="SectorCatalog-cardTitle SectorCatalog-cardTitle--light">
