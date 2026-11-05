@@ -298,8 +298,17 @@ export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const req = res?.req;
+  const origin = req?.headers?.origin;
+  const isCrossOrigin =
+    origin &&
+    !origin.includes('localhost') &&
+    !origin.includes('127.0.0.1') &&
+    (origin.includes('vercel.app') || origin.includes('thinkwires.com'));
+
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE ||
+    (isCrossOrigin ? 'none' : isProduction ? 'strict' : 'lax');
   const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
@@ -312,8 +321,17 @@ export const setAdminAuthCookie = (res, token) => {
 
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const req = res?.req;
+  const origin = req?.headers?.origin;
+  const isCrossOrigin =
+    origin &&
+    !origin.includes('localhost') &&
+    !origin.includes('127.0.0.1') &&
+    (origin.includes('vercel.app') || origin.includes('thinkwires.com'));
+
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
+    process.env.COOKIE_SAME_SITE ||
+    (isCrossOrigin ? 'none' : isProduction ? 'strict' : 'lax');
   const secure = isProduction || sameSite.toLowerCase() === 'none';
   const opts = {
     httpOnly: true,

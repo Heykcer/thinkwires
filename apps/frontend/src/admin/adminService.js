@@ -43,12 +43,15 @@ export const getCsrfToken = () => {
   return null;
 };
 
-/**
- * Security: Authentication tokens are strictly server-managed via HttpOnly cookies
- * and are never stored in or readable by client-side scripts (prevents XSS token exfiltration).
- */
+// In-memory token storage (prevents XSS persistent token leakage while providing resilient Bearer auth)
+let currentAdminToken = null;
+
+export const setAdminToken = (token) => {
+  currentAdminToken = token || null;
+};
+
 export const getAdminToken = () => {
-  return null;
+  return currentAdminToken;
 };
 
 export const getAdminUser = () => {
@@ -96,6 +99,7 @@ export const setAdminSession = (param1, param2) => {
 };
 
 export const clearAdminSession = () => {
+  currentAdminToken = null;
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('tw_admin_token');
@@ -229,6 +233,9 @@ export const adminApi = {
     if (!res.ok) throw new Error(json.error || `Login failed (${res.status})`);
     if (json.csrfToken) {
       setCsrfToken(json.csrfToken);
+    }
+    if (json.token) {
+      setAdminToken(json.token);
     }
     if (json.user) {
       setAdminSession(json.user);

@@ -104,6 +104,7 @@ const AdminLayout = () => {
         if (!isMounted) return;
         console.warn('Admin session validation failed:', err.message);
         clearAdminSession();
+        setCurrentUser(null);
         navigate('/admin/login', {
           replace: true,
           state: { from: location.pathname },
@@ -373,7 +374,7 @@ const AdminLayout = () => {
 
   const currentProfile = getUserProfile();
 
-  if (authChecking) {
+  if (authChecking || !currentUser) {
     return (
       <div
         style={{
