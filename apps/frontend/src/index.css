@@ -17320,6 +17320,24 @@ textarea {
   transition: background-color 0.25s ease, padding-top 0.25s ease;
 }
 
+/* Three.js Background Globe Vertical Positioning: Aligned behind headline */
+.NewHero-globeBg {
+  transform: translateY(-85px);
+  will-change: transform;
+}
+
+@media (max-width: 1024px) {
+  .NewHero-globeBg {
+    transform: translateY(-60px);
+  }
+}
+
+@media (max-width: 768px) {
+  .NewHero-globeBg {
+    transform: translateY(-35px);
+  }
+}
+
 /* Ambient Glow Orbs */
 .NewHero-glowOrb {
   position: absolute;
@@ -17636,23 +17654,41 @@ textarea {
 .NewHero-visualCol {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .NewHero-imageWrapper {
   position: relative;
   width: 100%;
-  border-radius: var(--rounded-xl, 1rem);
+  max-width: 480px;
+  height: 460px;
+  margin-left: auto;
+  border-radius: var(--rounded-2xl, 1.25rem);
   overflow: hidden;
-  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.22);
-  background-color: var(--color-surface-container-low, #f3f2fe);
-  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  box-shadow: 0 20px 45px -12px rgba(0, 55, 176, 0.12);
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.96) 0%, rgba(240, 249, 255, 0.8) 60%, rgba(224, 242, 254, 0.55) 100%);
+  border: 1px solid rgba(0, 55, 176, 0.15);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme='dark'] .NewHero-imageWrapper {
+  background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.95) 0%, rgba(10, 16, 30, 0.9) 100%);
+  border-color: rgba(56, 189, 248, 0.2);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.5);
 }
 
 /* Slideshow Container */
 .NewHero-slideshowContainer {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 100%;
 }
 
 .NewHero-slideItem {
@@ -17769,22 +17805,30 @@ textarea {
 /* Floating Live Dispatch Card */
 .NewHero-floatingCard {
   position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  padding: 1.125rem 1.25rem;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  padding: 0.875rem 1rem;
   border-radius: var(--rounded-lg, 0.75rem);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.2);
-  z-index: 5;
+  border: 1px solid rgba(0, 55, 176, 0.16);
+  box-shadow: 0 12px 28px -6px rgba(0, 55, 176, 0.12);
+  z-index: 10;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 [data-theme='dark'] .NewHero-floatingCard {
-  background: rgba(15, 23, 42, 0.92);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(56, 189, 248, 0.25);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
 }
 
 .NewHero-cardAnimate {
@@ -18237,6 +18281,12 @@ textarea {
   .NewHero-section {
     padding-top: 1.25rem;
   }
+
+  .NewHero-imageWrapper {
+    max-width: 460px;
+    height: 440px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -18247,8 +18297,13 @@ textarea {
     scroll-margin-top: 1rem;
   }
 
-  .NewHero-slideshowContainer {
+  .NewHero-imageWrapper {
+    max-width: 100%;
     height: 380px;
+  }
+
+  .NewHero-slideshowContainer {
+    height: 100%;
   }
 
   .NewHero-floatingCard {
