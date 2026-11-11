@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import ResourcesPage from './pages/ResourcesPage';
 import FAQPage from './pages/FAQPage';
 import BenefitsPage from './pages/BenefitsPage';
-import { Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { checkAuthSession } from './store/slices/authSlice';
 
