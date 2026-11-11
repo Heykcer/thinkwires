@@ -349,14 +349,6 @@ const Reports = () => {
               Our Latest Tech &amp; Market Reports
             </h2>
           </div>
-          <div className="Reports-headerRight">
-            <Link to="/blog" className="Reports-browseLink">
-              <span>Browse All Articles</span>
-              <span className="material-symbols-outlined">
-                arrow_forward
-              </span>
-            </Link>
-          </div>
           <Link to="/blog" className="Reports-browseLink group">
             <span>Browse All Reports</span>
             <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
@@ -367,65 +359,131 @@ const Reports = () => {
 
         {/* Carousel Viewport with Native Horizontal Scroll & CSS Scroll-Snap */}
         <div
-          className="Reports-sliderWrapper"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          ref={trackRef}
+          className="Reports-carouselTrack"
+          tabIndex={0}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Talent Advisory Insights Carousel"
+          onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
-          <motion.div
-            className="Reports-sliderTrack"
-            animate={{
-              x: `calc(-${currentIndex} * ((100% + 24px) / ${cardsPerView}))`,
-            }}
-            transition={{
-              type: 'spring',
-              stiffness: 260,
-              damping: 30,
-            }}
-          >
-            {reportsData.map((report) => (
+          {allArticles.map((article) => {
+            const destination = getReportDestination(article);
+            const imageSrc = getArticleImage(article);
+            const badgeText =
+              article.badge || article.category || article.tag || 'Insights';
+            const readTimeText = article.readTime || '8 min read';
+            const publishDate =
+              article.publishedAt || article.date || 'Aug 2026';
+            const subCategoryText =
+              article.subCategory || article.category;
+            const authorName =
+              typeof article.author === 'object'
+                ? article.author?.name || 'Thinkwires Advisory Team'
+                : article.author || 'Thinkwires Advisory Team';
+            const authorAvatar =
+              typeof article.author === 'object' ? article.author?.avatar : null;
+            const authorInitials = getAuthorInitials(article.author);
+
+            return (
               <div
-                key={report.id}
+                key={article.id || article.slug || article.title}
                 className="Reports-slide"
-                style={{
-                  width:
-                    cardsPerView === 1
-                      ? '100%'
-                      : cardsPerView === 2
-                      ? 'calc((100% - 24px) / 2)'
-                      : 'calc((100% - 48px) / 3)',
-                }}
               >
-                <div className="Reports-card">
-                  <div className="Reports-imageContainer">
-                    <img
-                      src={report.image}
-                      alt={report.title}
-                      className="Reports-image"
-                      loading="lazy"
-                    />
-                    <span className="Reports-tagBadge">
-                      {report.tag}
-                    </span>
-                  </div>
-                  <div className="Reports-content">
-                    <span className="Reports-date">
-                      {report.date}
-                    </span>
-                    <h3 className="Reports-cardTitle">
-                      {report.title}
-                    </h3>
-                    <p className="Reports-cardDesc">
-                      {report.desc}
-                    </p>
-                    <div className="Reports-footer">
-                      <Link to="/blog" className="Reports-readLink">
-                        <span>Read Analysis</span>
-                        <span className="material-symbols-outlined">
-                          arrow_forward
+                <article className="Reports-card">
+                  <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto' }}>
+                    {/* Standardized Card Image Header */}
+                    <div className="Reports-imageContainer">
+                      <img
+                        src={imageSrc}
+                        alt={article.title}
+                        className="Reports-image"
+                        loading="lazy"
+                      />
+                      <span
+                        className="Reports-tagBadge"
+                        style={{
+                          backgroundColor:
+                            article.badgeBg || 'rgba(15, 23, 42, 0.85)',
+                          color: article.badgeColor || '#ffffff',
+                        }}
+                      >
+                        {badgeText}
+                      </span>
+                      {readTimeText && (
+                        <span className="Reports-readBadge">
+                          <span>⏱</span>
+                          <span>{readTimeText}</span>
                         </span>
-                      </Link>
+                      )}
                     </div>
+
+                    {/* Content Area with aligned typography */}
+                    <div className="Reports-content">
+                      <div className="Reports-metaRow">
+                        <span className="Reports-metaDate">{publishDate}</span>
+                        {subCategoryText && (
+                          <>
+                            <span className="Reports-metaDot">•</span>
+                            <span className="Reports-metaCategory">
+                              {subCategoryText}
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      <h3 className="Reports-cardTitle">
+                        {article.title}
+                      </h3>
+
+                      <p className="Reports-cardDesc">
+                        {article.excerpt || article.summary || article.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Aligned footer with author and Read Analysis */}
+                  <div className="Reports-footer">
+                    <div className="Reports-authorGroup">
+                      {authorAvatar ? (
+                        <img
+                          src={authorAvatar}
+                          alt={authorName}
+                          className="Reports-authorAvatar"
+                          style={{
+                            width: 28,
+                            height: 28,
+                            minWidth: 28,
+                            minHeight: 28,
+                            maxWidth: 28,
+                            maxHeight: 28,
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <div className="Reports-authorBubble">
+                          {authorInitials}
+                        </div>
+                      )}
+                      <span className="Reports-authorName">
+                        {authorName}
+                      </span>
+                    </div>
+
+                    <Link
+                      to={destination}
+                      className="Reports-readLink"
+                    >
+                      <span>Read Analysis</span>
+                      <span className="material-symbols-outlined text-[16px]">
+                        arrow_forward
+                      </span>
+                    </Link>
                   </div>
                 </article>
               </div>
@@ -433,17 +491,22 @@ const Reports = () => {
           })}
         </div>
 
-        {/* Pagination Dots */}
-        {maxIndex > 0 && (
-          <div className="Reports-dotsIndicator">
-            {Array.from({ length: maxIndex + 1 }).map((_, dotIdx) => (
+        {/* Slide Indicator / Pagination Dots (Reduced to valid scroll stops) */}
+        {maxDots > 1 && (
+          <div
+            className="Reports-dotsContainer"
+            role="tablist"
+            aria-label="Carousel pagination"
+          >
+            {Array.from({ length: maxDots }).map((_, dotIdx) => (
               <button
                 key={dotIdx}
                 type="button"
-                onClick={() => setCurrentIndex(dotIdx)}
-                aria-label={`Go to reports group ${dotIdx + 1}`}
+                onClick={() => handleScrollToSlide(dotIdx)}
+                aria-label={`Go to slide ${dotIdx + 1} of ${maxDots}`}
+                aria-current={activeSlide === dotIdx ? 'true' : undefined}
                 className={`Reports-dot ${
-                  currentIndex === dotIdx ? 'Reports-dot--active' : ''
+                  activeSlide === dotIdx ? 'active' : ''
                 }`}
               />
             ))}
