@@ -141,7 +141,7 @@ const AboutMissionVisionSection = () => {
 
               <div className="TW-AboutMV-cardFooter">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  sparkles
+                  auto_awesome
                 </span>
                 <span>Connecting People, Technology and Possibilities</span>
               </div>

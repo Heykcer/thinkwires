@@ -110,23 +110,33 @@ const AdminLoginPage = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '1rem',
+              marginBottom: '1.25rem',
             }}
           >
             <div
               style={{
                 background: '#FFFFFF',
                 borderRadius: '12px',
-                padding: '0.45rem 1.25rem',
+                padding: '0 1rem',
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 boxShadow: '0 8px 20px rgba(0, 0, 0, 0.25)',
+                height: '48px',
+                width: '180px',
+                overflow: 'hidden',
               }}
             >
               <img
                 src={logo}
                 alt="Thinkwires Logo"
-                style={{ height: '36px', width: 'auto', display: 'block' }}
+                style={{
+                  height: '165px',
+                  width: 'auto',
+                  maxWidth: 'none',
+                  display: 'block',
+                  objectFit: 'contain',
+                }}
               />
             </div>
           </div>
@@ -169,79 +179,9 @@ const AdminLoginPage = () => {
             </div>
           )}
 
-          {/* Quick Demo Credentials Assistant */}
-          <div
-            style={{
-              marginBottom: '1.25rem',
-              padding: '0.85rem 1rem',
-              backgroundColor: '#F8FAFC',
-              border: '1px solid #E2E8F0',
-              borderRadius: '8px',
-              fontSize: '0.78rem',
-              color: '#475569',
-            }}
-          >
-            <div
-              style={{
-                fontWeight: 700,
-                color: '#1E293B',
-                marginBottom: '0.4rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '0.95rem', color: '#008F68' }}>
-                vpn_key
-              </span>
-              <span>Default System Credentials</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.35rem 0.5rem',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '6px',
-                  border: '1px solid #E2E8F0',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  setEmail('admin@thinkwires.com');
-                  setPassword('Thinkwires@2026');
-                }}
-                title="Click to fill Admin credentials"
-              >
-                <span><strong>Admin:</strong> admin@thinkwires.com</span>
-                <span style={{ color: '#008F68', fontWeight: 600, fontSize: '0.72rem' }}>Fill &rarr;</span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.35rem 0.5rem',
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '6px',
-                  border: '1px solid #E2E8F0',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  setEmail('superadmin@thinkwires.com');
-                  setPassword('Thinkwires@Admin2026!');
-                }}
-                title="Click to fill Superadmin credentials"
-              >
-                <span><strong>Superadmin:</strong> superadmin@thinkwires.com</span>
-                <span style={{ color: '#008F68', fontWeight: 600, fontSize: '0.72rem' }}>Fill &rarr;</span>
-              </div>
-            </div>
-          </div>
-
           <form
             onSubmit={handleSubmit}
+            autoComplete="off"
             style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
           >
             <div>
@@ -259,9 +199,10 @@ const AdminLoginPage = () => {
               </label>
               <input
                 id="admin-email"
+                name="email"
                 type="email"
                 required
-                autoComplete="email"
+                autoComplete="off"
                 placeholder="name@thinkwires.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -318,10 +259,11 @@ const AdminLoginPage = () => {
               <div style={{ position: 'relative' }}>
                 <input
                   id="admin-password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   required
-                  autoComplete="current-password"
-                  placeholder="••••••••••••"
+                  autoComplete="new-password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{

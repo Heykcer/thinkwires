@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -49,8 +50,25 @@ const ComponentLoader = () => (
   </div>
 );
 
+// Map of URL ?category= param values → BlogFilters category keys
+const CATEGORY_PARAM_MAP = {
+  'talent-strategy': 'Talent Strategy',
+  'talent+strategy': 'Talent Strategy',
+  'talent strategy': 'Talent Strategy',
+  'ai-tech-trends': 'AI & Tech Trends',
+  'ai+tech+trends': 'AI & Tech Trends',
+  'ai & tech trends': 'AI & Tech Trends',
+  'gcc-economics': 'GCC Economics',
+  'gcc+economics': 'GCC Economics',
+  'gcc economics': 'GCC Economics',
+  'case-studies': 'Case Studies',
+  'case+studies': 'Case Studies',
+  'case studies': 'Case Studies',
+};
+
 const BlogPage = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const {
     articles,
     featuredArticle,
@@ -66,6 +84,45 @@ const BlogPage = () => {
 
   const [activeArticleModal, setActiveArticleModal] = useState(null);
 
+  // Handle ?category= URL param — map to a known BlogFilters key
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      const normalised = categoryParam.toLowerCase();
+      const mapped =
+        CATEGORY_PARAM_MAP[normalised] ||
+        CATEGORY_PARAM_MAP[normalised.replace(/\+/g, ' ')] ||
+        null;
+      if (mapped) {
+        dispatch(setSelectedCategory(mapped));
+      }
+    }
+  }, [searchParams, dispatch]);
+
+  // Handle ?article= URL param — open the matching article in the reader modal
+  useEffect(() => {
+    const articleParam = searchParams.get('article');
+    if (!articleParam) return;
+    const target = articles.find(
+      (a) =>
+        String(a.id) === articleParam ||
+        a.slug === articleParam ||
+        a.title?.toLowerCase().includes(articleParam.toLowerCase())
+    );
+    if (target) {
+      // Defer to avoid synchronous setState-in-effect lint warning
+      setTimeout(() => setActiveArticleModal(target), 0);
+    } else if (
+      featuredArticle &&
+      (articleParam === 'featured-flagship-1' ||
+        String(featuredArticle.id) === articleParam ||
+        featuredArticle.slug === articleParam ||
+        featuredArticle.title?.toLowerCase().includes(articleParam.toLowerCase()))
+    ) {
+      setTimeout(() => setActiveArticleModal(featuredArticle), 0);
+    }
+  }, [searchParams, articles, featuredArticle]);
+
   useEffect(() => {
     dispatch(fetchArticles({ q: searchQuery, category: selectedCategory }));
     dispatch(fetchFeaturedArticle());
@@ -75,13 +132,26 @@ const BlogPage = () => {
   // Filter articles dynamically
   const filteredArticles = articles.filter((art) => {
     if (art.featured) return false;
+
+    // "Talent Strategy" filter also includes report-adjacent categories and badges
+    const isTalentStrategyFilter = selectedCategory === 'Talent Strategy';
+    const talentStrategyAdjacent =
+      isTalentStrategyFilter &&
+      (art.category === 'IT Job Market Reports' ||
+        art.category === 'Recruitment Operations' ||
+        art.category === 'Workforce Culture' ||
+        art.badge === 'Market Report' ||
+        art.badge === 'Talent Ops Audit' ||
+        art.badge === 'AI Recruitment');
+
     const matchesCategory =
       selectedCategory === 'all' ||
       selectedCategory === 'All' ||
       selectedCategory === 'All Insights' ||
       selectedCategory.startsWith('All Insights') ||
       art.category === selectedCategory ||
-      art.badge === selectedCategory;
+      art.badge === selectedCategory ||
+      talentStrategyAdjacent;
 
     const matchesSearch =
       searchQuery.trim() === '' ||
