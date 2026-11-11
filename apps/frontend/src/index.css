@@ -26181,5 +26181,11 @@ textarea {
     gap: 1.25rem;
   }
 
-  .Eor-explana
+  /* Fixed incomplete selector – removed stray text */
+  .Eor-explanation {
+    /* placeholder styles */
+    margin-top: 1rem;
+  }
 ... [truncated for diff preview]
+
+}
