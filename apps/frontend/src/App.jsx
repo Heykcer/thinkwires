@@ -1,5 +1,8 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ResourcesPage from './pages/ResourcesPage';
+import FAQPage from './pages/FAQPage';
+import BenefitsPage from './pages/BenefitsPage';
+import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { checkAuthSession } from './store/slices/authSlice';
 
