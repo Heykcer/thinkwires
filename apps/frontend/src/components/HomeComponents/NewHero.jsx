@@ -18,6 +18,7 @@ import {
 import ApplyModal from '../common/ApplyModal';
 import ScopeCallModal from '../common/ScopeCallModal';
 import SkillSearchInput from '../common/SkillSearchInput';
+import CyberGlobe from './CyberGlobe';
 
 const SLIDE_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
@@ -306,6 +307,19 @@ const NewHero = ({ onOpenModal }) => {
         className="NewHero-heroSection NewHero-section"
         onMouseMove={handleHeroMouseMove}
       >
+        {/* Thinkwires 3D Transparent Network Globe in Hero Background: Positioned via CSS behind headline */}
+        <CyberGlobe
+          className="NewHero-globeBg"
+          isBackground={true}
+          height="100%"
+          showFloor={false}
+          globeOffsetX={-37}
+          globeOffsetY={6}
+          radius={35}
+          showPolyhedra={false}
+          showOrbitalRings={false}
+          showPerimeterRim={false}
+        />
 
         {/* OSS Dynamic Mouse-Tracking Spotlight */}
         <motion.div

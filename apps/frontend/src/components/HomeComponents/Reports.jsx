@@ -94,34 +94,10 @@ const Reports = () => {
               Our Latest Tech &amp; Market Reports
             </h2>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Slider Navigation Arrows */}
-            <div className="flex items-center gap-1.5 mr-2">
-              <button
-                type="button"
-                onClick={prevSlide}
-                aria-label="Previous report"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_left
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={nextSlide}
-                aria-label="Next report"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_right
-                </span>
-              </button>
-            </div>
-
-            <Link to="/blog" className="Reports-browseLink group">
+          <div className="Reports-headerRight">
+            <Link to="/blog" className="Reports-browseLink">
               <span>Browse All Articles</span>
-              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+              <span className="material-symbols-outlined">
                 arrow_forward
               </span>
             </Link>
@@ -130,27 +106,26 @@ const Reports = () => {
 
         {/* Carousel Slider Viewport */}
         <div
-          className="Reports-sliderWrapper overflow-hidden relative select-none"
+          className="Reports-sliderWrapper"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           <motion.div
-            className="flex gap-6"
+            className="Reports-sliderTrack"
             animate={{
-              x: `calc(-${currentIndex} * (100% / ${cardsPerView} + ${24 / cardsPerView}px - 24px / ${cardsPerView}))`,
+              x: `calc(-${currentIndex} * ((100% + 24px) / ${cardsPerView}))`,
             }}
             transition={{
               type: 'spring',
               stiffness: 260,
               damping: 30,
             }}
-            style={{ display: 'flex' }}
           >
             {reportsData.map((report) => (
               <div
                 key={report.id}
-                className="Reports-slide flex-shrink-0 flex"
+                className="Reports-slide"
                 style={{
                   width:
                     cardsPerView === 1
@@ -160,38 +135,36 @@ const Reports = () => {
                       : 'calc((100% - 48px) / 3)',
                 }}
               >
-                <div className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                  <div className="flex flex-col flex-1">
-                    <div className="Reports-imageContainer relative w-full h-48 overflow-hidden bg-slate-100">
-                      <img
-                        src={report.image}
-                        alt={report.title}
-                        className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <span className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-sm text-slate-800 shadow-sm">
-                        {report.tag}
-                      </span>
-                    </div>
-                    <div className="Reports-content p-6 flex flex-col flex-1">
-                      <span className="Reports-date text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">
-                        {report.date}
-                      </span>
-                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.5rem]">
-                        {report.title}
-                      </h3>
-                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
-                        {report.desc}
-                      </p>
-                    </div>
+                <div className="Reports-card">
+                  <div className="Reports-imageContainer">
+                    <img
+                      src={report.image}
+                      alt={report.title}
+                      className="Reports-image"
+                      loading="lazy"
+                    />
+                    <span className="Reports-tagBadge">
+                      {report.tag}
+                    </span>
                   </div>
-
-                  <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto">
-                    <Link to="/blog" className="Reports-readLink inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
-                      <span>Read Analysis</span>
-                      <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                        arrow_forward
-                      </span>
-                    </Link>
+                  <div className="Reports-content">
+                    <span className="Reports-date">
+                      {report.date}
+                    </span>
+                    <h3 className="Reports-cardTitle">
+                      {report.title}
+                    </h3>
+                    <p className="Reports-cardDesc">
+                      {report.desc}
+                    </p>
+                    <div className="Reports-footer">
+                      <Link to="/blog" className="Reports-readLink">
+                        <span>Read Analysis</span>
+                        <span className="material-symbols-outlined">
+                          arrow_forward
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -201,17 +174,15 @@ const Reports = () => {
 
         {/* Pagination Dots */}
         {maxIndex > 0 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
+          <div className="Reports-dotsIndicator">
             {Array.from({ length: maxIndex + 1 }).map((_, dotIdx) => (
               <button
                 key={dotIdx}
                 type="button"
                 onClick={() => setCurrentIndex(dotIdx)}
                 aria-label={`Go to reports group ${dotIdx + 1}`}
-                className={`h-2 transition-all rounded-full ${
-                  currentIndex === dotIdx
-                    ? 'w-8 bg-blue-600'
-                    : 'w-2 bg-slate-300 hover:bg-slate-400'
+                className={`Reports-dot ${
+                  currentIndex === dotIdx ? 'Reports-dot--active' : ''
                 }`}
               />
             ))}

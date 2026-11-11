@@ -257,14 +257,14 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
       )}
 
       {/* Quick Action Share & Download Bar */}
-      <div className="JobCard-shareActionBar flex items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
+      <div className="JobCard-shareActionBar">
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             downloadJobDescriptionPdf(job);
           }}
-          className="JobCard-actionMiniBtn flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 py-1.5 px-2.5 rounded border border-slate-200 transition-colors"
+          className="JobCard-actionMiniBtn JobCard-downloadJdBtn"
           title={`Download PDF Job Description for ${job.title}`}
           aria-label={`Download PDF Job Description for ${job.title}`}
         >
@@ -292,7 +292,7 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
             e.stopPropagation();
             shareJobOnWhatsApp(job);
           }}
-          className="JobCard-actionMiniBtn flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 py-1.5 px-2.5 rounded border border-emerald-200 transition-colors"
+          className="JobCard-actionMiniBtn JobCard-whatsappBtn"
           title={`Share ${job.title} on WhatsApp`}
           aria-label={`Share ${job.title} on WhatsApp`}
         >
