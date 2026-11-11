@@ -75,11 +75,11 @@ const IndustryDetailPage = () => {
       <div className="IndustryDetail-notFoundPage">
         <Navbar />
         <div className="IndustryDetail-notFoundContainer">
-          <span className="material-symbols-outlined text-[64px] text-blue-500 mb-4">
+          <span className="material-symbols-outlined IndustryDetail-notFoundIcon">
             travel_explore
           </span>
-          <h1 className="text-3xl font-bold mb-2">Industry Sector Not Found</h1>
-          <p className="text-slate-600 mb-6 max-w-md text-center">
+          <h1 className="IndustryDetail-notFoundTitle">Industry Sector Not Found</h1>
+          <p className="IndustryDetail-notFoundDesc">
             The industry sector you requested does not exist or may have been relocated.
           </p>
           <Link to="/industries" className="btn btn-primary">
@@ -154,7 +154,7 @@ const IndustryDetailPage = () => {
                   {badgeText || 'Specialized Domain Practice'}
                 </span>
                 <span className="IndustryDetail-heroPodsBadge">
-                  <span className="material-symbols-outlined text-[15px]">
+                  <span className="material-symbols-outlined">
                     hub
                   </span>
                   <span>{podsDeployed} Active Pods Deployed</span>
@@ -177,7 +177,7 @@ const IndustryDetailPage = () => {
                   className="btn btn-primary IndustryDetail-primaryBtn"
                 >
                   <span>Deploy Talent Pod</span>
-                  <span className="material-symbols-outlined text-[18px]">
+                  <span className="material-symbols-outlined">
                     arrow_forward
                   </span>
                 </button>
@@ -187,7 +187,7 @@ const IndustryDetailPage = () => {
                   onClick={() => scrollToSection('active-openings')}
                   className="btn btn-outline IndustryDetail-outlineBtn"
                 >
-                  <span className="material-symbols-outlined text-[18px]">
+                  <span className="material-symbols-outlined">
                     work
                   </span>
                   <span>View Domain Openings ({matchedJobs.length})</span>
@@ -242,9 +242,9 @@ const IndustryDetailPage = () => {
                     direction="up"
                     delay={(index % 3) * 0.08}
                   >
-                    <div className="IndustryDetail-solutionCard group">
+                    <div className="IndustryDetail-solutionCard">
                       <div className="IndustryDetail-solutionIcon">
-                        <span className="material-symbols-outlined text-[28px]">
+                        <span className="material-symbols-outlined">
                           {sol.icon || 'star'}
                         </span>
                       </div>
@@ -290,7 +290,7 @@ const IndustryDetailPage = () => {
                   >
                     <div className="IndustryDetail-domainCard">
                       <div className="IndustryDetail-domainHeader">
-                        <span className="material-symbols-outlined text-blue-600 text-[22px]">
+                        <span className="material-symbols-outlined IndustryDetail-domainIcon">
                           developer_board
                         </span>
                         <h3 className="IndustryDetail-domainTitle">
@@ -319,14 +319,16 @@ const IndustryDetailPage = () => {
               <ScrollReveal direction="up">
                 <div className="IndustryDetail-complianceBanner">
                   <div className="IndustryDetail-complianceLeft">
-                    <span className="material-symbols-outlined text-green-500 text-[36px]">
-                      verified_user
-                    </span>
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-1">
+                    <div className="IndustryDetail-complianceIconWrapper">
+                      <span className="material-symbols-outlined IndustryDetail-complianceIcon">
+                        verified_user
+                      </span>
+                    </div>
+                    <div className="IndustryDetail-complianceText">
+                      <h3 className="IndustryDetail-complianceTitle">
                         Mandatory Regulatory &amp; Compliance Stacks
                       </h3>
-                      <p className="text-slate-300 text-sm max-w-xl">
+                      <p className="IndustryDetail-complianceDesc">
                         Every deployment pod is thoroughly vetted for jurisdictional
                         compliance, data sovereignty, and security frameworks relevant to{' '}
                         {title}.
@@ -336,7 +338,7 @@ const IndustryDetailPage = () => {
                   <div className="IndustryDetail-complianceBadges">
                     {compliance.map((item, cIdx) => (
                       <span key={cIdx} className="IndustryDetail-compliancePill">
-                        <span className="material-symbols-outlined text-[15px] text-green-400">
+                        <span className="material-symbols-outlined IndustryDetail-compliancePillIcon">
                           check_circle
                         </span>
                         <span>{item}</span>
@@ -443,46 +445,51 @@ const IndustryDetailPage = () => {
               </div>
             ) : (
               <div className="IndustryDetail-emptyJobs">
-                <span className="material-symbols-outlined text-[40px] text-blue-500 mb-2">
+                <span className="material-symbols-outlined IndustryDetail-emptyIcon">
                   playlist_add_check
                 </span>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">
+                <h3 className="IndustryDetail-emptyTitle">
                   New Positions Sourcing Daily
                 </h3>
-                <p className="text-slate-500 text-sm max-w-md text-center mb-4">
+                <p className="IndustryDetail-emptyDesc">
                   We are constantly opening new engineering mandates in {title}. Submit your profile to join our verified talent bench.
                 </p>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSelectedJobForApply({
-                      jobId: 'general-intake',
-                      title: `${title} Specialized Candidate Pool`,
-                      department: title,
-                      location: 'Remote / India / USA',
-                    })
-                  }
-                  className="btn btn-primary"
-                >
-                  Join Talent Bench
-                </button>
+                <div className="IndustryDetail-emptyActions">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedJobForApply({
+                        jobId: 'general-intake',
+                        title: `${title} Specialized Talent Bench Pool`,
+                        department: title,
+                        location: 'Remote / India / USA',
+                      })
+                    }
+                    className="IndustryDetail-emptyBtn"
+                    aria-label={`Join ${title} Talent Bench`}
+                  >
+                    <span className="material-symbols-outlined">how_to_reg</span>
+                    <span>Join Talent Bench</span>
+                  </button>
+                  <Link
+                    to="/bench"
+                    className="IndustryDetail-emptySecondaryBtn"
+                    aria-label="Explore Bench Pool"
+                  >
+                    <span className="material-symbols-outlined">group</span>
+                    <span>Explore Bench Pool</span>
+                  </Link>
+                </div>
               </div>
             )}
 
-            <div className="flex justify-center mt-8">
+            <div className="IndustryDetail-browseBtnWrapper">
               <Link
                 to={`/jobs?industry=${slug}`}
-                className="btn btn-outline"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.75rem',
-                  borderRadius: '9999px',
-                }}
+                className="btn btn-outline IndustryDetail-browseBtn"
               >
                 <span>Browse All Active Mandates</span>
-                <span className="material-symbols-outlined text-[18px]">
+                <span className="material-symbols-outlined">
                   arrow_forward
                 </span>
               </Link>
@@ -494,15 +501,15 @@ const IndustryDetailPage = () => {
         <section className="IndustryDetail-section IndustryDetail-section--alt">
           <div className="IndustryDetail-container">
             <div className="IndustryDetail-otherHeader">
-              <h3 className="text-lg font-bold text-slate-800">
+              <h3 className="IndustryDetail-otherTitle">
                 Explore Other Specialized Industry Practices
               </h3>
               <Link
                 to="/industries"
-                className="text-blue-600 font-semibold text-sm hover:underline flex items-center gap-1"
+                className="IndustryDetail-otherLink"
               >
                 <span>View All 11 Sectors</span>
-                <span className="material-symbols-outlined text-[16px]">
+                <span className="material-symbols-outlined">
                   arrow_forward
                 </span>
               </Link>
@@ -516,7 +523,7 @@ const IndustryDetailPage = () => {
                     to={`/industries/${ind.slug}`}
                     className="IndustryDetail-otherChip"
                   >
-                    <span className="material-symbols-outlined text-[16px] text-blue-600">
+                    <span className="material-symbols-outlined IndustryDetail-otherChipIcon">
                       {ind.icon || 'terminal'}
                     </span>
                     <span>{ind.title}</span>

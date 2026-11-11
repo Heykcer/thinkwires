@@ -225,22 +225,15 @@ const Industries = () => {
                     <span className="Industries-carouselPodsCount">
                       Pods: <strong>{sector.podsDeployed || '25+'}</strong>
                     </span>
-                    <a
-                      href="#process"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const el = document.getElementById('process');
-                        if (el) {
-                          el.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
+                    <Link
+                      to={`/industries/${targetSlug}`}
                       className="Industries-exploreLink cursor-pointer relative z-10"
                     >
-                      <span>Explore Practice</span>
+                      <span>Explore</span>
                       <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
                         arrow_forward
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </article>
               );
