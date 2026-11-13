@@ -1,8 +1,19 @@
 import React from 'react';
 import BenchCandidateCard from './BenchCandidateCard';
 import ScrollReveal from '../common/ScrollReveal';
+import { BenchTalentSkeleton } from '../common/Skeleton';
 
-const BenchCandidateGrid = ({ talents, totalCount }) => {
+const BenchCandidateGrid = ({ talents, totalCount, isLoading = false }) => {
+  if (isLoading) {
+    return (
+      <div className="BenchGrid-wrapper">
+        <div className="BenchGrid-grid">
+          <BenchTalentSkeleton count={6} />
+        </div>
+      </div>
+    );
+  }
+
   if (!talents || talents.length === 0) {
     return (
       <div className="BenchGrid-emptyState">

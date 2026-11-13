@@ -38,16 +38,25 @@ const ContactCTA = lazy(
   () => import('../components/BlogComponents/ContactCTA')
 );
 
-const ComponentLoader = () => (
+import {
+  FeaturedArticleSkeleton,
+  BlogCardSkeleton,
+} from '../components/common/Skeleton';
+
+const BlogSectionLoader = () => (
   <div
+    className="blog-container"
     style={{
-      textAlign: 'center',
-      padding: '3rem 1.5rem',
-      color: '#64748b',
-      fontSize: '0.95rem',
+      padding: '2rem 1.5rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '3rem',
     }}
   >
-    Loading research section...
+    <FeaturedArticleSkeleton />
+    <div className="BlogGrid-container">
+      <BlogCardSkeleton count={6} />
+    </div>
   </div>
 );
 
@@ -297,7 +306,7 @@ const BlogPage = () => {
         {/* 1. Hero Section */}
         <BlogHero />
 
-        <Suspense fallback={<ComponentLoader />}>
+        <Suspense fallback={<BlogSectionLoader />}>
           {/* 2. Featured Flagship Paper */}
           <FeaturedArticle
             article={featuredArticle}

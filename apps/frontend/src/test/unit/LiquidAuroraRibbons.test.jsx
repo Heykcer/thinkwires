@@ -25,6 +25,9 @@ describe('LiquidAuroraRibbons (Unit Test)', () => {
     expect(
       container.querySelector('.tw-aurora-blob-lavender')
     ).toBeInTheDocument();
+    expect(
+      container.querySelector('.tw-aurora-blob-center')
+    ).toBeInTheDocument();
 
     // Verify presence of 3D Glass Ribbons SVG and groups
     const svg = container.querySelector('svg.tw-glass-ribbon-svg');
@@ -35,10 +38,22 @@ describe('LiquidAuroraRibbons (Unit Test)', () => {
     expect(
       container.querySelector('.tw-glass-group-secondary')
     ).toBeInTheDocument();
+    expect(
+      container.querySelector('.tw-glass-group-left')
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('.tw-glass-group-bridge')
+    ).toBeInTheDocument();
+
+    // Verify full-width specular light sweeps
+    expect(container.querySelector('.tw-glass-light-sweep')).toBeInTheDocument();
+    expect(container.querySelector('.tw-glass-light-sweep-left')).toBeInTheDocument();
 
     // Verify caustic optical glow flares
     expect(container.querySelector('.tw-glass-caustic-1')).toBeInTheDocument();
     expect(container.querySelector('.tw-glass-caustic-2')).toBeInTheDocument();
+    expect(container.querySelector('.tw-glass-caustic-3')).toBeInTheDocument();
+    expect(container.querySelector('.tw-glass-caustic-4')).toBeInTheDocument();
   });
 
   it('contains absolutely no particle, dot or network canvas elements', () => {

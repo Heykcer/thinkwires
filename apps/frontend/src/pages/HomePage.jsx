@@ -7,6 +7,15 @@ import TechStack from '../components/HomeComponents/TechStack';
 import About from '../components/HomeComponents/About';
 import MissionVisionExperience from '../components/HomeComponents/MissionVisionExperience';
 import Footer from '../components/common/Footer';
+import {
+  CapabilitiesSkeleton,
+  OpeningsSkeleton,
+  ProcessSkeleton,
+  StatsJourneySkeleton,
+  IndustriesSkeleton,
+  ReportsSkeleton,
+  CTASkeleton,
+} from '../components/common/Skeleton';
 
 const Capabilities = React.lazy(
   () => import('../components/HomeComponents/Capabilities')
@@ -68,19 +77,25 @@ const HomePage = () => {
         <TechStack />
         <About />
         <MissionVisionExperience />
-        <Suspense
-          fallback={
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-              Loading...
-            </div>
-          }
-        >
+        <Suspense fallback={<CapabilitiesSkeleton />}>
           <Capabilities />
+        </Suspense>
+        <Suspense fallback={<OpeningsSkeleton />}>
           <Openings />
+        </Suspense>
+        <Suspense fallback={<ProcessSkeleton />}>
           <Process />
+        </Suspense>
+        <Suspense fallback={<StatsJourneySkeleton />}>
           <StatsJourney />
+        </Suspense>
+        <Suspense fallback={<IndustriesSkeleton />}>
           <Industries />
+        </Suspense>
+        <Suspense fallback={<ReportsSkeleton />}>
           <Reports />
+        </Suspense>
+        <Suspense fallback={<CTASkeleton />}>
           <CTA />
         </Suspense>
       </main>

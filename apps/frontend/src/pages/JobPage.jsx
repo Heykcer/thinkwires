@@ -32,17 +32,16 @@ const CandidateFAQs = lazy(
   () => import('../components/JobsComponents/CandidateFAQs')
 );
 
+import { JobCardSkeleton } from '../components/common/Skeleton';
+
 const ComponentLoader = () => (
-  <div
-    style={{
-      textAlign: 'center',
-      padding: '3rem 1.5rem',
-      color: '#64748b',
-      fontSize: '0.95rem',
-    }}
-  >
-    Loading section...
-  </div>
+  <section className="FeaturedPositions-section">
+    <div className="FeaturedPositions-container">
+      <div className="FeaturedPositions-grid">
+        <JobCardSkeleton count={6} />
+      </div>
+    </div>
+  </section>
 );
 
 const JobPage = () => {
@@ -223,13 +222,13 @@ const JobPage = () => {
         <Suspense fallback={<ComponentLoader />}>
           {/* Featured Positions Grid (Dynamic from Redux Store & Backend) */}
           {isLoading && openings.length === 0 ? (
-            <div
-              style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}
-            >
-              <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>
-                Loading dynamic job listings from backend...
+            <section className="FeaturedPositions-section" id="featured-positions">
+              <div className="FeaturedPositions-container">
+                <div className="FeaturedPositions-grid">
+                  <JobCardSkeleton count={6} />
+                </div>
               </div>
-            </div>
+            </section>
           ) : isError && openings.length === 0 ? (
             <div
               style={{ textAlign: 'center', padding: '4rem', color: '#ef4444' }}

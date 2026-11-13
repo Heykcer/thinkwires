@@ -2,6 +2,7 @@ import React from 'react';
 import BlogCard from './BlogCard';
 import ScrollReveal from '../common/ScrollReveal';
 import { SearchIcon } from '../../admin/AdminIcons';
+import { BlogCardSkeleton } from '../common/Skeleton';
 
 const BlogGrid = ({
   articles = [],
@@ -14,21 +15,7 @@ const BlogGrid = ({
   if (isLoading) {
     return (
       <div className="BlogGrid-container">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="BlogGrid-skeletonCard">
-            <div className="BlogGrid-skeletonImage" />
-            <div className="BlogGrid-skeletonText" style={{ width: '40%' }} />
-            <div
-              className="BlogGrid-skeletonText"
-              style={{ width: '90%', height: '24px' }}
-            />
-            <div
-              className="BlogGrid-skeletonText"
-              style={{ width: '75%', height: '16px' }}
-            />
-            <div className="BlogGrid-skeletonFooter" />
-          </div>
-        ))}
+        <BlogCardSkeleton count={6} />
       </div>
     );
   }

@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitEorConsultation,
   resetSubmitStatus,
 } from '../../store/slices/eorSlice';
+
+const TARGET_GEO_OPTIONS = [
+  { value: 'india', label: 'India (Local & Offshore Tech Squads)' },
+  { value: 'usa', label: 'United States (Multi-State Compliance)' },
+  { value: 'canada', label: 'Canada (Provincial EOR)' },
+  { value: 'gcc', label: 'GCC / Middle East Expansion' },
+  { value: 'multi', label: 'Multi-Country Cross Border' },
+];
 
 const EorConsultation = ({ data }) => {
   const dispatch = useDispatch();
@@ -19,6 +27,65 @@ const EorConsultation = ({ data }) => {
     headcount: '1-5',
     projectDetails: '',
   });
+
+  const [geoDropdownOpen, setGeoDropdownOpen] = useState(false);
+  const geoDropdownRef = useRef(null);
+
+  const selectedGeoOption =
+    TARGET_GEO_OPTIONS.find((opt) => opt.value === form.targetGeo) ||
+    TARGET_GEO_OPTIONS[0];
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        geoDropdownRef.current &&
+        !geoDropdownRef.current.contains(e.target)
+      ) {
+        setGeoDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleGeoKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!geoDropdownOpen) {
+        setGeoDropdownOpen(true);
+      } else {
+        const currIdx = TARGET_GEO_OPTIONS.findIndex(
+          (opt) => opt.value === form.targetGeo
+        );
+        const nextIdx =
+          currIdx < TARGET_GEO_OPTIONS.length - 1 ? currIdx + 1 : 0;
+        setForm((prev) => ({
+          ...prev,
+          targetGeo: TARGET_GEO_OPTIONS[nextIdx].value,
+        }));
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!geoDropdownOpen) {
+        setGeoDropdownOpen(true);
+      } else {
+        const currIdx = TARGET_GEO_OPTIONS.findIndex(
+          (opt) => opt.value === form.targetGeo
+        );
+        const prevIdx =
+          currIdx > 0 ? currIdx - 1 : TARGET_GEO_OPTIONS.length - 1;
+        setForm((prev) => ({
+          ...prev,
+          targetGeo: TARGET_GEO_OPTIONS[prevIdx].value,
+        }));
+      }
+    } else if (e.key === 'Escape' || e.key === 'Tab') {
+      setGeoDropdownOpen(false);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setGeoDropdownOpen((prev) => !prev);
+    }
+  };
 
   if (!data) return null;
   const { eyebrow, heading, description, benefits = [], hq } = data;
@@ -193,33 +260,107 @@ const EorConsultation = ({ data }) => {
                   />
                 </div>
 
-                <div className="Payroll-formField">
-                  <label className="Payroll-formLabel" htmlFor="targetGeo">
+                <div className="Payroll-formField" ref={geoDropdownRef}>
+                  <label
+                    className="Payroll-formLabel"
+                    id="targetGeo-label"
+                    htmlFor="targetGeo-trigger"
+                  >
                     Target Geographies *
                   </label>
-                  <div className="Payroll-inputWrapper">
-                    <select
-                      className="Payroll-select"
-                      style={{ paddingLeft: '1rem' }}
-                      id="targetGeo"
-                      name="targetGeo"
-                      required
-                      value={form.targetGeo}
-                      onChange={handleChange}
+                  <div className="Payroll-inputWrapper Eor-selectWrapper">
+                    <button
+                      type="button"
+                      id="targetGeo-trigger"
+                      className={`Payroll-select Eor-customSelectTrigger ${
+                        geoDropdownOpen ? 'is-open' : ''
+                      }`}
+                      aria-haspopup="listbox"
+                      aria-expanded={geoDropdownOpen}
+                      aria-labelledby="targetGeo-label"
+                      onClick={() => setGeoDropdownOpen((prev) => !prev)}
+                      onKeyDown={handleGeoKeyDown}
                     >
-                      <option value="india">
-                        India (Local & Offshore Tech Squads)
-                      </option>
-                      <option value="usa">
-                        United States (Multi-State Compliance)
-                      </option>
-                      <option value="canada">Canada (Provincial EOR)</option>
-                      <option value="gcc">GCC / Middle East Expansion</option>
-                      <option value="multi">Multi-Country Cross Border</option>
-                    </select>
-                    <span className="material-symbols-outlined Payroll-selectArrow">
+                      <span className="Eor-customSelectValue">
+                        {selectedGeoOption.label}
+                      </span>
+                    </button>
+
+                    <span
+                      className={`material-symbols-outlined Payroll-selectArrow Eor-dropdownArrow ${
+                        geoDropdownOpen ? 'is-open' : ''
+                      }`}
+                      aria-hidden="true"
+                    >
                       expand_more
                     </span>
+
+                    {/* Hidden select for form integration & testing */}
+                    <select
+                      id="targetGeo"
+                      name="targetGeo"
+                      value={form.targetGeo}
+                      onChange={handleChange}
+                      style={{
+                        position: 'absolute',
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        width: '1px',
+                        height: '1px',
+                        bottom: 0,
+                      }}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    >
+                      {TARGET_GEO_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Custom Dropdown Menu */}
+                    {geoDropdownOpen && (
+                      <ul
+                        id="targetGeo-menu"
+                        role="listbox"
+                        aria-labelledby="targetGeo-label"
+                        className="Eor-customSelectMenu"
+                      >
+                        {TARGET_GEO_OPTIONS.map((opt) => {
+                          const isSelected = form.targetGeo === opt.value;
+                          return (
+                            <li
+                              key={opt.value}
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`Eor-customSelectOption ${
+                                isSelected ? 'is-selected' : ''
+                              }`}
+                              onClick={() => {
+                                setForm((prev) => ({
+                                  ...prev,
+                                  targetGeo: opt.value,
+                                }));
+                                setGeoDropdownOpen(false);
+                              }}
+                            >
+                              <span className="Eor-customSelectOptionText">
+                                {opt.label}
+                              </span>
+                              {isSelected && (
+                                <span
+                                  className="material-symbols-outlined Eor-customSelectCheck"
+                                  aria-hidden="true"
+                                >
+                                  check
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>

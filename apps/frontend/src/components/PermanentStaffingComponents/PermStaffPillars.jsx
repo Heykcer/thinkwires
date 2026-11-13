@@ -35,7 +35,8 @@ const PermStaffPillars = ({ data }) => {
               direction="up"
               delay={idx * 0.1}
               distance={50}
-              style={{ display: 'flex' }}
+              className="PermStaff-pillarReveal"
+              style={{ display: 'flex', width: '100%', height: '100%' }}
             >
               <div className="PermStaff-pillarCard" style={{ width: '100%' }}>
                 <div className="pillar-top">
