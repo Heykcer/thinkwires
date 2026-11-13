@@ -132,10 +132,11 @@ const Footer = () => {
                 className={'Footer-logoImg'}
               />
             </Link>
+            <h4 className={'Footer-brandTagline'}>
+              Technology Matters. People Matter More.
+            </h4>
             <p className={'Footer-brandDesc'}>
-              Architecting elite workforce solutions, borderless global
-              engineering teams, and hyper-scalable enterprise talent ecosystems
-              across North America, India, and emerging tech corridors.
+             Thinkwires Technology is a Noida-based talent supply chain and business solutions company delivering skilled professionals and innovative solutions across AI, Cloud Computing, Cybersecurity, Semiconductors, Engineering, and Digital Transformation.
             </p>
             <div className={'Footer-socialLinks'}>
               <a
