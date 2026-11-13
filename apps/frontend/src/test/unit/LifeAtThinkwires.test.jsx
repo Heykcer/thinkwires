@@ -34,10 +34,25 @@ describe('LifeAtThinkwires Component (Unit Tests)', () => {
 
     const viewRolesBtn = screen.getByRole('link', { name: /View Open Positions/i });
     expect(viewRolesBtn).toBeInTheDocument();
+
+    // Enterprise Credentials Ribbon
+    expect(screen.getByText('500+')).toBeInTheDocument();
+    expect(screen.getByText(/Global Delivery Corridors/i)).toBeInTheDocument();
+    expect(screen.getByText('98%')).toBeInTheDocument();
   });
 
-  it('renders all four distinct culture pillars with titles, subtitles, and badges', () => {
-    renderWithProviders(<LifeAtThinkwires />);
+  it('renders all four distinct culture pillars with titles, subtitles, badges, and index numbers in deep navy section', () => {
+    const { container } = renderWithProviders(<LifeAtThinkwires />);
+
+    // Verify deep navy container exists
+    const navyWrapper = container.querySelector('.TW-Life-pillarsNavyWrapper');
+    expect(navyWrapper).toBeInTheDocument();
+
+    // Index numbers
+    expect(screen.getByText('01')).toBeInTheDocument();
+    expect(screen.getByText('02')).toBeInTheDocument();
+    expect(screen.getByText('03')).toBeInTheDocument();
+    expect(screen.getByText('04')).toBeInTheDocument();
 
     // 1. Collaboration
     expect(screen.getByText('Collaboration')).toBeInTheDocument();
@@ -56,12 +71,19 @@ describe('LifeAtThinkwires Component (Unit Tests)', () => {
     expect(screen.getByText('Skill Mastery')).toBeInTheDocument();
   });
 
-  it('renders Workplace Experience section with editorial cards', () => {
-    renderWithProviders(<LifeAtThinkwires />);
+  it('renders Workplace Experience section with asymmetric editorial spread', () => {
+    const { container } = renderWithProviders(<LifeAtThinkwires />);
 
     expect(
       screen.getByText(/Where Engineering Meets People-First Culture/i)
     ).toBeInTheDocument();
+
+    // Check asymmetric spread containers
+    expect(container.querySelector('.TW-Life-editorialSpread')).toBeInTheDocument();
+    expect(container.querySelector('.TW-Life-editorialFeaturedCard')).toBeInTheDocument();
+    expect(container.querySelector('.TW-Life-editorialStacked')).toBeInTheDocument();
+
+    // Cards and content
     expect(
       screen.getByText(/Cross-Functional Problem Solving/i)
     ).toBeInTheDocument();
@@ -91,6 +113,7 @@ describe('LifeAtThinkwires Component (Unit Tests)', () => {
     expect(lightbox).toBeInTheDocument();
     expect(within(lightbox).getByText('Cross-Functional Architecture Review')).toBeInTheDocument();
     expect(within(lightbox).getByText('Engineering & Collaboration')).toBeInTheDocument();
+    expect(within(lightbox).getByText(/Photo 1 of 5/i)).toBeInTheDocument();
 
     // Close lightbox via close button
     const closeBtn = screen.getByLabelText(/Close lightbox/i);
@@ -101,17 +124,38 @@ describe('LifeAtThinkwires Component (Unit Tests)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('closes Lightbox on Escape key press', () => {
+  it('supports Next and Previous navigation and Escape key in Lightbox modal', () => {
     const { container } = renderWithProviders(<LifeAtThinkwires />);
 
     const galleryItems = container.querySelectorAll('.TW-Life-galleryItem');
-    fireEvent.click(galleryItems[1]);
+    fireEvent.click(galleryItems[0]);
 
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const lightbox = screen.getByRole('dialog');
+    expect(lightbox).toBeInTheDocument();
+    expect(within(lightbox).getByText('Cross-Functional Architecture Review')).toBeInTheDocument();
+
+    // Click Next button
+    const nextBtn = screen.getByLabelText(/Next photo/i);
+    fireEvent.click(nextBtn);
+    expect(within(lightbox).getByText('Thinkwires Technology Hub Team')).toBeInTheDocument();
+    expect(within(lightbox).getByText(/Photo 2 of 5/i)).toBeInTheDocument();
+
+    // Arrow Right key
+    fireEvent.keyDown(window, { key: 'ArrowRight', code: 'ArrowRight' });
+    expect(within(lightbox).getByText('Next-Gen Talent Campus Drive')).toBeInTheDocument();
+    expect(within(lightbox).getByText(/Photo 3 of 5/i)).toBeInTheDocument();
+
+    // Arrow Left key
+    fireEvent.keyDown(window, { key: 'ArrowLeft', code: 'ArrowLeft' });
+    expect(within(lightbox).getByText('Thinkwires Technology Hub Team')).toBeInTheDocument();
+
+    // Previous button
+    const prevBtn = screen.getByLabelText(/Previous photo/i);
+    fireEvent.click(prevBtn);
+    expect(within(lightbox).getByText('Cross-Functional Architecture Review')).toBeInTheDocument();
 
     // Press Escape
     fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
-
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
@@ -138,4 +182,3 @@ describe('LifeAtThinkwires Component (Unit Tests)', () => {
     expect(articlesCta).toHaveAttribute('href', '/blog');
   });
 });
-
