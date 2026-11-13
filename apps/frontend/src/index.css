@@ -24307,6 +24307,7 @@ textarea {
 
 [data-theme='dark'] .PermStaff-processCard .deliv-val {
   color: var(--color-outline-variant, #cbd5e1);
+}
 [data-theme='dark'] .PermStaff-pillarCard .pillar-points li {
   color: var(--color-on-surface, #e2e8f0);
 }
