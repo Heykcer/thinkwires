@@ -20424,26 +20424,49 @@ textarea {
 /* --- Beneficiaries (Audience Bento) --- */
 .Payroll-segmentsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
   margin-top: 3rem;
+}
+
+.Payroll-segmentsGrid > * {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.Payroll-segmentReveal {
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .Payroll-segmentCard {
   background-color: var(--color-surface-container-lowest, #ffffff);
   border: 1px solid var(--color-card-stroke, #e2e8f0);
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  border-radius: 1.25rem;
+  padding: 2rem 1.65rem;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.25s ease;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
 }
 
 .Payroll-segmentCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px -4px rgba(15, 23, 42, 0.08), 0 6px 12px -3px rgba(15, 23, 42, 0.04);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.Payroll-segmentBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin-bottom: 1.5rem;
 }
 
 .Payroll-segmentHeader {
@@ -20451,54 +20474,70 @@ textarea {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
+  min-height: 44px;
 }
 
 .Payroll-segmentIndex {
   font-size: 1.75rem;
   font-weight: 800;
-  color: rgba(0, 55, 176, 0.25);
+  line-height: 1;
+  color: rgba(37, 99, 235, 0.25);
+  font-variant-numeric: tabular-nums;
 }
 
 .Payroll-segmentIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: 0.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.625rem;
   background: var(--color-surface-container-low, #f3f2fe);
   color: var(--color-primary, #0037b0);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.Payroll-segmentIcon .material-symbols-outlined {
+  font-size: 22px;
 }
 
 .Payroll-segmentTitle {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-navy-dark, #0f172a);
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.85rem 0;
   line-height: 1.35;
+  min-height: 3.15rem;
+  display: flex;
+  align-items: flex-start;
 }
 
 .Payroll-segmentDesc {
   font-size: 0.875rem;
   color: var(--color-on-surface-variant, #434655);
-  line-height: 1.55;
-  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  margin: 0;
+  min-height: 7.25rem;
 }
 
 .Payroll-segmentList {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: auto 0 0 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  min-height: 120px;
+  justify-content: flex-end;
 }
 
 .Payroll-segmentListItem {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.625rem;
   font-size: 0.8125rem;
+  line-height: 1.45;
   color: var(--color-on-surface, #1a1b23);
   font-weight: 600;
 }
@@ -20506,9 +20545,57 @@ textarea {
 .Payroll-bulletDot {
   width: 6px;
   height: 6px;
-  border-radius: 9999px;
+  border-radius: 50%;
   background-color: var(--color-cobalt-bright, #2563eb);
   flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.Payroll-bulletText {
+  flex: 1;
+}
+
+@media (max-width: 1200px) {
+  .Payroll-segmentsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .Payroll-segmentTitle {
+    min-height: 2.8rem;
+  }
+
+  .Payroll-segmentDesc {
+    min-height: 5.5rem;
+  }
+
+  .Payroll-segmentList {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .Payroll-segmentsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Payroll-segmentCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .Payroll-segmentTitle {
+    min-height: auto;
+  }
+
+  .Payroll-segmentDesc {
+    min-height: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .Payroll-segmentList {
+    min-height: auto;
+  }
 }
 
 /* --- Features Suite Grid (4 in a row) --- */
@@ -21338,6 +21425,23 @@ textarea {
 [data-theme='dark'] .Payroll-select option {
   background-color: #1a1b23;
   color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-segmentIndex {
+  color: rgba(59, 130, 246, 0.35);
+}
+
+[data-theme='dark'] .Payroll-segmentIcon {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-cobalt-bright, #3b82f6);
+}
+
+[data-theme='dark'] .Payroll-segmentDesc {
+  color: var(--color-outline-variant, #a0a3bd);
+}
+
+[data-theme='dark'] .Payroll-segmentListItem {
+  color: var(--color-on-surface, #e2e8f0);
 }
 
 /* ==========================================================================

@@ -21,9 +21,15 @@ const PayrollBeneficiaries = ({ data }) => {
 
         <div className="Payroll-segmentsGrid">
           {segments.map((seg, idx) => (
-            <ScrollReveal key={idx} direction="up" delay={idx * 0.1}>
+            <ScrollReveal
+              key={idx}
+              direction="up"
+              delay={idx * 0.1}
+              className="Payroll-segmentReveal"
+              style={{ display: 'flex', width: '100%', height: '100%' }}
+            >
               <div className="Payroll-segmentCard">
-                <div>
+                <div className="Payroll-segmentBody">
                   <div className="Payroll-segmentHeader">
                     <span className="Payroll-segmentIndex">{seg.step}</span>
                     <div className="Payroll-segmentIcon">
@@ -44,7 +50,7 @@ const PayrollBeneficiaries = ({ data }) => {
                   {(seg.points || []).map((pt, i) => (
                     <li key={i} className="Payroll-segmentListItem">
                       <span className="Payroll-bulletDot"></span>
-                      <span>{pt}</span>
+                      <span className="Payroll-bulletText">{pt}</span>
                     </li>
                   ))}
                 </ul>
