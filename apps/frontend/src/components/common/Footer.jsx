@@ -136,13 +136,7 @@ const Footer = () => {
               Technology Matters. People Matter More.
             </h4>
             <p className={'Footer-brandDesc'}>
-              Thinkwires Technology is a talent supply chain and business
-              solutions company headquartered in Noida, India, partnering with
-              organisations to address their evolving technology and business
-              needs. We specialize in providing skilled professionals and
-              technology-driven solutions across Artificial Intelligence (AI),
-              Cloud Computing, Cybersecurity, Semiconductor, Engineering, and
-              Digital Transformation.
+             Thinkwires Technology is a Noida-based talent supply chain and business solutions company delivering skilled professionals and innovative solutions across AI, Cloud Computing, Cybersecurity, Semiconductors, Engineering, and Digital Transformation.
             </p>
             <div className={'Footer-socialLinks'}>
               <a
