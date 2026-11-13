@@ -22904,6 +22904,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+  align-items: stretch;
   margin-bottom: 3rem;
 }
 
@@ -22922,24 +22923,33 @@ textarea {
 .PermStaff-processCard {
   background-color: var(--color-surface-container-lowest, #ffffff);
   border: 1px solid var(--color-card-stroke, #e2e8f0);
-  border-radius: 1rem;
-  padding: 1.75rem;
+  border-radius: 1.25rem;
+  padding: 2rem 1.65rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-  transition: all 0.25s ease;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
 }
 
 .PermStaff-processCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
-  border-color: rgba(37, 99, 235, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px -4px rgba(15, 23, 42, 0.08), 0 6px 12px -3px rgba(15, 23, 42, 0.04);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.PermStaff-processCard .step-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin-bottom: 1.5rem;
 }
 
 .PermStaff-processCard .step-circle {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -22947,6 +22957,8 @@ textarea {
   font-size: 1.125rem;
   font-weight: 800;
   margin-bottom: 1.25rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .PermStaff-processCard .step-circle.primary {
@@ -22962,41 +22974,91 @@ textarea {
 .PermStaff-processCard .step-phase {
   font-size: 0.6875rem;
   font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-primary, #0037b0);
-  margin-bottom: 0.35rem;
+  color: var(--color-primary, #1d4ed8);
+  margin-bottom: 0.5rem;
 }
 
 .PermStaff-processCard .step-title {
   font-size: 1.05rem;
   font-weight: 700;
+  line-height: 1.35;
   color: var(--color-navy-dark, #0f172a);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
+  min-height: 2.85rem;
+  display: flex;
+  align-items: flex-start;
 }
 
 .PermStaff-processCard .step-desc {
   font-size: 0.8125rem;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--color-secondary, #49607e);
-  margin: 0 0 1.25rem 0;
+  margin: 0;
+  min-height: 6rem;
 }
 
 .PermStaff-processCard .step-deliverable {
-  padding: 0.75rem;
+  margin: auto 0 0 0;
+  padding: 0.875rem 1rem;
   background-color: var(--color-surface-container-low, #f3f2fe);
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 76px;
 }
 
 .PermStaff-processCard .deliv-label {
   display: block;
   font-size: 0.6875rem;
   font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--color-navy-dark, #0f172a);
+  margin-bottom: 0.25rem;
 }
 
 .PermStaff-processCard .deliv-val {
-  font-size: 0.75rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  line-height: 1.4;
   color: var(--color-secondary, #49607e);
+}
+
+@media (max-width: 1200px) {
+  .PermStaff-processCard .step-title {
+    min-height: 2.5rem;
+  }
+
+  .PermStaff-processCard .step-desc {
+    min-height: 4.5rem;
+  }
+
+  .PermStaff-processCard .step-deliverable {
+    min-height: 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  .PermStaff-processCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .PermStaff-processCard .step-title {
+    min-height: auto;
+  }
+
+  .PermStaff-processCard .step-desc {
+    min-height: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .PermStaff-processCard .step-deliverable {
+    min-height: auto;
+  }
 }
 
 .PermStaff-processMetricStrip {
@@ -23747,6 +23809,27 @@ textarea {
 [data-theme='dark'] .PermStaff-form select option {
   background-color: #1a1b23;
   color: #ffffff;
+}
+
+[data-theme='dark'] .PermStaff-processCard .step-phase {
+  color: var(--color-cobalt-bright, #3b82f6);
+}
+
+[data-theme='dark'] .PermStaff-processCard .step-desc {
+  color: var(--color-outline-variant, #a0a3bd);
+}
+
+[data-theme='dark'] .PermStaff-processCard .step-deliverable {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .PermStaff-processCard .deliv-label {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .PermStaff-processCard .deliv-val {
+  color: var(--color-outline-variant, #cbd5e1);
 }
 
 /* ==========================================================================
