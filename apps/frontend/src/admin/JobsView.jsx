@@ -844,6 +844,22 @@ const JobsView = ({ defaultFilter }) => {
                               <span>Mandate: {job.jobId || 'REQ'}</span>
                             </Link>
                           )}
+                          {job.jobId && !String(job.jobId).startsWith('REQ-') && (
+                            <span
+                              style={{
+                                fontSize: '0.67rem',
+                                fontWeight: 700,
+                                padding: '0.1rem 0.4rem',
+                                borderRadius: '4px',
+                                backgroundColor: '#F0FDF4',
+                                color: '#15803D',
+                                border: '1px solid #DCFCE7',
+                              }}
+                              title="Job Identifier"
+                            >
+                              {job.jobId}
+                            </span>
+                          )}
                         </div>
                         <div
                           style={{
@@ -876,6 +892,21 @@ const JobsView = ({ defaultFilter }) => {
                           >
                             {job.experienceRequired || 3}+ yrs
                           </span>
+                          {(job.jobCreationDate || job.createdAt) && (
+                            <span
+                              style={{
+                                fontSize: '0.67rem',
+                                color: '#64748B',
+                                padding: '0.05rem 0.35rem',
+                                backgroundColor: '#F8FAFC',
+                                borderRadius: '3px',
+                                border: '1px solid #F1F5F9',
+                              }}
+                              title="Job Creation Date"
+                            >
+                              Created: {String(job.jobCreationDate || job.createdAt).split('T')[0]}
+                            </span>
+                          )}
                         </div>
                         {job.description && (
                           <div
@@ -948,6 +979,19 @@ const JobsView = ({ defaultFilter }) => {
                         {renderNoticeBadge(
                           job.noticePeriod,
                           job.noticePeriodOther
+                        )}
+                        {job.expectedJoiningDate && (
+                          <div
+                            style={{
+                              fontSize: '0.67rem',
+                              color: '#0F766E',
+                              fontWeight: 600,
+                              marginTop: '0.2rem',
+                            }}
+                            title="Expected Joining Date"
+                          >
+                            Joining: {job.expectedJoiningDate}
+                          </div>
                         )}
                       </td>
 

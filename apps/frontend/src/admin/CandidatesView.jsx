@@ -49,7 +49,9 @@ const CandidatesView = () => {
     experience: 5,
     expectedSalary: '₹28 LPA / $55k',
     status: 'Applied',
+    jobId: '',
     jobTitle: 'Lead Full Stack & Frontend Engineer',
+    positionApplied: 'Lead Full Stack & Frontend Engineer',
     notes: '',
   });
 
@@ -279,7 +281,9 @@ const CandidatesView = () => {
                 experience: 4,
                 expectedSalary: '₹24 LPA',
                 status: 'Applied',
+                jobId: '',
                 jobTitle: 'Lead Full Stack & Frontend Engineer',
+                positionApplied: 'Lead Full Stack & Frontend Engineer',
                 notes: '',
               });
               setFormError('');
@@ -436,16 +440,34 @@ const CandidatesView = () => {
                           {cand.currentRole}
                         </div>
 
-                        {cand.jobTitle && (
+                        {(cand.positionApplied || cand.jobTitle) && (
                           <div
                             style={{
                               fontSize: '0.72rem',
                               color: '#0F766E',
                               fontWeight: 600,
                               marginTop: '0.2rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              flexWrap: 'wrap',
                             }}
                           >
-                            {cand.jobTitle}
+                            <span>{cand.positionApplied || cand.jobTitle}</span>
+                            {cand.jobId && (
+                              <span
+                                style={{
+                                  fontSize: '0.62rem',
+                                  backgroundColor: '#CCFBF1',
+                                  color: '#0F766E',
+                                  padding: '0.05rem 0.3rem',
+                                  borderRadius: '3px',
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {cand.jobId}
+                              </span>
+                            )}
                           </div>
                         )}
 
@@ -778,8 +800,24 @@ const CandidatesView = () => {
                     </td>
                     <td data-label="Applied For">
                       <div style={{ fontWeight: 600, color: '#0F172A' }}>
-                        {cand.jobTitle || 'General Application'}
+                        {cand.positionApplied || cand.jobTitle || 'General Application'}
                       </div>
+                      {cand.jobId && (
+                        <span
+                          style={{
+                            fontSize: '0.67rem',
+                            color: '#4F46E5',
+                            backgroundColor: '#EEF2FF',
+                            padding: '0.08rem 0.35rem',
+                            borderRadius: '4px',
+                            fontWeight: 600,
+                            display: 'inline-block',
+                            marginTop: '0.15rem',
+                          }}
+                        >
+                          ID: {cand.jobId}
+                        </span>
+                      )}
                     </td>
                     <td data-label="Skills">
                       <div
@@ -905,9 +943,38 @@ const CandidatesView = () => {
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <label className="tw-form-label">Target Role Requisition</label>
-                <div style={{ fontSize: '0.85rem' }}>
-                  {selectedCandidate.jobTitle}
+                <label className="tw-form-label">
+                  Target Role / Position Applied
+                </label>
+                <div
+                  style={{
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>
+                    {selectedCandidate.positionApplied ||
+                      selectedCandidate.jobTitle ||
+                      'General Technical Position'}
+                  </span>
+                  {selectedCandidate.jobId && (
+                    <span
+                      style={{
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        backgroundColor: '#EEF2FF',
+                        color: '#4F46E5',
+                        padding: '0.1rem 0.4rem',
+                        borderRadius: '4px',
+                        border: '1px solid #E0E7FF',
+                      }}
+                    >
+                      Job ID: {selectedCandidate.jobId}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -1324,16 +1391,37 @@ const CandidatesView = () => {
                   </div>
                   <div className="tw-form-group">
                     <label className="tw-form-label">
-                      Applied For Requisition
+                      Position Applied
                     </label>
                     <input
                       type="text"
                       className="tw-form-input"
-                      value={formData.jobTitle}
+                      value={formData.positionApplied || formData.jobTitle}
                       onChange={(e) =>
-                        setFormData({ ...formData, jobTitle: e.target.value })
+                        setFormData({
+                          ...formData,
+                          jobTitle: e.target.value,
+                          positionApplied: e.target.value,
+                        })
                       }
                       placeholder="e.g. Lead Full Stack & Frontend Engineer"
+                    />
+                  </div>
+                </div>
+
+                <div className="tw-form-row">
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">
+                      Job ID (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      className="tw-form-input"
+                      value={formData.jobId}
+                      onChange={(e) =>
+                        setFormData({ ...formData, jobId: e.target.value })
+                      }
+                      placeholder="e.g. JOB-10492"
                     />
                   </div>
                 </div>

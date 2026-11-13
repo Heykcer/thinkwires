@@ -132,6 +132,14 @@ const jobRequirementSchema = new mongoose.Schema(
       type: String,
       default: 'Competitive CTC',
     },
+    jobCreationDate: {
+      type: String,
+      default: () => new Date().toISOString().split('T')[0],
+    },
+    expectedJoiningDate: {
+      type: String,
+      default: '',
+    },
     targetCloseDate: {
       type: Date,
       default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),

@@ -29,6 +29,21 @@ const candidateSchema = new mongoose.Schema(
       type: String,
       default: 'Software Engineer',
     },
+    jobId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    jobTitle: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    positionApplied: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     headline: {
       type: String,
       default: '',

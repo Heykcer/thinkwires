@@ -7,7 +7,7 @@ const DEFAULT_MILESTONES = [
     id: 'timeline-2022',
     year: '2022',
     tag: 'Founding',
-    title: 'The Inception',
+    title: 'Foundation & Model Inception',
     description:
       'Founded in Noida with a core team dedicated to borderless recruitment, pioneering an agency aggregator network that delivers verified profiles in under 5 hours.',
     variant: 'default',
@@ -15,7 +15,7 @@ const DEFAULT_MILESTONES = [
   {
     id: 'timeline-2023',
     year: '2023',
-    tag: 'Market Fit',
+    tag: 'Practice Alignment',
     title: 'Growth & Practice Alignment',
     description:
       'Unit economics break-even achieved. Launched specialized talent practices across SAP ABAP/HANA, Cloud/DevOps, and Enterprise Salesforce consulting.',
@@ -24,7 +24,7 @@ const DEFAULT_MILESTONES = [
   {
     id: 'timeline-2024',
     year: '2024',
-    tag: 'International',
+    tag: 'Cross-Border',
     title: 'Cross-Border Expansion',
     description:
       'Inaugurated dedicated talent corridors into the United States and Canada. Rolled out comprehensive Employer of Record (EOR) and global payroll management.',
@@ -32,9 +32,9 @@ const DEFAULT_MILESTONES = [
   },
   {
     id: 'timeline-2026',
-    year: '2026+',
-    tag: 'Next Era',
-    title: 'AI-Powered Delivery',
+    year: '2025+',
+    tag: 'FUTURE HORIZONS',
+    title: 'AI-Powered Delivery & Telemetry Vetting',
     description:
       'Automated code telemetry vetting, generative talent search matching, and sub-48-hour global deployment pipelines across AI and PLM systems.',
     variant: 'dark-emerald',
@@ -100,11 +100,38 @@ const GrowthTimeline = ({ data }) => {
           <p className="GrowthTimeline-subtitle">{description}</p>
         </header>
 
-        {/* 4 Horizontal Cards Grid matching Stitch */}
+        {/* 4 Horizontal Cards Grid */}
         <div className="GrowthTimeline-grid">
           {resolvedList.map((item, idx) => {
-            const isDarkCard = item.variant === 'dark-emerald';
-            const isCobalt = item.variant === 'cobalt';
+            const isDarkCard = idx === 3 || item.variant === 'dark-emerald';
+            const isCobalt = idx === 2 || item.variant === 'cobalt';
+
+            const cardVariantClass =
+              idx === 3
+                ? 'GrowthTimeline-card--2026 GrowthTimeline-card--dark'
+                : idx === 2
+                  ? 'GrowthTimeline-card--2024'
+                  : idx === 1
+                    ? 'GrowthTimeline-card--2023'
+                    : 'GrowthTimeline-card--2022';
+
+            const yearVariantClass =
+              idx === 3
+                ? 'GrowthTimeline-year--2026 GrowthTimeline-year--emerald'
+                : idx === 2
+                  ? 'GrowthTimeline-year--2024 GrowthTimeline-year--cobalt'
+                  : idx === 1
+                    ? 'GrowthTimeline-year--2023'
+                    : 'GrowthTimeline-year--2022 GrowthTimeline-year--muted';
+
+            const tagVariantClass =
+              idx === 3
+                ? 'GrowthTimeline-tag--2026 GrowthTimeline-tag--emerald'
+                : idx === 2
+                  ? 'GrowthTimeline-tag--2024 GrowthTimeline-tag--cobalt'
+                  : idx === 1
+                    ? 'GrowthTimeline-tag--2023'
+                    : 'GrowthTimeline-tag--2022 GrowthTimeline-tag--default';
 
             return (
               <ScrollReveal
@@ -115,32 +142,47 @@ const GrowthTimeline = ({ data }) => {
                 style={{ display: 'flex' }}
               >
                 <div
-                  className={`GrowthTimeline-card ${isDarkCard ? 'GrowthTimeline-card--dark' : ''}`}
+                  className={`GrowthTimeline-card ${cardVariantClass}`}
                   style={{ width: '100%' }}
                 >
+                  {/* Subtle globe-inspired decorative element for 2024 */}
+                  {idx === 2 && (
+                    <div
+                      className="GrowthTimeline-globeWatermark"
+                      aria-hidden="true"
+                    >
+                      <svg
+                        width="110"
+                        height="110"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                        <path d="M2 12h20" />
+                      </svg>
+                    </div>
+                  )}
+
+                  {/* Ambient futuristic glow for 2026+ standout card */}
+                  {idx === 3 && (
+                    <div
+                      className="GrowthTimeline-ambientGlow"
+                      aria-hidden="true"
+                    />
+                  )}
+
                   {/* Card Top: Year & Tag */}
                   <div className="GrowthTimeline-cardTop">
-                    <span
-                      className={`GrowthTimeline-year ${
-                        isDarkCard
-                          ? 'GrowthTimeline-year--emerald'
-                          : isCobalt
-                            ? 'GrowthTimeline-year--cobalt'
-                            : 'GrowthTimeline-year--muted'
-                      }`}
-                    >
+                    <span className={`GrowthTimeline-year ${yearVariantClass}`}>
                       {item.year}
                     </span>
 
-                    <span
-                      className={`GrowthTimeline-tag ${
-                        isDarkCard
-                          ? 'GrowthTimeline-tag--emerald'
-                          : isCobalt
-                            ? 'GrowthTimeline-tag--cobalt'
-                            : 'GrowthTimeline-tag--default'
-                      }`}
-                    >
+                    <span className={`GrowthTimeline-tag ${tagVariantClass}`}>
                       {item.tag}
                     </span>
                   </div>
