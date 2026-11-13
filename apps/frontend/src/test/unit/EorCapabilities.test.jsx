@@ -89,3 +89,4 @@ describe('EorCapabilities Component - Card 2 Footer Spacing', () => {
     expect(rightText).toHaveStyle({ textAlign: 'right' });
   });
 });
+

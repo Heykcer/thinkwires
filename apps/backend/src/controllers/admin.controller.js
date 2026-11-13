@@ -2208,29 +2208,6 @@ export const bulkImportCandidates = async (req, res) => {
         console.warn(`[bulkImportCandidates] Skipping malformed row #${i}:`, rowErr.message);
       }
     }
-            skills: skillsArray,
-            totalExperienceYears: String(candidateRecord.experience || 0),
-            relevantExperienceYears: String(
-              candidateRecord.relevantExperience || 0
-            ),
-            currentEmployer: candidateRecord.currentCompany,
-            currentCTC: candidateRecord.currentCTC,
-            expectedCTC: candidateRecord.expectedSalary,
-            city: candidateRecord.location,
-            client: candidateRecord.client,
-            rateCard: candidateRecord.rateCard,
-            preferredLocation: candidateRecord.preferredLocation,
-            applicationDate: candidateRecord.applicationDate,
-            month: candidateRecord.month,
-            noticePeriod: candidateRecord.noticePeriod,
-            candidateNote: candidateRecord.notes,
-          });
-        }
-        inMemoryData.candidates = inMemoryData.candidates || [];
-        inMemoryData.candidates.unshift(candidateRecord);
-        importedCandidates.push(candidateRecord);
-      }
-    }
 
     if (importedCandidates.length === 0 && skippedEmails.length > 0) {
       return res.status(200).json({
