@@ -132,10 +132,11 @@ const Footer = () => {
                 className={'Footer-logoImg'}
               />
             </Link>
+            <p className={'Footer-tagline'}>
+              Technology Matters. <span className={'Footer-taglineHighlight'}>People Matter More.</span>
+            </p>
             <p className={'Footer-brandDesc'}>
-              Architecting elite workforce solutions, borderless global
-              engineering teams, and hyper-scalable enterprise talent ecosystems
-              across North America, India, and emerging tech corridors.
+              Thinkwires Technology is a talent supply chain and business solutions company headquartered in Noida, India, partnering with organisations to address their evolving technology and business needs. We specialize in providing skilled professionals and technology-driven solutions across Artificial Intelligence (AI), Cloud Computing, Cybersecurity, Semiconductor, Engineering, and Digital Transformation.
             </p>
             <div className={'Footer-socialLinks'}>
               <a
@@ -158,7 +159,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
+          <div className={'Footer-col'}>
             <h4 className={'Footer-colTitle'}>CORE SERVICES</h4>
             <ul className={'Footer-linkList'}>
               <li>
@@ -198,7 +199,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div>
+          <div className={'Footer-col'}>
             <h4 className={'Footer-colTitle'}>INDUSTRIES</h4>
             <ul className={'Footer-linkList'}>
                 <li>
@@ -229,31 +230,28 @@ const Footer = () => {
               </ul>
           </div>
 
-          <div>
+          <div className={'Footer-col'}>
             <h4 className={'Footer-colTitle'}>CORPORATE OFFICE</h4>
             <div className={'Footer-address'}>
-              Thinkwires Global Corp
-              <br />
-              Plot No 20, Block H-1/A,
-              <br />
-              Sector 63, Noida, Uttar
-              <br />
-              Pradesh 201301
+              <strong className={'Footer-addressCompany'}>Thinkwires Global Corp</strong>
+              <span>Plot No 20, Block H-1/A, Sector 63,</span>
+              <span>Noida, Uttar Pradesh 201301, India</span>
             </div>
             <div className={'Footer-contactInfo'}>
               <a
                 href="mailto:info@thinkwires.com"
                 className={'Footer-contactLink'}
               >
-                <IconMail width="14" height="14" /> info@thinkwires.com
+                <IconMail width="14" height="14" /> <span>info@thinkwires.com</span>
               </a>
             </div>
 
-            <h4 className={'Footer-newsletterTitle'}>
-              Talent Advisory Newsletter
-            </h4>
-      <NewsletterForm />
-
+            <div className={'Footer-newsletterWrapper'}>
+              <h4 className={'Footer-newsletterTitle'}>
+                Talent Advisory Newsletter
+              </h4>
+              <NewsletterForm />
+            </div>
           </div>
         </div>
 
