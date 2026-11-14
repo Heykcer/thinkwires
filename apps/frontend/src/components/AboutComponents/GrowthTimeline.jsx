@@ -32,7 +32,7 @@ const DEFAULT_MILESTONES = [
   },
   {
     id: 'timeline-2026',
-    year: '2025+',
+    year: '2026+',
     tag: 'FUTURE HORIZONS',
     title: 'AI-Powered Delivery & Telemetry Vetting',
     description:
