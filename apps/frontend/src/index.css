@@ -3186,18 +3186,26 @@ body {
   border: none;
   padding: 0;
   cursor: pointer;
-  color: inherit;
+  color: var(--color-on-surface-variant, #434655);
   transition: transform 0.2s ease;
 }
 
 .Navbar-servicesToggle svg {
   transition: transform 0.2s ease;
+  stroke: var(--color-on-surface-variant, #434655);
 }
 
 .Navbar-dropdownContainer:hover .Navbar-servicesToggle svg,
 .Navbar-dropdownContainer.Navbar-servicesOpen .Navbar-servicesToggle svg,
 .Navbar-dropdownContainer.Navbar-dropdownOpen .Navbar-servicesToggle svg {
   transform: rotate(180deg);
+  stroke: var(--color-primary);
+}
+
+.Navbar-dropdownContainer:hover .Navbar-servicesToggle,
+.Navbar-dropdownContainer.Navbar-servicesOpen .Navbar-servicesToggle,
+.Navbar-dropdownContainer.Navbar-dropdownOpen .Navbar-servicesToggle {
+  color: var(--color-primary);
 }
 
 .Navbar-logoContainer {
@@ -25941,6 +25949,7 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 1.25rem;
   gap: 1.25rem;
   transition: all 0.2s ease;
 }
