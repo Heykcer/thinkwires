@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitPermanentStaffingConsultation,
   resetPermConsultationState,
 } from '../../store/slices/permanentStaffingSlice';
+
+const MANDATE_HIERARCHY_OPTIONS = [
+  'C-Suite (CTO / CIO / CDO)',
+  'Vice President / Head of Engineering',
+  'Principal Architect / Director',
+  'Enterprise ERP (SAP S/4HANA Practice)',
+  'Permanent Core Engineering Team (5+)',
+];
+
+const TARGET_TIMELINE_OPTIONS = [
+  'Immediate (Under 30 Days)',
+  'Q1 Executive Strategic Plan',
+  'Confidential Succession Replacement',
+  'GCC Buildout (Quarterly Intake)',
+];
 
 const PermStaffConsultation = ({ data }) => {
   const dispatch = useDispatch();
@@ -20,6 +35,170 @@ const PermStaffConsultation = ({ data }) => {
     mandateScope: '',
     isConfidential: true,
   });
+
+  const [hierarchyOpen, setHierarchyOpen] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
+  const [hierarchyHighlight, setHierarchyHighlight] = useState(-1);
+  const [timelineHighlight, setTimelineHighlight] = useState(-1);
+
+  const hierarchyRef = useRef(null);
+  const timelineRef = useRef(null);
+  const hierarchyTriggerRef = useRef(null);
+  const timelineTriggerRef = useRef(null);
+
+  // Close custom dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (hierarchyRef.current && !hierarchyRef.current.contains(e.target)) {
+        setHierarchyOpen(false);
+        setHierarchyHighlight(-1);
+      }
+      if (timelineRef.current && !timelineRef.current.contains(e.target)) {
+        setTimelineOpen(false);
+        setTimelineHighlight(-1);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectHierarchy = (option) => {
+    setFormData((prev) => ({ ...prev, mandateHierarchy: option }));
+    setHierarchyOpen(false);
+    setHierarchyHighlight(-1);
+    if (hierarchyTriggerRef.current) {
+      hierarchyTriggerRef.current.focus();
+    }
+  };
+
+  const handleSelectTimeline = (option) => {
+    setFormData((prev) => ({ ...prev, targetTimeline: option }));
+    setTimelineOpen(false);
+    setTimelineHighlight(-1);
+    if (timelineTriggerRef.current) {
+      timelineTriggerRef.current.focus();
+    }
+  };
+
+  const handleHierarchyKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!hierarchyOpen) {
+        setHierarchyOpen(true);
+        const currIdx = MANDATE_HIERARCHY_OPTIONS.indexOf(formData.mandateHierarchy);
+        setHierarchyHighlight(currIdx >= 0 ? currIdx : 0);
+        return;
+      }
+      setHierarchyHighlight((prev) =>
+        prev < MANDATE_HIERARCHY_OPTIONS.length - 1 ? prev + 1 : 0
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!hierarchyOpen) {
+        setHierarchyOpen(true);
+        const currIdx = MANDATE_HIERARCHY_OPTIONS.indexOf(formData.mandateHierarchy);
+        setHierarchyHighlight(
+          currIdx >= 0 ? currIdx : MANDATE_HIERARCHY_OPTIONS.length - 1
+        );
+        return;
+      }
+      setHierarchyHighlight((prev) =>
+        prev > 0 ? prev - 1 : MANDATE_HIERARCHY_OPTIONS.length - 1
+      );
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (
+        hierarchyOpen &&
+        hierarchyHighlight >= 0 &&
+        MANDATE_HIERARCHY_OPTIONS[hierarchyHighlight]
+      ) {
+        handleSelectHierarchy(MANDATE_HIERARCHY_OPTIONS[hierarchyHighlight]);
+      } else {
+        setHierarchyOpen((prev) => !prev);
+        const currIdx = MANDATE_HIERARCHY_OPTIONS.indexOf(formData.mandateHierarchy);
+        setHierarchyHighlight(currIdx >= 0 ? currIdx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setHierarchyOpen(false);
+      setHierarchyHighlight(-1);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      setHierarchyOpen(false);
+      setHierarchyHighlight(-1);
+    }
+  };
+
+  const handleTimelineKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!timelineOpen) {
+        setTimelineOpen(true);
+        const currIdx = TARGET_TIMELINE_OPTIONS.indexOf(formData.targetTimeline);
+        setTimelineHighlight(currIdx >= 0 ? currIdx : 0);
+        return;
+      }
+      setTimelineHighlight((prev) =>
+        prev < TARGET_TIMELINE_OPTIONS.length - 1 ? prev + 1 : 0
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!timelineOpen) {
+        setTimelineOpen(true);
+        const currIdx = TARGET_TIMELINE_OPTIONS.indexOf(formData.targetTimeline);
+        setTimelineHighlight(
+          currIdx >= 0 ? currIdx : TARGET_TIMELINE_OPTIONS.length - 1
+        );
+        return;
+      }
+      setTimelineHighlight((prev) =>
+        prev > 0 ? prev - 1 : TARGET_TIMELINE_OPTIONS.length - 1
+      );
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (
+        timelineOpen &&
+        timelineHighlight >= 0 &&
+        TARGET_TIMELINE_OPTIONS[timelineHighlight]
+      ) {
+        handleSelectTimeline(TARGET_TIMELINE_OPTIONS[timelineHighlight]);
+      } else {
+        setTimelineOpen((prev) => !prev);
+        const currIdx = TARGET_TIMELINE_OPTIONS.indexOf(formData.targetTimeline);
+        setTimelineHighlight(currIdx >= 0 ? currIdx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setTimelineOpen(false);
+      setTimelineHighlight(-1);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      setTimelineOpen(false);
+      setTimelineHighlight(-1);
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -82,7 +261,7 @@ const PermStaffConsultation = ({ data }) => {
                   </a>
                   <p className="hl-note">
                     {hotlineAvailability ||
-                      '5-Hour Response SLA • Mon – Fri'}
+                      'Available 09:00 AM – 19:00 PM IST • Mon – Fri'}
                   </p>
                 </div>
 
@@ -144,6 +323,10 @@ const PermStaffConsultation = ({ data }) => {
                           mandateScope: '',
                           isConfidential: true,
                         });
+                        setHierarchyOpen(false);
+                        setTimelineOpen(false);
+                        setHierarchyHighlight(-1);
+                        setTimelineHighlight(-1);
                       }}
                     >
                       Register Another Mandate
@@ -206,33 +389,217 @@ const PermStaffConsultation = ({ data }) => {
 
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label htmlFor="mandateHierarchy">
+                      <label
+                        id="mandateHierarchy-label"
+                        htmlFor="mandateHierarchy-trigger"
+                      >
                         Mandate Hierarchy *
                       </label>
-                      <select
-                        id="mandateHierarchy"
-                        value={formData.mandateHierarchy}
-                        onChange={handleChange}
+                      <div
+                        className="PermStaff-customSelectWrapper"
+                        ref={hierarchyRef}
                       >
-                        <option>C-Suite (CTO / CIO / CDO)</option>
-                        <option>Vice President / Head of Engineering</option>
-                        <option>Principal Architect / Director</option>
-                        <option>Enterprise ERP (SAP S/4HANA Practice)</option>
-                        <option>Permanent Core Engineering Team (5+)</option>
-                      </select>
+                        <button
+                          type="button"
+                          id="mandateHierarchy-trigger"
+                          ref={hierarchyTriggerRef}
+                          role="combobox"
+                          aria-haspopup="listbox"
+                          aria-expanded={hierarchyOpen}
+                          aria-labelledby="mandateHierarchy-label mandateHierarchy-trigger"
+                          aria-controls="mandateHierarchy-menu"
+                          className={`PermStaff-customSelectTrigger ${
+                            hierarchyOpen ? 'is-open' : ''
+                          }`}
+                          onClick={() => {
+                            setHierarchyOpen((prev) => !prev);
+                            setTimelineOpen(false);
+                            const currIdx = MANDATE_HIERARCHY_OPTIONS.indexOf(
+                              formData.mandateHierarchy
+                            );
+                            setHierarchyHighlight(currIdx >= 0 ? currIdx : 0);
+                          }}
+                          onKeyDown={handleHierarchyKeyDown}
+                        >
+                          <span className="PermStaff-customSelectValue">
+                            {formData.mandateHierarchy}
+                          </span>
+                          <span
+                            className={`material-symbols-outlined PermStaff-selectArrow ${
+                              hierarchyOpen ? 'is-open' : ''
+                            }`}
+                            aria-hidden="true"
+                          >
+                            expand_more
+                          </span>
+                        </button>
+
+                        <select
+                          id="mandateHierarchy"
+                          name="mandateHierarchy"
+                          value={formData.mandateHierarchy}
+                          onChange={handleChange}
+                          className="PermStaff-hiddenSelect"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        >
+                          {MANDATE_HIERARCHY_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+
+                        {hierarchyOpen && (
+                          <ul
+                            id="mandateHierarchy-menu"
+                            role="listbox"
+                            aria-labelledby="mandateHierarchy-label"
+                            className="PermStaff-customSelectMenu"
+                          >
+                            {MANDATE_HIERARCHY_OPTIONS.map((opt, idx) => {
+                              const isSelected =
+                                formData.mandateHierarchy === opt;
+                              const isHighlighted = idx === hierarchyHighlight;
+                              return (
+                                <li
+                                  key={opt}
+                                  role="option"
+                                  aria-selected={isSelected}
+                                  className={`PermStaff-customSelectOption ${
+                                    isSelected ? 'is-selected' : ''
+                                  } ${
+                                    isHighlighted ? 'is-highlighted' : ''
+                                  }`}
+                                  onClick={() => handleSelectHierarchy(opt)}
+                                  onMouseEnter={() =>
+                                    setHierarchyHighlight(idx)
+                                  }
+                                >
+                                  <span className="PermStaff-customSelectOptionText">
+                                    {opt}
+                                  </span>
+                                  {isSelected && (
+                                    <span
+                                      className="material-symbols-outlined PermStaff-customSelectCheck"
+                                      aria-hidden="true"
+                                    >
+                                      check
+                                    </span>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </div>
                     </div>
+
                     <div className="form-group">
-                      <label htmlFor="targetTimeline">Target Timeline *</label>
-                      <select
-                        id="targetTimeline"
-                        value={formData.targetTimeline}
-                        onChange={handleChange}
+                      <label
+                        id="targetTimeline-label"
+                        htmlFor="targetTimeline-trigger"
                       >
-                        <option>Immediate (Under 30 Days)</option>
-                        <option>Q1 Executive Strategic Plan</option>
-                        <option>Confidential Succession Replacement</option>
-                        <option>GCC Buildout (Quarterly Intake)</option>
-                      </select>
+                        Target Timeline *
+                      </label>
+                      <div
+                        className="PermStaff-customSelectWrapper"
+                        ref={timelineRef}
+                      >
+                        <button
+                          type="button"
+                          id="targetTimeline-trigger"
+                          ref={timelineTriggerRef}
+                          role="combobox"
+                          aria-haspopup="listbox"
+                          aria-expanded={timelineOpen}
+                          aria-labelledby="targetTimeline-label targetTimeline-trigger"
+                          aria-controls="targetTimeline-menu"
+                          className={`PermStaff-customSelectTrigger ${
+                            timelineOpen ? 'is-open' : ''
+                          }`}
+                          onClick={() => {
+                            setTimelineOpen((prev) => !prev);
+                            setHierarchyOpen(false);
+                            const currIdx = TARGET_TIMELINE_OPTIONS.indexOf(
+                              formData.targetTimeline
+                            );
+                            setTimelineHighlight(currIdx >= 0 ? currIdx : 0);
+                          }}
+                          onKeyDown={handleTimelineKeyDown}
+                        >
+                          <span className="PermStaff-customSelectValue">
+                            {formData.targetTimeline}
+                          </span>
+                          <span
+                            className={`material-symbols-outlined PermStaff-selectArrow ${
+                              timelineOpen ? 'is-open' : ''
+                            }`}
+                            aria-hidden="true"
+                          >
+                            expand_more
+                          </span>
+                        </button>
+
+                        <select
+                          id="targetTimeline"
+                          name="targetTimeline"
+                          value={formData.targetTimeline}
+                          onChange={handleChange}
+                          className="PermStaff-hiddenSelect"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        >
+                          {TARGET_TIMELINE_OPTIONS.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+
+                        {timelineOpen && (
+                          <ul
+                            id="targetTimeline-menu"
+                            role="listbox"
+                            aria-labelledby="targetTimeline-label"
+                            className="PermStaff-customSelectMenu"
+                          >
+                            {TARGET_TIMELINE_OPTIONS.map((opt, idx) => {
+                              const isSelected =
+                                formData.targetTimeline === opt;
+                              const isHighlighted = idx === timelineHighlight;
+                              return (
+                                <li
+                                  key={opt}
+                                  role="option"
+                                  aria-selected={isSelected}
+                                  className={`PermStaff-customSelectOption ${
+                                    isSelected ? 'is-selected' : ''
+                                  } ${
+                                    isHighlighted ? 'is-highlighted' : ''
+                                  }`}
+                                  onClick={() => handleSelectTimeline(opt)}
+                                  onMouseEnter={() =>
+                                    setTimelineHighlight(idx)
+                                  }
+                                >
+                                  <span className="PermStaff-customSelectOptionText">
+                                    {opt}
+                                  </span>
+                                  {isSelected && (
+                                    <span
+                                      className="material-symbols-outlined PermStaff-customSelectCheck"
+                                      aria-hidden="true"
+                                    >
+                                      check
+                                    </span>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </div>
                     </div>
                   </div>
 
