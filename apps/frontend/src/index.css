@@ -27616,7 +27616,7 @@ textarea {
   width: calc(50% - 48px);
   background-color: #0f172a;
   border-radius: var(--rounded-lg);
-  padding: 2.25rem 2rem;
+  padding: 2rem 1.6rem;
   border: 1px solid rgba(148, 163, 184, 0.22);
   box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.4);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -27690,26 +27690,33 @@ textarea {
 
 .StatsJourney-cardFooter {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   padding-top: 1.25rem;
   border-top: 1px solid rgba(148, 163, 184, 0.2);
   margin-top: 0.5rem;
+  width: 100%;
 }
 
 .StatsJourney-metricPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.8125rem;
+  gap: 0.4rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.4rem 0.85rem;
+  padding: 0.38rem 0.7rem;
   border-radius: 0.375rem;
   background: rgba(30, 41, 59, 0.9);
   color: #e2e8f0;
   border: 1px solid rgba(148, 163, 184, 0.3);
   line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.StatsJourney-metricPill .material-symbols-outlined {
+  flex-shrink: 0;
 }
 
 .StatsJourney-spineCard.is-active .StatsJourney-metricPillPrimary {
@@ -27763,6 +27770,11 @@ textarea {
 
   .StatsJourney-spineCard {
     width: 100%;
+  }
+
+  .StatsJourney-cardFooter {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 }
 
