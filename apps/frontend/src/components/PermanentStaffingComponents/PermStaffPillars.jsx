@@ -38,7 +38,7 @@ const PermStaffPillars = ({ data }) => {
               className="PermStaff-pillarReveal"
               style={{ display: 'flex', width: '100%', height: '100%' }}
             >
-              <div className="PermStaff-pillarCard" style={{ width: '100%' }}>
+              <div className="PermStaff-pillarCard" style={{ width: '100%', height: '100%' }}>
                 <div className="pillar-top">
                   <div className="pillar-header-row">
                     <div

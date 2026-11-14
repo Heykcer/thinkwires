@@ -17,7 +17,7 @@ const PermStaffProcess = ({ data }) => {
         {/* 4-Step Process Timeline Grid */}
         <div className="PermStaff-processGrid">
           {steps.map((st, idx) => (
-            <div key={idx} className="PermStaff-processCard">
+            <div key={idx} className="PermStaff-processCard" style={{ height: '100%' }}>
               <div className="step-body">
                 <div
                   className={`step-circle ${idx === 3 ? 'emerald' : 'primary'}`}
