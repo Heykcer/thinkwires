@@ -10,7 +10,7 @@ const EorCapabilities = ({ data }) => {
       className="Payroll-sectionShell"
       style={{ backgroundColor: 'var(--color-surface-container-low, #f3f2fe)' }}
     >
-      <div className="Payroll-sectionContainer">
+      <div className="Payroll-sectionContainer Eor-capabilitiesContainer">
         <ScrollReveal direction="up">
           <div
             style={{
@@ -29,7 +29,7 @@ const EorCapabilities = ({ data }) => {
           {capabilities.map((cap, idx) => (
             <ScrollReveal key={idx} direction="up" delay={idx * 0.12}>
               <div className="Payroll-pillarCard" style={{ height: '100%' }}>
-                <div>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div className={`Payroll-pillarIconBox`}>
                     <span
                       className="material-symbols-outlined"
@@ -54,7 +54,8 @@ const EorCapabilities = ({ data }) => {
                       margin: 0,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.5rem',
+                      gap: '0.625rem',
+                      marginTop: 'auto',
                     }}
                   >
                     {(cap.bullets || []).map((b, i) => (
@@ -91,39 +92,55 @@ const EorCapabilities = ({ data }) => {
                     borderTop: '1px solid var(--color-card-stroke, #e2e8f0)',
                     fontSize: '0.75rem',
                     color: 'var(--color-outline, #747686)',
+                    minHeight: '3.25rem',
+                    gap: '0.75rem',
                     ...(idx === 1 ? { gap: '1rem' } : {}),
                   }}
                 >
                   <span
-                    className={idx === 1 ? 'Eor-cardFooterLeft--second' : undefined}
-                    style={
-                      idx === 1
-                        ? {
-                            textAlign: 'left',
-                            flex: '1 1 auto',
-                            minWidth: 0,
-                            lineHeight: 1.4,
-                          }
-                        : undefined
-                    }
+                    className={`Eor-cardFooterLeft ${idx === 1 ? 'Eor-cardFooterLeft--second' : ''}`}
+                    style={{
+                      textAlign: 'left',
+                      flex: '1 1 auto',
+                      minWidth: 0,
+                      lineHeight: 1.4,
+                    }}
                   >
-                    {cap.footerLeft}
+                    {idx === 1 && cap.footerLeft === 'Retention Boost: +38% Contract Tenure' ? (
+                      <>
+                        <span style={{ display: 'block', whiteSpace: 'nowrap' }}>
+                          Retention Boost: +38%
+                        </span>{' '}
+                        <span style={{ display: 'block', whiteSpace: 'nowrap' }}>
+                          Contract Tenure
+                        </span>
+                      </>
+                    ) : (
+                      cap.footerLeft
+                    )}
                   </span>
                   <span
-                    className={idx === 1 ? 'Eor-cardFooterRight--second' : undefined}
+                    className={`Eor-cardFooterRight ${idx === 1 ? 'Eor-cardFooterRight--second' : ''}`}
                     style={{
                       fontWeight: 700,
                       color: 'var(--color-primary, #0037b0)',
-                      ...(idx === 1
-                        ? {
-                            textAlign: 'right',
-                            flexShrink: 0,
-                            lineHeight: 1.4,
-                          }
-                        : {}),
+                      textAlign: 'right',
+                      lineHeight: 1.4,
+                      marginLeft: 'auto',
                     }}
                   >
-                    {cap.footerRight}
+                    {idx === 1 && cap.footerRight === 'Comprehensive Cover' ? (
+                      <>
+                        <span style={{ display: 'block', whiteSpace: 'nowrap' }}>
+                          Comprehensive
+                        </span>{' '}
+                        <span style={{ display: 'block', whiteSpace: 'nowrap' }}>
+                          Cover
+                        </span>
+                      </>
+                    ) : (
+                      cap.footerRight
+                    )}
                   </span>
                 </div>
               </div>
