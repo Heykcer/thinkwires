@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitStaffAugmentationConsultation,
@@ -19,6 +19,30 @@ const StaffAugConsultation = ({ data }) => {
     preferredTime: '',
     details: '',
   });
+
+  // Custom dropdown state
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+  const roleDropdownRef = useRef(null);
+
+  const roleOptions = [
+    { value: 'cloud-devops', label: 'Cloud & DevOps (AWS / GCP / K8s)' },
+    { value: 'fullstack',    label: 'Full-Stack (React / Node / Python)' },
+    { value: 'data-ai',     label: 'Data Engineering & AI / ML' },
+    { value: 'sap-erp',     label: 'Enterprise ERP / SAP HANA' },
+    { value: 'qa-auto',     label: 'QA & Test Automation' },
+    { value: 'other',       label: 'Multiple Roles / Custom Squad' },
+  ];
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleOutside = (e) => {
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(e.target)) {
+        setIsRoleDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -191,34 +215,123 @@ const StaffAugConsultation = ({ data }) => {
 
                 <div className="form-row-2">
                   <div className="form-group">
-                    <label htmlFor="roleNeeded">
+                    <label htmlFor="roleNeeded-trigger">
                       Primary Tech Stack / Role <span className="req">*</span>
                     </label>
-                    <div className="StaffAug-selectWrapper">
+
+                    {/* Custom accessible dropdown */}
+                    <div
+                      className="StaffAug-customDropdown"
+                      ref={roleDropdownRef}
+                    >
+                      {/* Trigger button */}
+                      <button
+                        id="roleNeeded-trigger"
+                        type="button"
+                        className={`StaffAug-dropdownTrigger${isRoleDropdownOpen ? ' StaffAug-dropdownTrigger--open' : ''}`}
+                        aria-haspopup="listbox"
+                        aria-expanded={isRoleDropdownOpen}
+                        onClick={() => setIsRoleDropdownOpen((o) => !o)}
+                      >
+                        <span
+                          className={
+                            formData.roleNeeded
+                              ? 'StaffAug-dropdownValue'
+                              : 'StaffAug-dropdownPlaceholder'
+                          }
+                        >
+                          {formData.roleNeeded
+                            ? roleOptions.find(
+                                (o) => o.value === formData.roleNeeded
+                              )?.label
+                            : 'Select required domain'}
+                        </span>
+                        {/* Chevron – rotates via CSS class */}
+                        <svg
+                          className={`StaffAug-dropdownChevron${isRoleDropdownOpen ? ' StaffAug-dropdownChevron--open' : ''}`}
+                          width="14"
+                          height="14"
+                          viewBox="0 0 12 8"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="m1 1 5 5 5-5" />
+                        </svg>
+                      </button>
+
+                      {/* Options panel */}
+                      {isRoleDropdownOpen && (
+                        <ul
+                          className="StaffAug-dropdownMenu"
+                          role="listbox"
+                          aria-label="Primary Tech Stack / Role"
+                        >
+                          {roleOptions.map((option) => {
+                            const isSelected =
+                              formData.roleNeeded === option.value;
+                            return (
+                              <li
+                                key={option.value}
+                                role="option"
+                                aria-selected={isSelected}
+                                className={`StaffAug-dropdownOption${isSelected ? ' StaffAug-dropdownOption--selected' : ''}`}
+                                onMouseDown={() => {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    roleNeeded: option.value,
+                                  }));
+                                  setIsRoleDropdownOpen(false);
+                                }}
+                              >
+                                <span>{option.label}</span>
+                                {isSelected && (
+                                  <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    aria-hidden="true"
+                                  >
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+
+                      {/* Hidden native select keeps form required-validation */}
                       <select
                         id="roleNeeded"
+                        name="roleNeeded"
                         required
                         value={formData.roleNeeded}
                         onChange={handleChange}
-                        className="StaffAug-styledSelect"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        style={{
+                          position: 'absolute',
+                          opacity: 0,
+                          pointerEvents: 'none',
+                          width: 0,
+                          height: 0,
+                        }}
                       >
-                        <option value="" disabled>
-                          Select required domain
-                        </option>
-                        <option value="cloud-devops">
-                          Cloud &amp; DevOps (AWS / GCP / K8s)
-                        </option>
-                        <option value="fullstack">
-                          Full-Stack (React / Node / Python)
-                        </option>
-                        <option value="data-ai">
-                          Data Engineering &amp; AI / ML
-                        </option>
-                        <option value="sap-erp">Enterprise ERP / SAP HANA</option>
-                        <option value="qa-auto">QA &amp; Test Automation</option>
-                        <option value="other">
-                          Multiple Roles / Custom Squad
-                        </option>
+                        <option value="" disabled />
+                        {roleOptions.map((o) => (
+                          <option key={o.value} value={o.value}>
+                            {o.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
