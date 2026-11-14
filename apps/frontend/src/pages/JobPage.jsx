@@ -3,156 +3,80 @@ import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchOpenings } from '../store/slices/homeSlice';
-import { getIndustryBySlug, getSearchTermForIndustry } from '../store/slices/industriesSlice';
+import { getSearchTermForIndustry } from '../store/slices/industriesSlice';
 
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import ApplyModal from '../components/common/ApplyModal';
 import JobSpecModal from '../components/JobsComponents/JobSpecModal';
 
-// Above-the-fold components loaded synchronously for instant LCP
-import JobsHero from '../components/JobsComponents/JobsHero';
-import JobSearch from '../components/JobsComponents/JobSearch';
+// Above-the-fold component loaded synchronously
+import CareersHero from '../components/JobsComponents/CareersHero';
 
-// Below-the-fold components lazy loaded for optimal bundle splitting
-const FeaturedPositions = lazy(
-  () => import('../components/JobsComponents/FeaturedPositions')
+// Below-the-fold sections loaded for optimal bundle splitting
+const LifeAtThinkwires = lazy(
+  () => import('../components/JobsComponents/LifeAtThinkwires')
 );
-const TalentBench = lazy(
-  () => import('../components/JobsComponents/TalentBench')
+const CareersOpportunities = lazy(
+  () => import('../components/JobsComponents/CareersOpportunities')
 );
-const JobsStats = lazy(() => import('../components/JobsComponents/JobsStats'));
-const CareerBenefits = lazy(
-  () => import('../components/JobsComponents/CareerBenefits')
+const CareersBlogsSection = lazy(
+  () => import('../components/JobsComponents/CareersBlogsSection')
 );
-const CareerInsights = lazy(
-  () => import('../components/JobsComponents/CareerInsights')
+const CareersBenefitsSection = lazy(
+  () => import('../components/JobsComponents/CareersBenefitsSection')
 );
-const CandidateFAQs = lazy(
-  () => import('../components/JobsComponents/CandidateFAQs')
+const CareersClosingCTA = lazy(
+  () => import('../components/JobsComponents/CareersClosingCTA')
 );
 
-const ComponentLoader = () => (
-  <div
-    style={{
-      textAlign: 'center',
-      padding: '3rem 1.5rem',
-      color: '#64748b',
-      fontSize: '0.95rem',
-    }}
-  >
-    Loading section...
+const SectionLoader = () => (
+  <div className="CR-SectionLoader">
+    <div className="CR-Spinner" />
+    <span>Loading careers experience...</span>
   </div>
 );
 
 const JobPage = () => {
   const dispatch = useDispatch();
-  const { openings, status, errors } = useSelector((state) => state.home);
+  const { openings = [], status = {}, errors = {} } = useSelector(
+    (state) => state.home || {}
+  );
+  const { isAuthenticated } = useSelector((state) => state.auth || {});
 
   const [selectedJobForModal, setSelectedJobForModal] = useState(null);
   const [selectedJobForSpec, setSelectedJobForSpec] = useState(null);
 
   const [searchParams] = useSearchParams();
   const industrySlugParam = searchParams.get('industry');
-  const searchParam = searchParams.get('search') || searchParams.get('q');
-  const locationParam = searchParams.get('location');
-  const experienceParam = searchParams.get('experience');
 
-  // Search & Filter state
-  const [searchQuery, setSearchQuery] = useState(() => {
-    if (searchParam) return searchParam;
-    return industrySlugParam ? getSearchTermForIndustry(industrySlugParam) : '';
-  });
-  const [prevIndustrySlug, setPrevIndustrySlug] = useState(industrySlugParam);
+  const navigate = useNavigate();
 
-  if (prevIndustrySlug !== industrySlugParam) {
-    setPrevIndustrySlug(industrySlugParam);
-    if (industrySlugParam) {
-      setSearchQuery(getSearchTermForIndustry(industrySlugParam));
-    }
-  }
-
-  const [locationFilter, setLocationFilter] = useState(() => locationParam || 'All');
-  const [experienceFilter, setExperienceFilter] = useState(() => experienceParam || 'All');
-
-  // Sync state when URL search parameters change
-  useEffect(() => {
-    const q = searchParams.get('search') || searchParams.get('q');
-    if (q !== null && q !== undefined) {
-      setSearchQuery(q);
-    }
-    const loc = searchParams.get('location');
-    if (loc) {
-      setLocationFilter(loc);
-    }
-    const exp = searchParams.get('experience');
-    if (exp) {
-      setExperienceFilter(exp);
-    }
-  }, [searchParams]);
-  const [workMode, setWorkMode] = useState('All Modes');
-  const [jobMode, setJobMode] = useState('All Types');
-  const [noticePeriod, setNoticePeriod] = useState('All Notice');
-  const [departmentFilter, setDepartmentFilter] = useState('All Roles');
-  const [sortBy, setSortBy] = useState('Newest First');
-
-  // Dispatch Redux thunk to fetch openings dynamically from backend
+  // Load openings from backend via Redux thunk
   const loadJobsFromBackend = useCallback(() => {
-    dispatch(
-      fetchOpenings({
-        q: searchQuery,
-        location: locationFilter,
-        experience: experienceFilter,
-        workMode: workMode,
-        jobMode: jobMode,
-        noticePeriod: noticePeriod,
-        department: departmentFilter,
-        sort: sortBy,
-      })
-    );
-  }, [
-    dispatch,
-    searchQuery,
-    locationFilter,
-    experienceFilter,
-    workMode,
-    jobMode,
-    noticePeriod,
-    departmentFilter,
-    sortBy,
-  ]);
+    dispatch(fetchOpenings());
+  }, [dispatch]);
 
-  // Trigger search on filter changes or initial load
   useEffect(() => {
     loadJobsFromBackend();
-  }, [
-    departmentFilter,
-    workMode,
-    jobMode,
-    noticePeriod,
-    sortBy,
-    loadJobsFromBackend,
-  ]);
-
-  // Handle Search button submit
-  const handleSearchSubmit = () => {
-    loadJobsFromBackend();
-  };
+  }, [loadJobsFromBackend]);
 
   const isLoading = status.openings === 'loading';
   const isError = status.openings === 'failed';
 
-  const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.auth);
-
+  // Apply handler
   const handleApplyJob = (job) => {
+    if (!job) {
+      setSelectedJobForModal('General Talent Bench Application');
+      return;
+    }
+
     const jobIdentifier =
       job.id ||
       job._id ||
       'job-' +
-        encodeURIComponent(job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
-    const empType =
-      job.jobMode || job.employmentType || job.type || 'Permanent';
+        encodeURIComponent((job.title || 'role').toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+    const empType = job.jobMode || job.employmentType || job.type || 'Permanent';
     const postDate = job.postedDate
       ? new Date(job.postedDate).toLocaleDateString('en-US', {
           month: 'short',
@@ -160,133 +84,83 @@ const JobPage = () => {
           year: 'numeric',
         })
       : job.postingDate || 'Active Mandate';
-    const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(job.title)}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
+    const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(
+      job.title || ''
+    )}&department=${encodeURIComponent(
+      job.department || 'Engineering'
+    )}&location=${encodeURIComponent(
+      job.location || 'Remote'
+    )}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(
+      postDate
+    )}`;
 
     if (isAuthenticated) {
       navigate(targetApplyUrl);
     } else {
-      // Direct unauthenticated candidate to login with return redirect to the exact job application
-      navigate(`/login?redirect=${encodeURIComponent(targetApplyUrl)}`);
+      setSelectedJobForModal(job);
     }
   };
 
+  const handleDropResume = () => {
+    setSelectedJobForModal({
+      title: 'Global Talent Bench — General Application',
+      department: 'Engineering & Consulting',
+      location: 'India / US / Canada',
+      type: 'Full-Time / Contract',
+    });
+  };
+
   return (
-    <div className="JobPage-wrapper">
+    <div className="JobPage-wrapper CR-PageRoot">
       <Helmet>
-        <title>Jobs | Thinkwires — Global Talent Cloud</title>
+        <title>Careers &amp; Life at ThinkWires | Global Talent Cloud</title>
         <meta
           name="description"
-          content="Browse 500+ active engineering and tech roles across India, USA, and Canada. Apply directly with AI-driven ATS screening."
+          content="Explore high-impact engineering careers at ThinkWires. Browse verified openings across Cloud, AI, and Enterprise platforms in India, USA, and Canada."
         />
-        <meta property="og:title" content="Hot Jobs | Thinkwires" />
+        <meta property="og:title" content="Careers & Life at ThinkWires" />
         <meta
           property="og:description"
-          content="Browse 500+ active engineering and tech roles across India, USA, and Canada. Apply directly with AI-driven ATS screening."
+          content="Build the future of technology with ThinkWires. Explore real team culture, verified openings, and competitive total rewards."
         />
         <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Hot Jobs | Thinkwires" />
+        <meta name="twitter:title" content="Careers at ThinkWires" />
         <meta
           name="twitter:description"
-          content="Browse 500+ active engineering and tech roles across India, USA, and Canada."
+          content="Explore high-impact engineering careers at ThinkWires across India, USA, and Canada."
         />
-        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
       </Helmet>
+
       <Navbar />
 
       <main className="JobPage-main">
-        {/* Hero Section with Floating Search Bar (Instant Render) */}
-        <JobsHero>
-          <JobSearch
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            locationFilter={locationFilter}
-            setLocationFilter={setLocationFilter}
-            experienceFilter={experienceFilter}
-            setExperienceFilter={setExperienceFilter}
-            workMode={workMode}
-            setWorkMode={setWorkMode}
-            jobMode={jobMode}
-            setJobMode={setJobMode}
-            noticePeriod={noticePeriod}
-            setNoticePeriod={setNoticePeriod}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            totalResults={openings.length}
-            onSearchSubmit={handleSearchSubmit}
+        {/* Section 1: Hero */}
+        <CareersHero totalJobsCount={openings.length} />
+
+        <Suspense fallback={<SectionLoader />}>
+          {/* Section 2, 3, 4: Life at ThinkWires, Meet Our People, Our Culture, Photo Gallery */}
+          <LifeAtThinkwires />
+
+          {/* Section 5: Career Opportunities (Official Job Listings with Functional Search & Multi-Filters) */}
+          <CareersOpportunities
+            jobsList={openings}
+            isLoading={isLoading}
+            isError={isError}
+            errorMessage={errors.openings}
+            onRetry={loadJobsFromBackend}
+            onApplyClick={handleApplyJob}
+            onViewSpecClick={setSelectedJobForSpec}
           />
-        </JobsHero>
 
-        <div className="section-divider-line" />
+          {/* Section 6: Career Blogs & Tips (6 Official Articles with Reader Modal) */}
+          <CareersBlogsSection />
 
-        {/* Lazy Loaded Below-the-fold Sections */}
-        <Suspense fallback={<ComponentLoader />}>
-          {/* Featured Positions Grid (Dynamic from Redux Store & Backend) */}
-          {isLoading && openings.length === 0 ? (
-            <div
-              style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}
-            >
-              <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>
-                Loading dynamic job listings from backend...
-              </div>
-            </div>
-          ) : isError && openings.length === 0 ? (
-            <div
-              style={{ textAlign: 'center', padding: '4rem', color: '#ef4444' }}
-            >
-              <div>
-                {errors.openings ||
-                  'Unable to load live jobs from backend server.'}
-              </div>
-              <button
-                onClick={loadJobsFromBackend}
-                style={{
-                  marginTop: '1rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '6px',
-                  background: '#2563eb',
-                  color: '#fff',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Retry
-              </button>
-            </div>
-          ) : (
-            <FeaturedPositions
-              jobsList={openings}
-              activeCategory={departmentFilter}
-              setActiveCategory={setDepartmentFilter}
-              onApplyClick={handleApplyJob}
-              onViewSpecClick={setSelectedJobForSpec}
-            />
-          )}
+          {/* Section 7: Benefits & Growth (Official Benefits: Medical, PF, Gratuity, IJP, Training, Leave, etc.) */}
+          <CareersBenefitsSection />
 
-          <div className="section-divider-line" />
-
-          {/* Drop CV Banner Section */}
-          <TalentBench />
-
-          <div className="section-divider-line" />
-
-          {/* 4 Metrics Strip (Redux Dynamic Data) */}
-          <JobsStats />
-
-          <div className="section-divider-line" />
-
-          {/* Why Build Your Career With Thinkwires Section (Redux Dynamic Data) */}
-          <CareerBenefits />
-
-          <div className="section-divider-line" />
-
-          {/* Career Insights & Tech Culture Section */}
-          <CareerInsights />
-
-          <div className="section-divider-line" />
-
-          {/* Candidate FAQs Section (Redux Dynamic Data) */}
-          <CandidateFAQs />
+          {/* Section 8: Final CTA */}
+          <CareersClosingCTA onDropResumeClick={handleDropResume} />
         </Suspense>
       </main>
 
