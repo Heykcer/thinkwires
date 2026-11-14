@@ -21,7 +21,7 @@
     }
   },
   "hero": {
-    "badge": "About Thinkwires • Transforming Global IT Talent Delivery",
+    "badge": "About Thinkwires \u2022 Transforming Global IT Talent Delivery",
     "breadcrumbs": [
       {
         "label": "Home",
@@ -195,7 +195,7 @@
         ],
         "footerTag": "Founding Vision & Executive Search",
         "linkedinUrl": null,
-        "image": null
+        "image": "/images/team/naziya-husain.jpg"
       },
       {
         "id": "leader-002",
@@ -221,7 +221,7 @@
         ],
         "footerTag": "Enterprise HR & Operations",
         "linkedinUrl": null,
-        "image": null
+        "image": "/images/team/anju-balyan.jpg"
       },
       {
         "id": "leader-003",
@@ -247,7 +247,7 @@
         ],
         "footerTag": "Strategic Growth & Enterprise Scaling",
         "linkedinUrl": null,
-        "image": null
+        "image": "/images/team/ananya-mehta.jpg"
       },
       {
         "id": "leader-004",
@@ -273,7 +273,7 @@
         ],
         "footerTag": "People Strategy & Global Brand",
         "linkedinUrl": null,
-        "image": null
+        "image": "/images/team/arjun-verma.jpg"
       },
       {
         "id": "leader-005",
@@ -306,7 +306,7 @@
         ],
         "footerTag": "Global Delivery Operations & Risk Governance",
         "linkedinUrl": null,
-        "image": null
+        "image": "/images/team/meera-iyer.jpg"
       }
     ]
   },
@@ -407,7 +407,7 @@
   "openings": [
     {
       "id": 13,
-      "category": "AI & COGNITIVE LABS • HIGH PRIORITY",
+      "category": "AI & COGNITIVE LABS \u2022 HIGH PRIORITY",
       "badge": "Hot Job",
       "badgeColor": "green",
       "logo": "AI",
@@ -416,7 +416,7 @@
       "location": "Bangalore",
       "experience": "8 - 12 Years",
       "experienceTier": "Lead",
-      "salary": "₹45 - 60 LPA",
+      "salary": "\u20b945 - 60 LPA",
       "joining": "Immediate",
       "jobMode": "Permanent",
       "workMode": "Work From Home",
@@ -435,7 +435,7 @@
     },
     {
       "id": 14,
-      "category": "CLOUD & CYBERSECURITY • CONTRACT",
+      "category": "CLOUD & CYBERSECURITY \u2022 CONTRACT",
       "badge": "Urgent Requirement",
       "badgeColor": "blue",
       "logo": "AWS",
@@ -444,7 +444,7 @@
       "location": "Remote (US/IND)",
       "experience": "10+ Years",
       "experienceTier": "Lead",
-      "salary": "₹35 - 50 LPA",
+      "salary": "\u20b935 - 50 LPA",
       "joining": "< 15 Days",
       "jobMode": "Contract",
       "workMode": "Work From Office",
@@ -463,16 +463,16 @@
     },
     {
       "id": 15,
-      "category": "DISTRIBUTED SYSTEMS • HYBRID",
+      "category": "DISTRIBUTED SYSTEMS \u2022 HYBRID",
       "badge": "Immediate Joining",
       "badgeColor": "purple",
       "logo": "ACH",
-      "title": "Senior Full Stack Engineer – Distributed Go & Kafka",
+      "title": "Senior Full Stack Engineer \u2013 Distributed Go & Kafka",
       "company": "NextGen High-Throughput Systems",
       "location": "Hyderabad",
       "experience": "5 - 8 Years",
       "experienceTier": "Senior",
-      "salary": "₹28 - 40 LPA",
+      "salary": "\u20b928 - 40 LPA",
       "joining": "< 30 Days",
       "jobMode": "Contract to Hire",
       "workMode": "Hybrid",
@@ -491,7 +491,7 @@
     },
     {
       "id": 16,
-      "category": "ENTERPRISE SYSTEMS • PERMANENT",
+      "category": "ENTERPRISE SYSTEMS \u2022 PERMANENT",
       "badge": "Direct Client",
       "badgeColor": "green",
       "logo": "SAP",
@@ -500,7 +500,7 @@
       "location": "Pune / Bangalore",
       "experience": "9 - 14 Years",
       "experienceTier": "Lead",
-      "salary": "₹32 - 45 LPA",
+      "salary": "\u20b932 - 45 LPA",
       "joining": "> 30 Days",
       "jobMode": "Permanent",
       "workMode": "Hybrid",
@@ -519,7 +519,7 @@
     },
     {
       "id": 1,
-      "category": "ENTERPRISE SYSTEMS • CONTRACT",
+      "category": "ENTERPRISE SYSTEMS \u2022 CONTRACT",
       "badge": "Immediate Joining",
       "badgeColor": "green",
       "logo": "SAP",
@@ -528,7 +528,7 @@
       "location": "Bangalore",
       "experience": "3 - 5 Years",
       "experienceTier": "Mid",
-      "salary": "₹10 - 15 LPA",
+      "salary": "\u20b910 - 15 LPA",
       "joining": "< 15 Days",
       "description": "Professionals with hands-on experience in ABAP development and HANA-based solutions, along with strong expertise in form development, CDS Views, AMDP, and enterprise RICEF implementations.",
       "skills": [
@@ -547,7 +547,7 @@
     },
     {
       "id": 2,
-      "category": "FINTECH CORRIDOR • US REMOTE",
+      "category": "FINTECH CORRIDOR \u2022 US REMOTE",
       "badge": "Greenfield",
       "badgeColor": "blue",
       "logo": "ACH",
@@ -556,7 +556,7 @@
       "location": "Remote (US/IND)",
       "experience": "15+ Years",
       "experienceTier": "Lead",
-      "salary": "₹20+ LPA / Direct",
+      "salary": "\u20b920+ LPA / Direct",
       "joining": "Principal Tier",
       "description": "Design and build a standalone, high-throughput, fault-tolerant Payment Processing & Ledger Platform from scratch. Core responsibilities include low-latency microservices and ISO 20022 messaging.",
       "skills": [
@@ -575,11 +575,11 @@
     },
     {
       "id": 3,
-      "category": "DIGITAL EXPERIENCE • HYBRID",
+      "category": "DIGITAL EXPERIENCE \u2022 HYBRID",
       "badge": "Immediate (15 Days)",
       "badgeColor": "green",
       "logo": "AEM",
-      "title": "Full Stack Developer – Adobe AEM / Web SDK",
+      "title": "Full Stack Developer \u2013 Adobe AEM / Web SDK",
       "company": "Global Digital Commerce",
       "location": "Bangalore / Hyd",
       "experience": "8+ Years",
@@ -603,17 +603,17 @@
     },
     {
       "id": 4,
-      "category": "AI & COGNITIVE LABS • HIGH PRIORITY",
+      "category": "AI & COGNITIVE LABS \u2022 HIGH PRIORITY",
       "badge": "Hot Job",
       "badgeColor": "blue",
       "logo": "AI",
-      "title": "Senior Data Scientist – GenAI / Computer Vision",
+      "title": "Senior Data Scientist \u2013 GenAI / Computer Vision",
       "company": "AI & Cognitive Labs",
       "location": "Bangalore / Hyd",
       "experience": "8+ Years",
       "experienceTier": "Senior",
-      "salary": "₹30 - 40 LPA",
-      "joining": "15–30 Days",
+      "salary": "\u20b930 - 40 LPA",
+      "joining": "15\u201330 Days",
       "description": "Design, develop, and deploy production-scale LLMs, diffusion systems, and multi-modal computer vision models. Deep expertise in PyTorch, LangChain, and vector embeddings.",
       "skills": [
         "LLMs",
@@ -631,11 +631,11 @@
     },
     {
       "id": 5,
-      "category": "CLOUD ENGINEERING • FULL-TIME",
+      "category": "CLOUD ENGINEERING \u2022 FULL-TIME",
       "badge": "Full-Time",
       "badgeColor": "blue",
       "logo": "AWS",
-      "title": "Cloud Architect – AI Platform",
+      "title": "Cloud Architect \u2013 AI Platform",
       "company": "Enterprise AI Platform",
       "location": "Bangalore",
       "experience": "10+ Years",
@@ -659,7 +659,7 @@
     },
     {
       "id": 8,
-      "category": "FRONTEND & UX • FEATURE TEAM",
+      "category": "FRONTEND & UX \u2022 FEATURE TEAM",
       "badge": "Hot Job",
       "badgeColor": "blue",
       "logo": "React",
@@ -668,7 +668,7 @@
       "location": "Hyderabad",
       "experience": "8+ Years",
       "experienceTier": "Lead",
-      "salary": "₹28 - 38 LPA",
+      "salary": "\u20b928 - 38 LPA",
       "joining": "15 Days",
       "description": "Lead the frontend architecture of complex enterprise dashboards. Drive SSR/SSG patterns using Next.js, TailwindCSS, Redux Toolkit, and micro-frontend design.",
       "skills": [

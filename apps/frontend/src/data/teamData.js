@@ -1,6 +1,6 @@
 /**
- * Centralized Team & Culture Data for Thinkwires
- * Provides structured employee profiles, departments, and culture storytelling assets.
+ * Centralized Team, Benefits, Culture & Career Blogs Data for Thinkwires
+ * Provides structured employee profiles, authentic career blogs, and culture assets.
  */
 
 export const TEAM_DEPARTMENTS = [
@@ -186,6 +186,110 @@ export const TEAM_MEMBERS = [
   },
 ];
 
+export const EMPLOYEE_BENEFITS = [
+  {
+    id: 'ben-health',
+    title: 'Comprehensive Health & Wellness',
+    tag: 'Whole-Person Care',
+    description:
+      'Premium family healthcare coverage, periodic wellness retreats, and regular mental health support workshops that value sustainable success over burnout.',
+    icon: 'shield',
+    badge: '100% Covered',
+  },
+  {
+    id: 'ben-global',
+    title: 'Global Client Footprint',
+    tag: 'Borderless Impact',
+    description:
+      'Collaborate directly with engineering counterparts in Silicon Valley, Toronto, New York, and European tech corridors without relocation friction.',
+    icon: 'globe',
+    badge: '3 Continents',
+  },
+  {
+    id: 'ben-upskilling',
+    title: 'Continuous Tech Upskilling',
+    tag: 'Skill Mastery',
+    description:
+      'Sponsorship for Tier-1 cloud certifications (AWS, Azure, GCP), GenAI hackathons, and enterprise solution architecture workshops.',
+    icon: 'graduation',
+    badge: 'Paid Certifications',
+  },
+  {
+    id: 'ben-agility',
+    title: 'Work-Life Agility',
+    tag: 'Flexibility First',
+    description:
+      'Choose from completely remote, hybrid, or on-site modes. Flexible overlap schedules tailored to your individual family needs.',
+    icon: 'laptop',
+    badge: 'Remote & Hybrid',
+  },
+  {
+    id: 'ben-career',
+    title: 'Transparent Career Pathing',
+    tag: 'Merit-Based Growth',
+    description:
+      'Bi-annual performance evaluations, direct promotions to Staff/Principal engineering cohorts, and clear payroll progression charts.',
+    icon: 'trending',
+    badge: 'Bi-Annual Reviews',
+  },
+  {
+    id: 'ben-csr',
+    title: 'Impact & Social Purpose',
+    tag: 'Community Value',
+    description:
+      'Join our CSR initiatives: village children educational support, healthcare drives, and tree planting programs that empower local communities.',
+    icon: 'heart',
+    badge: '1,000+ Trees',
+  },
+];
+
+export const CAREER_BLOGS = [
+  {
+    id: 'blog-wellness',
+    date: 'Sep 12, 2026',
+    category: 'Wellness & Culture',
+    readTime: '5 min read',
+    title: 'Supporting Employee Wellness and Work-Life Balance in Distributed Teams',
+    snippet:
+      'Sustainable high performance depends on feeling healthy, respected, and empowered to deliver world-class code without burnout. Discover our frameworks for mental health, flexible overlap hours, and family wellness retreats.',
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+    link: '/blog',
+  },
+  {
+    id: 'blog-campus',
+    date: 'Jun 23, 2026',
+    category: 'Campus Drive & Learning',
+    readTime: '4 min read',
+    title: 'From Classroom to Career: Empowering 250+ Next-Gen Tech Graduates',
+    snippet:
+      'Recap of ThinkWires landmark hiring drive in Dehradun, selecting high-potential graduate talent across Cloud and Full-Stack cohorts with comprehensive mentorship and architectural bootcamps.',
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
+    link: '/blog',
+  },
+  {
+    id: 'blog-csr',
+    date: 'May 04, 2026',
+    category: 'CSR & Sustainability',
+    readTime: '6 min read',
+    title: 'CSR & Environmental Sustainability: Our Roadmap to 1,000 Planted Trees',
+    snippet:
+      'Learn how our team combines cutting-edge engineering consulting with purposeful community initiatives in healthcare, rural student tech tutoring, and our milestone tree plantation campaigns.',
+    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    link: '/blog',
+  },
+  {
+    id: 'blog-interview',
+    date: 'Aug 15, 2026',
+    category: 'Career Tips & Advice',
+    readTime: '5 min read',
+    title: 'Mastering Technical Architecture Reviews: Career Tips for Cloud & DevOps Engineers',
+    snippet:
+      'Practical advice from ThinkWires solution architects on demonstrating real-world problem-solving, telemetry vetting, and cross-functional communication during technical assessments.',
+    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80',
+    link: '/blog',
+  },
+];
+
 export const CULTURE_THEMES = [
   {
     id: 'collaboration',
@@ -345,4 +449,3 @@ export const GALLERY_ITEMS = [
     spanClass: 'TW-Gal-span-standard',
   },
 ];
-

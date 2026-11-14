@@ -5,8 +5,58 @@ import {
   TEAM_MEMBERS,
   CULTURE_THEMES,
   EMPLOYEE_EXPERIENCE_ITEMS,
+  EMPLOYEE_BENEFITS,
+  CAREER_BLOGS,
   GALLERY_ITEMS,
 } from '../../data/teamData';
+
+const BenefitIcon = ({ type }) => {
+  if (type === 'shield') {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    );
+  }
+  if (type === 'globe') {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    );
+  }
+  if (type === 'graduation') {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+      </svg>
+    );
+  }
+  if (type === 'laptop') {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+        <line x1="2" y1="20" x2="22" y2="20" />
+      </svg>
+    );
+  }
+  if (type === 'trending') {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+        <polyline points="17 6 23 6 23 12" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+};
 
 const LifeAtThinkwires = () => {
   // Department filter state
@@ -406,7 +456,7 @@ const LifeAtThinkwires = () => {
           </div>
 
           <div className="TW-CultureGrid-container">
-            {CULTURE_THEMES.map((theme, index) => {
+            {CULTURE_THEMES.map((theme) => {
               const isLarge = theme.aspect === 'wide';
               return (
                 <div
@@ -450,7 +500,7 @@ const LifeAtThinkwires = () => {
       <section className="TW-ExperienceSection-root">
         <div className="TW-Life-container">
           <div className="TW-SectionHeader text-center">
-            <span className="TW-SectionPill">THE WORKPLACE EXPERIENCE</span>
+            <span className="TW-SectionPill">THE WORKPLACE ENVIRONMENT</span>
             <h2 className="TW-SectionTitle">Designed for Growth, Autonomy &amp; Purpose</h2>
             <p className="TW-SectionSubtitle">
               We invest in environments that empower technical curiosity, shared
@@ -513,7 +563,40 @@ const LifeAtThinkwires = () => {
       </section>
 
       {/* ===================================================================
-          5. PHOTO GALLERY: Asymmetric Masonry Grid + Lightbox
+          5. EMPLOYEE BENEFITS & PERKS
+          =================================================================== */}
+      <section className="TW-BenefitsSection-root">
+        <div className="TW-Life-container">
+          <div className="TW-SectionHeader text-center">
+            <span className="TW-SectionPill">COMPREHENSIVE SUPPORT</span>
+            <h2 className="TW-SectionTitle">Employee Benefits &amp; Well-Being</h2>
+            <p className="TW-SectionSubtitle">
+              We invest in our people with comprehensive family healthcare, continuous
+              cloud certifications, work-life agility, and purpose-driven community impact.
+            </p>
+          </div>
+
+          <div className="TW-BenefitsGrid-container">
+            {EMPLOYEE_BENEFITS.map((ben) => (
+              <div key={ben.id} className="TW-BenefitCard-root">
+                <div className="TW-BenefitCard-top">
+                  <div className="TW-BenefitCard-iconBox">
+                    <BenefitIcon type={ben.icon} />
+                  </div>
+                  <span className="TW-BenefitCard-badge">{ben.badge}</span>
+                </div>
+
+                <span className="TW-BenefitCard-tag">{ben.tag}</span>
+                <h3 className="TW-BenefitCard-title">{ben.title}</h3>
+                <p className="TW-BenefitCard-desc">{ben.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================================
+          6. PHOTO GALLERY: Asymmetric Masonry Grid + Lightbox
           =================================================================== */}
       <section className="TW-GallerySection-root">
         <div className="TW-Life-container">
@@ -596,7 +679,70 @@ const LifeAtThinkwires = () => {
       </section>
 
       {/* ===================================================================
-          6. CLOSING CTA: Your Next Chapter Starts Here
+          7. CAREER BLOGS & TIPS: Accurate Articles from Thinkwires Old Site
+          =================================================================== */}
+      <section className="TW-CareerBlogs-root">
+        <div className="TW-Life-container">
+          <div className="TW-CareerBlogs-headerRow">
+            <div>
+              <span className="TW-SectionPill">KNOWLEDGE BASE &amp; TECH CULTURE</span>
+              <h2 className="TW-SectionTitle">Career Blogs &amp; Insights</h2>
+              <p className="TW-SectionSubtitle">
+                Discover technical insights, distributed work wellness, campus recruitment stories, and CSR updates directly from our engineers and leadership.
+              </p>
+            </div>
+            <Link to="/blog" className="TW-CareerBlogs-allBtn">
+              <span>View All Articles</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="TW-CareerBlogs-grid">
+            {CAREER_BLOGS.map((article) => (
+              <article key={article.id} className="TW-BlogCard-root">
+                <div className="TW-BlogCard-imgWrapper">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="TW-BlogCard-img"
+                    loading="lazy"
+                  />
+                  <span className="TW-BlogCard-tag">{article.category}</span>
+                </div>
+
+                <div className="TW-BlogCard-body">
+                  <div className="TW-BlogCard-meta">
+                    <span>{article.date}</span>
+                    <span className="TW-BlogCard-dot">•</span>
+                    <span>{article.readTime}</span>
+                  </div>
+
+                  <h3 className="TW-BlogCard-title">
+                    <Link to={article.link}>{article.title}</Link>
+                  </h3>
+                  <p className="TW-BlogCard-snippet">{article.snippet}</p>
+
+                  <div className="TW-BlogCard-footer">
+                    <Link to={article.link} className="TW-BlogCard-readMore">
+                      <span>Read Story</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================================
+          8. CLOSING CTA: Your Next Chapter Starts Here (Functional Explore Careers CTA)
           =================================================================== */}
       <section className="TW-ClosingCTA-section">
         <div className="TW-Life-container">
@@ -607,7 +753,8 @@ const LifeAtThinkwires = () => {
               <h2 className="TW-ClosingCTA-title">Your Next Chapter Starts Here.</h2>
               <p className="TW-ClosingCTA-desc">
                 Be part of a team that values innovation, collaboration, continuous learning,
-                and meaningful work. Explore opportunities to grow with Thinkwires.
+                and meaningful work. Explore active career openings with Thinkwires across
+                our international technology corridors.
               </p>
 
               <div className="TW-ClosingCTA-actions">
@@ -755,7 +902,7 @@ const LifeAtThinkwires = () => {
                       className="TW-MemberModal-linkedinBtn"
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.761-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                       </svg>
                       <span>Connect on LinkedIn</span>
                     </a>

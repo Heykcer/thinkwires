@@ -4,8 +4,8 @@ import { screen, fireEvent, within } from '@testing-library/react';
 import { renderWithProviders } from '../test-utils';
 import LifeAtThinkwires from '../../components/JobsComponents/LifeAtThinkwires';
 
-describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
-  it('renders Hero Section with headline, description, CTAs, and trust metrics', () => {
+describe('LifeAtThinkwires Component (Comprehensive Culture & Experience Tests)', () => {
+  it('renders Hero Section with real team mosaic, headline, description, CTAs, and trust metrics', () => {
     const { container } = renderWithProviders(<LifeAtThinkwires />);
 
     // Section anchor & container
@@ -36,7 +36,7 @@ describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
     expect(screen.getAllByText('98%').length).toBeGreaterThan(0);
   });
 
-  it('renders Meet Our Team section with interactive department filters and employee cards', () => {
+  it('renders Meet Our Team section with authentic employee profiles and interactive department filters', () => {
     renderWithProviders(<LifeAtThinkwires />);
 
     expect(screen.getByRole('heading', { name: /Meet Our Team/i })).toBeInTheDocument();
@@ -65,7 +65,6 @@ describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
     fireEvent.click(engineeringTab);
     expect(screen.getByText('Vikramaditya Rao')).toBeInTheDocument();
     expect(screen.getByText('Devendra Singh')).toBeInTheDocument();
-    // CEO Ananya Mehta should not be in the Engineering department list
     expect(screen.queryByText('Chief Executive Officer (CEO)')).toBeNull();
 
     // Click back to All Team
@@ -73,7 +72,7 @@ describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
     expect(screen.getByText('Ananya Mehta')).toBeInTheDocument();
   });
 
-  it('opens interactive Team Profile Modal on card click and closes on Escape', () => {
+  it('opens interactive Team Profile Modal on card click and closes with Escape key', () => {
     renderWithProviders(<LifeAtThinkwires />);
 
     // Click on Ananya Mehta's card
@@ -101,30 +100,70 @@ describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('renders Our Culture in Action with all five foundational themes', () => {
+  it('renders Our Culture in Action and Employee Experience sections', () => {
     renderWithProviders(<LifeAtThinkwires />);
 
+    // Culture Themes
     expect(screen.getByRole('heading', { name: /Our Culture in Action/i })).toBeInTheDocument();
     expect(screen.getByText('Collaboration')).toBeInTheDocument();
     expect(screen.getByText('Technology & Innovation')).toBeInTheDocument();
     expect(screen.getByText('Continuous Learning')).toBeInTheDocument();
     expect(screen.getByText('Global Perspectives')).toBeInTheDocument();
     expect(screen.getByText('Community & CSR')).toBeInTheDocument();
-  });
 
-  it('renders Employee Experience section with alternating narrative items', () => {
-    renderWithProviders(<LifeAtThinkwires />);
-
+    // Workplace Environment / Experience
     expect(
       screen.getByRole('heading', { name: /Designed for Growth, Autonomy & Purpose/i })
     ).toBeInTheDocument();
-
     expect(screen.getByText('Collaborative Working Environment')).toBeInTheDocument();
     expect(screen.getByText('Technical Exposure & Modern Tooling')).toBeInTheDocument();
     expect(screen.getByText('Continuous Learning & Career Mobility')).toBeInTheDocument();
   });
 
-  it('renders Photo Gallery and supports Lightbox navigation controls', () => {
+  it('renders Employee Benefits & Well-Being section with all 6 authentic benefit cards', () => {
+    renderWithProviders(<LifeAtThinkwires />);
+
+    expect(screen.getByRole('heading', { name: /Employee Benefits & Well-Being/i })).toBeInTheDocument();
+    expect(screen.getByText('Comprehensive Health & Wellness')).toBeInTheDocument();
+    expect(screen.getByText('Global Client Footprint')).toBeInTheDocument();
+    expect(screen.getByText('Continuous Tech Upskilling')).toBeInTheDocument();
+    expect(screen.getByText('Work-Life Agility')).toBeInTheDocument();
+    expect(screen.getByText('Transparent Career Pathing')).toBeInTheDocument();
+    expect(screen.getByText('Impact & Social Purpose')).toBeInTheDocument();
+  });
+
+  it('renders Career Blogs & Tips section with accurate articles from the old website', () => {
+    renderWithProviders(<LifeAtThinkwires />);
+
+    expect(screen.getByRole('heading', { name: /Career Blogs & Insights/i })).toBeInTheDocument();
+
+    // 1. Wellness article
+    expect(
+      screen.getByText(/Supporting Employee Wellness and Work-Life Balance in Distributed Teams/i)
+    ).toBeInTheDocument();
+
+    // 2. Campus drive article
+    expect(
+      screen.getByText(/From Classroom to Career: Empowering 250\+ Next-Gen Tech Graduates/i)
+    ).toBeInTheDocument();
+
+    // 3. CSR article
+    expect(
+      screen.getByText(/CSR & Environmental Sustainability: Our Roadmap to 1,000 Planted Trees/i)
+    ).toBeInTheDocument();
+
+    // 4. Interview advice article
+    expect(
+      screen.getByText(/Mastering Technical Architecture Reviews: Career Tips for Cloud & DevOps Engineers/i)
+    ).toBeInTheDocument();
+
+    // Link to all articles
+    const viewAllBtn = screen.getByRole('link', { name: /View All Articles/i });
+    expect(viewAllBtn).toBeInTheDocument();
+    expect(viewAllBtn).toHaveAttribute('href', '/blog');
+  });
+
+  it('renders Photo Gallery with Lightbox modal and navigation controls', () => {
     const { container } = renderWithProviders(<LifeAtThinkwires />);
 
     expect(screen.getByRole('heading', { name: /Life at Thinkwires Gallery/i })).toBeInTheDocument();
@@ -153,7 +192,7 @@ describe('LifeAtThinkwires Component (Interactive Redesign Unit Tests)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('renders Closing CTA with career and contact navigation', () => {
+  it('renders Closing CTA with functional Explore Careers & Contact navigation', () => {
     renderWithProviders(<LifeAtThinkwires />);
 
     expect(
