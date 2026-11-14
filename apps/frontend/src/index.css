@@ -10769,7 +10769,7 @@ textarea {
   position: relative;
   overflow: hidden;
   border-radius: 1.25rem;
-  padding: 2rem 1.65rem;
+  padding: 2rem 1.35rem;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -10946,14 +10946,17 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
+  width: 100%;
 }
 
 .GrowthTimeline-year {
-  font-size: 2.25rem;
+  font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .GrowthTimeline-year--muted {
@@ -10965,12 +10968,14 @@ textarea {
 }
 
 .GrowthTimeline-tag {
-  padding: 0.28rem 0.68rem;
+  padding: 0.22rem 0.55rem;
   border-radius: 9999px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .GrowthTimeline-tag--default {
