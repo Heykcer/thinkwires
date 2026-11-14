@@ -21526,12 +21526,65 @@ textarea {
   margin-top: 0.5rem;
 }
 
-/* --- EOR Capabilities Grid (4 in a row) --- */
+/* --- EOR Capabilities Container & Grid (Broader cards and consistent alignment) --- */
+.Eor-capabilitiesContainer {
+  max-width: 1440px;
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin: 0 auto;
+}
+
 .Eor-capabilitiesGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-top: 3.5rem;
+  align-items: stretch;
+}
+
+.Eor-capabilitiesGrid .Payroll-pillarCard {
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+@media (min-width: 1201px) {
+  .Eor-capabilitiesGrid .Payroll-pillarTitle {
+    min-height: 3.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .Eor-capabilitiesGrid .Payroll-pillarDesc {
+    min-height: 7.75rem;
+  }
+}
+
+.Eor-cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-card-stroke, #e2e8f0);
+  font-size: 0.75rem;
+  color: var(--color-outline, #747686);
+  min-height: 3.25rem;
+  gap: 0.75rem;
+}
+
+.Eor-cardFooterLeft {
+  text-align: left;
+  line-height: 1.4;
+}
+
+.Eor-cardFooterRight {
+  text-align: right;
+  margin-left: auto;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 @media (max-width: 1200px) {
@@ -21550,6 +21603,7 @@ textarea {
 .Eor-cardFooter--second {
   gap: 1rem !important;
   justify-content: space-between !important;
+  align-items: center !important;
 }
 
 .Eor-cardFooterLeft--second {
@@ -21561,8 +21615,9 @@ textarea {
 
 .Eor-cardFooterRight--second {
   text-align: right;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   line-height: 1.4;
+  white-space: normal;
 }
 
 /* Separation Model */
