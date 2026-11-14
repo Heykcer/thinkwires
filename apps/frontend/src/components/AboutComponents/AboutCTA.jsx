@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitConsultation,
   resetConsultationStatus,
 } from '../../store/slices/aboutSlice';
 import ScrollReveal from '../common/ScrollReveal';
+
+const PRIMARY_NEED_OPTIONS = [
+  'Staff Augmentation',
+  'Employer of Record (EOR)',
+  'Permanent Tech Recruitment',
+  'Payroll Outsourcing',
+];
 
 const AboutCTA = ({ data }) => {
   const dispatch = useDispatch();
@@ -36,6 +43,94 @@ const AboutCTA = ({ data }) => {
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const dropdownRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  // Close custom dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+        setHighlightedIndex(-1);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectNeed = (option) => {
+    setFormData((prev) => ({ ...prev, primaryNeed: option }));
+    if (fieldErrors.primaryNeed) {
+      setFieldErrors((prev) => ({ ...prev, primaryNeed: null }));
+    }
+    setDropdownOpen(false);
+    setHighlightedIndex(-1);
+    if (triggerRef.current) {
+      triggerRef.current.focus();
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!dropdownOpen) {
+        setDropdownOpen(true);
+        const currIdx = PRIMARY_NEED_OPTIONS.indexOf(formData.primaryNeed);
+        setHighlightedIndex(currIdx >= 0 ? currIdx : 0);
+        return;
+      }
+      setHighlightedIndex((prev) =>
+        prev < PRIMARY_NEED_OPTIONS.length - 1 ? prev + 1 : 0
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!dropdownOpen) {
+        setDropdownOpen(true);
+        const currIdx = PRIMARY_NEED_OPTIONS.indexOf(formData.primaryNeed);
+        setHighlightedIndex(
+          currIdx >= 0 ? currIdx : PRIMARY_NEED_OPTIONS.length - 1
+        );
+        return;
+      }
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : PRIMARY_NEED_OPTIONS.length - 1
+      );
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (
+        dropdownOpen &&
+        highlightedIndex >= 0 &&
+        PRIMARY_NEED_OPTIONS[highlightedIndex]
+      ) {
+        handleSelectNeed(PRIMARY_NEED_OPTIONS[highlightedIndex]);
+      } else {
+        setDropdownOpen((prev) => !prev);
+        const currIdx = PRIMARY_NEED_OPTIONS.indexOf(formData.primaryNeed);
+        setHighlightedIndex(currIdx >= 0 ? currIdx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setDropdownOpen(false);
+      setHighlightedIndex(-1);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      setDropdownOpen(false);
+      setHighlightedIndex(-1);
+    }
+  };
 
   const validate = () => {
     const errors = {};
@@ -95,6 +190,8 @@ const AboutCTA = ({ data }) => {
       techRoles: '',
       honeypot: '',
     });
+    setDropdownOpen(false);
+    setHighlightedIndex(-1);
     setFieldErrors({});
   };
 
@@ -332,33 +429,104 @@ const AboutCTA = ({ data }) => {
                         />
                       </div>
 
-                      <div className="AboutCTA-fieldGroup">
+                      <div
+                        className="AboutCTA-fieldGroup"
+                        ref={dropdownRef}
+                        style={{ position: 'relative' }}
+                      >
                         <label
                           className="AboutCTA-label"
                           htmlFor="ctaPrimaryNeed"
                         >
                           Primary Need
                         </label>
-                        <select
-                          id="ctaPrimaryNeed"
-                          name="primaryNeed"
-                          value={formData.primaryNeed}
-                          onChange={handleChange}
-                          className="AboutCTA-select"
-                        >
-                          <option value="Staff Augmentation">
-                            Staff Augmentation
-                          </option>
-                          <option value="Employer of Record (EOR)">
-                            Employer of Record (EOR)
-                          </option>
-                          <option value="Permanent Tech Recruitment">
-                            Permanent Tech Recruitment
-                          </option>
-                          <option value="Payroll Outsourcing">
-                            Payroll Outsourcing
-                          </option>
-                        </select>
+                        <div className="AboutCTA-selectWrapper">
+                          <button
+                            ref={triggerRef}
+                            type="button"
+                            id="ctaPrimaryNeed-trigger"
+                            className={`AboutCTA-input AboutCTA-customSelectTrigger ${
+                              dropdownOpen ? 'is-open' : ''
+                            }`}
+                            aria-haspopup="listbox"
+                            aria-expanded={dropdownOpen}
+                            onClick={() => setDropdownOpen((prev) => !prev)}
+                            onKeyDown={handleKeyDown}
+                          >
+                            <span className="AboutCTA-customSelectValue">
+                              {formData.primaryNeed}
+                            </span>
+                            <span
+                              className={`material-symbols-outlined AboutCTA-selectArrow ${
+                                dropdownOpen ? 'is-open' : ''
+                              }`}
+                              aria-hidden="true"
+                            >
+                              expand_more
+                            </span>
+                          </button>
+
+                          {/* Native select for accessibility, testing & form integration */}
+                          <select
+                            id="ctaPrimaryNeed"
+                            name="primaryNeed"
+                            value={formData.primaryNeed}
+                            onChange={handleChange}
+                            className="AboutCTA-select AboutCTA-hiddenSelect"
+                            tabIndex={-1}
+                          >
+                            {PRIMARY_NEED_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+
+                          {/* Custom Dropdown Menu matching Homepage Location Box */}
+                          {dropdownOpen && (
+                            <ul
+                              id="ctaPrimaryNeed-menu"
+                              role="listbox"
+                              aria-labelledby="ctaPrimaryNeed-label"
+                              className="AboutCTA-customSelectMenu"
+                            >
+                              {PRIMARY_NEED_OPTIONS.map((opt, idx) => {
+                                const isSelected =
+                                  formData.primaryNeed === opt;
+                                const isHighlighted =
+                                  idx === highlightedIndex;
+                                return (
+                                  <li
+                                    key={opt}
+                                    role="option"
+                                    aria-selected={isSelected}
+                                    className={`AboutCTA-customSelectOption ${
+                                      isSelected ? 'is-selected' : ''
+                                    } ${
+                                      isHighlighted ? 'is-highlighted' : ''
+                                    }`}
+                                    onClick={() => handleSelectNeed(opt)}
+                                    onMouseEnter={() =>
+                                      setHighlightedIndex(idx)
+                                    }
+                                  >
+                                    <span className="AboutCTA-customSelectOptionText">
+                                      {opt}
+                                    </span>
+                                    {isSelected && (
+                                      <span
+                                        className="material-symbols-outlined AboutCTA-customSelectCheck"
+                                        aria-hidden="true"
+                                      >
+                                        check
+                                      </span>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          )}
+                        </div>
                       </div>
                     </div>
 

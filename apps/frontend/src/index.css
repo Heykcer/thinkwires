@@ -11409,6 +11409,238 @@ textarea {
   color: #f8fafc;
 }
 
+/* --- About CTA Strategy Call Custom Select Dropdown (Matches Homepage Location Box) --- */
+.AboutCTA-selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.AboutCTA-customSelectTrigger {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 42px;
+  padding: 0.65rem 2.25rem 0.65rem 0.875rem !important;
+  text-align: left;
+  user-select: none;
+  cursor: pointer;
+  background-color: var(--color-surface-container-low);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: 0.5rem;
+  color: var(--color-navy-dark);
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.AboutCTA-customSelectTrigger:hover {
+  border-color: #cbd5e1;
+}
+
+.AboutCTA-customSelectTrigger:focus,
+.AboutCTA-customSelectTrigger.is-open {
+  border-color: var(--color-cobalt-bright, #2563eb);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+.AboutCTA-customSelectValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  flex: 1;
+  color: var(--color-navy-dark, #0f172a);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.AboutCTA-selectArrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+  font-size: 1.25rem !important;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.AboutCTA-selectArrow.is-open {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--color-cobalt-bright, #2563eb);
+}
+
+.AboutCTA-hiddenSelect {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+  bottom: 0;
+  left: 0;
+}
+
+.AboutCTA-customSelectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  box-shadow: 0 14px 34px -4px rgba(15, 23, 42, 0.16), 0 4px 8px -2px rgba(15, 23, 42, 0.06);
+  z-index: 1050;
+  padding: 0.35rem;
+  margin: 0;
+  list-style: none;
+  animation: AboutCTADropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes AboutCTADropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.AboutCTA-customSelectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  margin: 0.12rem 0;
+  border-radius: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+  text-align: left;
+}
+
+.AboutCTA-customSelectOption:hover,
+.AboutCTA-customSelectOption.is-highlighted {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.AboutCTA-customSelectOption.is-selected {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.AboutCTA-customSelectOption.is-selected:hover,
+.AboutCTA-customSelectOption.is-selected.is-highlighted {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.AboutCTA-customSelectOptionText {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.AboutCTA-customSelectCheck {
+  font-size: 1.15rem !important;
+  color: #ffffff !important;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Custom Scrollbar for AboutCTA Dropdown Menu */
+.AboutCTA-customSelectMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.AboutCTA-customSelectMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.AboutCTA-customSelectMenu::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+/* Dark Mode Support for AboutCTA Dropdown Menu */
+[data-theme='dark'] .AboutCTA-customSelectTrigger {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectTrigger:focus,
+[data-theme='dark'] .AboutCTA-customSelectTrigger.is-open {
+  border-color: var(--color-cobalt-bright, #2563eb);
+  background-color: #1e293b;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme='dark'] .AboutCTA-customSelectValue {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .AboutCTA-selectArrow {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .AboutCTA-selectArrow.is-open {
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectMenu {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='dark'] .AboutCTA-customSelectOption {
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectOption:hover,
+[data-theme='dark'] .AboutCTA-customSelectOption.is-highlighted {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectOption.is-selected {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectOption.is-selected:hover,
+[data-theme='dark'] .AboutCTA-customSelectOption.is-selected.is-highlighted {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .AboutCTA-customSelectMenu::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
 .AboutCTA-input:focus,
 .AboutCTA-select:focus,
 .AboutCTA-textarea:focus {
