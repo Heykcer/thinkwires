@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitPayrollConsultation,
   resetSubmitStatus,
 } from '../../store/slices/payrollSlice';
+
+const EMPLOYEE_SIZE_OPTIONS = [
+  { value: '1-10', label: '1-10 employees' },
+  { value: '11-50', label: '11-50 employees' },
+  { value: '51-200', label: '51-200 employees' },
+  { value: '201-500', label: '201-500 employees' },
+  { value: '500+', label: '500+ employees' },
+];
+
+const SERVICE_REQUIRED_OPTIONS = [
+  { value: 'Payroll Outsourcing', label: 'Payroll Outsourcing' },
+  { value: 'Staff Augmentation', label: 'Staff Augmentation' },
+  { value: 'Employer of Record', label: 'Employer of Record (EOR)' },
+  { value: 'Permanent Staffing', label: 'Permanent Staffing & Executive Search' },
+  { value: 'Other', label: 'Other Advisory Services' },
+];
 
 const PayrollConsultation = ({ data }) => {
   const dispatch = useDispatch();
@@ -19,6 +35,182 @@ const PayrollConsultation = ({ data }) => {
     phoneNumber: '',
     emailAddress: '',
   });
+
+  const [sizeOpen, setSizeOpen] = useState(false);
+  const [serviceOpen, setServiceOpen] = useState(false);
+  const [sizeHighlight, setSizeHighlight] = useState(-1);
+  const [serviceHighlight, setServiceHighlight] = useState(-1);
+
+  const sizeRef = useRef(null);
+  const serviceRef = useRef(null);
+  const sizeTriggerRef = useRef(null);
+  const serviceTriggerRef = useRef(null);
+
+  // Close custom dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sizeRef.current && !sizeRef.current.contains(e.target)) {
+        setSizeOpen(false);
+        setSizeHighlight(-1);
+      }
+      if (serviceRef.current && !serviceRef.current.contains(e.target)) {
+        setServiceOpen(false);
+        setServiceHighlight(-1);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectSize = (val) => {
+    setForm((prev) => ({ ...prev, employeeSize: val }));
+    setSizeOpen(false);
+    setSizeHighlight(-1);
+    if (sizeTriggerRef.current) {
+      sizeTriggerRef.current.focus();
+    }
+  };
+
+  const handleSelectService = (val) => {
+    setForm((prev) => ({ ...prev, serviceReq: val }));
+    setServiceOpen(false);
+    setServiceHighlight(-1);
+    if (serviceTriggerRef.current) {
+      serviceTriggerRef.current.focus();
+    }
+  };
+
+  const handleSizeKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!sizeOpen) {
+        setSizeOpen(true);
+        const currIdx = EMPLOYEE_SIZE_OPTIONS.findIndex(
+          (opt) => opt.value === form.employeeSize
+        );
+        setSizeHighlight(currIdx >= 0 ? currIdx : 0);
+        return;
+      }
+      setSizeHighlight((prev) =>
+        prev < EMPLOYEE_SIZE_OPTIONS.length - 1 ? prev + 1 : 0
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!sizeOpen) {
+        setSizeOpen(true);
+        const currIdx = EMPLOYEE_SIZE_OPTIONS.findIndex(
+          (opt) => opt.value === form.employeeSize
+        );
+        setSizeHighlight(
+          currIdx >= 0 ? currIdx : EMPLOYEE_SIZE_OPTIONS.length - 1
+        );
+        return;
+      }
+      setSizeHighlight((prev) =>
+        prev > 0 ? prev - 1 : EMPLOYEE_SIZE_OPTIONS.length - 1
+      );
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (
+        sizeOpen &&
+        sizeHighlight >= 0 &&
+        EMPLOYEE_SIZE_OPTIONS[sizeHighlight]
+      ) {
+        handleSelectSize(EMPLOYEE_SIZE_OPTIONS[sizeHighlight].value);
+      } else {
+        setSizeOpen((prev) => !prev);
+        const currIdx = EMPLOYEE_SIZE_OPTIONS.findIndex(
+          (opt) => opt.value === form.employeeSize
+        );
+        setSizeHighlight(currIdx >= 0 ? currIdx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setSizeOpen(false);
+      setSizeHighlight(-1);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      setSizeOpen(false);
+      setSizeHighlight(-1);
+    }
+  };
+
+  const handleServiceKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!serviceOpen) {
+        setServiceOpen(true);
+        const currIdx = SERVICE_REQUIRED_OPTIONS.findIndex(
+          (opt) => opt.value === form.serviceReq
+        );
+        setServiceHighlight(currIdx >= 0 ? currIdx : 0);
+        return;
+      }
+      setServiceHighlight((prev) =>
+        prev < SERVICE_REQUIRED_OPTIONS.length - 1 ? prev + 1 : 0
+      );
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!serviceOpen) {
+        setServiceOpen(true);
+        const currIdx = SERVICE_REQUIRED_OPTIONS.findIndex(
+          (opt) => opt.value === form.serviceReq
+        );
+        setServiceHighlight(
+          currIdx >= 0 ? currIdx : SERVICE_REQUIRED_OPTIONS.length - 1
+        );
+        return;
+      }
+      setServiceHighlight((prev) =>
+        prev > 0 ? prev - 1 : SERVICE_REQUIRED_OPTIONS.length - 1
+      );
+      return;
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (
+        serviceOpen &&
+        serviceHighlight >= 0 &&
+        SERVICE_REQUIRED_OPTIONS[serviceHighlight]
+      ) {
+        handleSelectService(SERVICE_REQUIRED_OPTIONS[serviceHighlight].value);
+      } else {
+        setServiceOpen((prev) => !prev);
+        const currIdx = SERVICE_REQUIRED_OPTIONS.findIndex(
+          (opt) => opt.value === form.serviceReq
+        );
+        setServiceHighlight(currIdx >= 0 ? currIdx : 0);
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setServiceOpen(false);
+      setServiceHighlight(-1);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      setServiceOpen(false);
+      setServiceHighlight(-1);
+    }
+  };
 
   if (!data) return null;
   const { eyebrow, heading, description, hqDetails = {} } = data;
@@ -223,69 +415,227 @@ const PayrollConsultation = ({ data }) => {
 
               <div className="Payroll-formRowGrid">
                 <div className="Payroll-formField">
-                  <label className="Payroll-formLabel" htmlFor="employeeSize">
+                  <label
+                    className="Payroll-formLabel"
+                    id="employeeSize-label"
+                    htmlFor="employeeSize-trigger"
+                  >
                     Employee Size *
                   </label>
-                  <div className="Payroll-inputWrapper">
+                  <div
+                    className="Payroll-inputWrapper Payroll-customSelectWrapper"
+                    ref={sizeRef}
+                  >
                     <span className="material-symbols-outlined Payroll-inputIcon">
                       groups
                     </span>
+                    <button
+                      type="button"
+                      id="employeeSize-trigger"
+                      ref={sizeTriggerRef}
+                      role="combobox"
+                      aria-haspopup="listbox"
+                      aria-expanded={sizeOpen}
+                      aria-labelledby="employeeSize-label employeeSize-trigger"
+                      aria-controls="employeeSize-menu"
+                      className={`Payroll-customSelectTrigger ${
+                        sizeOpen ? 'is-open' : ''
+                      }`}
+                      onClick={() => {
+                        setSizeOpen((prev) => !prev);
+                        setServiceOpen(false);
+                        const currIdx = EMPLOYEE_SIZE_OPTIONS.findIndex(
+                          (opt) => opt.value === form.employeeSize
+                        );
+                        setSizeHighlight(currIdx >= 0 ? currIdx : 0);
+                      }}
+                      onKeyDown={handleSizeKeyDown}
+                    >
+                      <span
+                        className={`Payroll-customSelectValue ${
+                          !form.employeeSize ? 'is-placeholder' : ''
+                        }`}
+                      >
+                        {EMPLOYEE_SIZE_OPTIONS.find(
+                          (opt) => opt.value === form.employeeSize
+                        )?.label || 'Select employee size'}
+                      </span>
+                      <span
+                        className={`material-symbols-outlined Payroll-selectArrow ${
+                          sizeOpen ? 'is-open' : ''
+                        }`}
+                        aria-hidden="true"
+                      >
+                        expand_more
+                      </span>
+                    </button>
+
                     <select
-                      className="Payroll-select"
+                      className="sr-only"
                       id="employeeSize"
                       name="employeeSize"
                       required
                       value={form.employeeSize}
                       onChange={handleChange}
+                      tabIndex={-1}
+                      aria-hidden="true"
                     >
                       <option value="" disabled>
                         Select employee size
                       </option>
-                      <option value="1-10">1-10 employees</option>
-                      <option value="11-50">11-50 employees</option>
-                      <option value="51-200">51-200 employees</option>
-                      <option value="201-500">201-500 employees</option>
-                      <option value="500+">500+ employees</option>
+                      {EMPLOYEE_SIZE_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
                     </select>
-                    <span className="material-symbols-outlined Payroll-selectArrow">
-                      expand_more
-                    </span>
+
+                    {sizeOpen && (
+                      <ul
+                        id="employeeSize-menu"
+                        role="listbox"
+                        aria-labelledby="employeeSize-label"
+                        className="Payroll-customSelectMenu"
+                      >
+                        {EMPLOYEE_SIZE_OPTIONS.map((opt, idx) => {
+                          const isSelected = form.employeeSize === opt.value;
+                          const isHighlighted = idx === sizeHighlight;
+                          return (
+                            <li
+                              key={opt.value}
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`Payroll-customSelectOption ${
+                                isSelected ? 'is-selected' : ''
+                              } ${isHighlighted ? 'is-highlighted' : ''}`}
+                              onClick={() => handleSelectSize(opt.value)}
+                              onMouseEnter={() => setSizeHighlight(idx)}
+                            >
+                              <span className="Payroll-customSelectOptionText">
+                                {opt.label}
+                              </span>
+                              {isSelected && (
+                                <span
+                                  className="material-symbols-outlined Payroll-customSelectCheck"
+                                  aria-hidden="true"
+                                >
+                                  check
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </div>
                 </div>
 
                 <div className="Payroll-formField">
-                  <label className="Payroll-formLabel" htmlFor="serviceReq">
+                  <label
+                    className="Payroll-formLabel"
+                    id="serviceReq-label"
+                    htmlFor="serviceReq-trigger"
+                  >
                     Service Required *
                   </label>
-                  <div className="Payroll-inputWrapper">
+                  <div
+                    className="Payroll-inputWrapper Payroll-customSelectWrapper"
+                    ref={serviceRef}
+                  >
                     <span className="material-symbols-outlined Payroll-inputIcon">
                       mobile_arrow_right
                     </span>
+                    <button
+                      type="button"
+                      id="serviceReq-trigger"
+                      ref={serviceTriggerRef}
+                      role="combobox"
+                      aria-haspopup="listbox"
+                      aria-expanded={serviceOpen}
+                      aria-labelledby="serviceReq-label serviceReq-trigger"
+                      aria-controls="serviceReq-menu"
+                      className={`Payroll-customSelectTrigger ${
+                        serviceOpen ? 'is-open' : ''
+                      }`}
+                      onClick={() => {
+                        setServiceOpen((prev) => !prev);
+                        setSizeOpen(false);
+                        const currIdx = SERVICE_REQUIRED_OPTIONS.findIndex(
+                          (opt) => opt.value === form.serviceReq
+                        );
+                        setServiceHighlight(currIdx >= 0 ? currIdx : 0);
+                      }}
+                      onKeyDown={handleServiceKeyDown}
+                    >
+                      <span className="Payroll-customSelectValue">
+                        {SERVICE_REQUIRED_OPTIONS.find(
+                          (opt) => opt.value === form.serviceReq
+                        )?.label || form.serviceReq}
+                      </span>
+                      <span
+                        className={`material-symbols-outlined Payroll-selectArrow ${
+                          serviceOpen ? 'is-open' : ''
+                        }`}
+                        aria-hidden="true"
+                      >
+                        expand_more
+                      </span>
+                    </button>
+
                     <select
-                      className="Payroll-select"
+                      className="sr-only"
                       id="serviceReq"
                       name="serviceReq"
                       required
                       value={form.serviceReq}
                       onChange={handleChange}
+                      tabIndex={-1}
+                      aria-hidden="true"
                     >
-                      <option value="Payroll Outsourcing">
-                        Payroll Outsourcing
-                      </option>
-                      <option value="Staff Augmentation">
-                        Staff Augmentation
-                      </option>
-                      <option value="Employer of Record">
-                        Employer of Record (EOR)
-                      </option>
-                      <option value="Permanent Staffing">
-                        Permanent Staffing & Executive Search
-                      </option>
-                      <option value="Other">Other Advisory Services</option>
+                      {SERVICE_REQUIRED_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
                     </select>
-                    <span className="material-symbols-outlined Payroll-selectArrow">
-                      expand_more
-                    </span>
+
+                    {serviceOpen && (
+                      <ul
+                        id="serviceReq-menu"
+                        role="listbox"
+                        aria-labelledby="serviceReq-label"
+                        className="Payroll-customSelectMenu"
+                      >
+                        {SERVICE_REQUIRED_OPTIONS.map((opt, idx) => {
+                          const isSelected = form.serviceReq === opt.value;
+                          const isHighlighted = idx === serviceHighlight;
+                          return (
+                            <li
+                              key={opt.value}
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`Payroll-customSelectOption ${
+                                isSelected ? 'is-selected' : ''
+                              } ${isHighlighted ? 'is-highlighted' : ''}`}
+                              onClick={() => handleSelectService(opt.value)}
+                              onMouseEnter={() => setServiceHighlight(idx)}
+                            >
+                              <span className="Payroll-customSelectOptionText">
+                                {opt.label}
+                              </span>
+                              {isSelected && (
+                                <span
+                                  className="material-symbols-outlined Payroll-customSelectCheck"
+                                  aria-hidden="true"
+                                >
+                                  check
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>
