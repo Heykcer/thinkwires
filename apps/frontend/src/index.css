@@ -3186,18 +3186,26 @@ body {
   border: none;
   padding: 0;
   cursor: pointer;
-  color: inherit;
+  color: var(--color-on-surface-variant, #434655);
   transition: transform 0.2s ease;
 }
 
 .Navbar-servicesToggle svg {
   transition: transform 0.2s ease;
+  stroke: var(--color-on-surface-variant, #434655);
 }
 
 .Navbar-dropdownContainer:hover .Navbar-servicesToggle svg,
 .Navbar-dropdownContainer.Navbar-servicesOpen .Navbar-servicesToggle svg,
 .Navbar-dropdownContainer.Navbar-dropdownOpen .Navbar-servicesToggle svg {
   transform: rotate(180deg);
+  stroke: var(--color-primary);
+}
+
+.Navbar-dropdownContainer:hover .Navbar-servicesToggle,
+.Navbar-dropdownContainer.Navbar-servicesOpen .Navbar-servicesToggle,
+.Navbar-dropdownContainer.Navbar-dropdownOpen .Navbar-servicesToggle {
+  color: var(--color-primary);
 }
 
 .Navbar-logoContainer {
@@ -12510,7 +12518,7 @@ textarea {
 /* --- Prevent horizontal overflow --- */
 .ContactPage-wrapper,
 .ContactPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ========================  TABLET  (max-width: 1024px) ======================== */
@@ -12994,14 +13002,14 @@ textarea {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .IndustriesPage-main {
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .IndustriesHero-section {
@@ -17337,7 +17345,7 @@ textarea {
 /* --- Prevent horizontal overflow on the entire page --- */
 .BenchPage-root,
 .BenchPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ========================  TABLET  (max-width: 1024px) ======================== */
@@ -25942,6 +25950,7 @@ textarea {
   flex-direction: column;
   justify-content: space-between;
   gap: 1.25rem;
+  gap: 1.25rem;
   transition: all 0.2s ease;
 }
 
@@ -27888,7 +27897,7 @@ textarea {
 .StaffAugPage-main,
 .PermStaffPage-wrapper,
 .PermStaffPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ==========================================================================
@@ -31836,7 +31845,7 @@ body {
   color: #0f172a;
   font-family: inherit;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .tw-faq-main {
