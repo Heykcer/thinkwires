@@ -12510,7 +12510,7 @@ textarea {
 /* --- Prevent horizontal overflow --- */
 .ContactPage-wrapper,
 .ContactPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ========================  TABLET  (max-width: 1024px) ======================== */
@@ -12994,14 +12994,14 @@ textarea {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .IndustriesPage-main {
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .IndustriesHero-section {
@@ -17337,7 +17337,7 @@ textarea {
 /* --- Prevent horizontal overflow on the entire page --- */
 .BenchPage-root,
 .BenchPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ========================  TABLET  (max-width: 1024px) ======================== */
@@ -27888,7 +27888,7 @@ textarea {
 .StaffAugPage-main,
 .PermStaffPage-wrapper,
 .PermStaffPage-main {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ==========================================================================
@@ -31836,7 +31836,7 @@ body {
   color: #0f172a;
   font-family: inherit;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .tw-faq-main {
