@@ -179,4 +179,53 @@ describe('Candidate Requisition Workflow (Integration Tests)', () => {
     expect(res.body.job.contactEmail).toBe(newReqPayload.contactEmail);
     expect(res.body.job.jobId).toMatch(/^REQ-/);
   });
+
+  it('submits technical scoping call, alerts HR email, and logs ticket under Enterprise Scoping in HelpDesk', async () => {
+    const scopingPayload = {
+      isScopingCall: true,
+      requestType: 'scoping_call',
+      domain: 'Cloud Architecture & Kubernetes',
+      consultationDate: '2026-11-20',
+      consultationTime: 'Morning (09:00 - 12:00 IST)',
+      scopeNotes: 'Need 3 senior cloud architects for multi-region migration.',
+      engagementModel: 'Enterprise Consultation: Cloud Architecture & Kubernetes',
+      targetRole: 'Cloud Solutions Squad',
+      headcount: '3-5 Engineers',
+      deploymentUrgency: 'Immediate (Within 48h - Bench Pool)',
+      workArrangement: 'Remote (Global / Borderless)',
+      fullName: 'Marcus Vance',
+      corporateEmail: 'm.vance@apex-fintech.com',
+      company: 'Apex FinTech Global',
+      phone: '+1 415 890 2345',
+      jobDescription: '[Scoping Call Request] Domain: Cloud Architecture & Kubernetes. Consultation Slot: 2026-11-20 (Morning).',
+    };
+
+    const res = await api
+      .post('/api/find-talent/requisition')
+      .send(scopingPayload);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.message).toMatch(/scoping call/i);
+    expect(res.body.requisition).toBeDefined();
+    expect(res.body.requisition.isScopingCall).toBe(true);
+    expect(res.body.requisition.category).toBe('Enterprise Scoping');
+
+    // Query HelpDesk tickets in admin dashboard
+    const hdRes = await api
+      .get('/api/admin/helpdesk?category=Enterprise Scoping')
+      .set('Cookie', adminCookie);
+
+    expect(hdRes.status).toBe(200);
+    expect(hdRes.body.success).toBe(true);
+    const scopingTicket = hdRes.body.tickets.find(
+      (t) => t.email === scopingPayload.corporateEmail
+    );
+    expect(scopingTicket).toBeDefined();
+    expect(scopingTicket.category).toBe('Enterprise Scoping');
+    expect(scopingTicket.priority).toBe('Critical');
+    expect(scopingTicket.destinationEmail).toBe('hr@thinkwires.com');
+    expect(scopingTicket.subject).toContain('[Scoping Call]');
+    expect(scopingTicket.message).toContain('2026-11-20');
+  });
 });

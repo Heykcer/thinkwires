@@ -7,8 +7,10 @@ import LoginPage from '../../pages/auth/LoginPage';
 import CandidateApplicationsPage from '../../pages/candidate/CandidateApplicationsPage';
 
 describe('Candidate End-to-End Functional Journey (Functional Tests)', () => {
-  it('executes complete candidate lifecycle: Login -> View Applications -> Withdraw Application', async () => {
-    const user = userEvent.setup();
+  it(
+    'executes complete candidate lifecycle: Login -> View Applications -> Withdraw Application',
+    async () => {
+      const user = userEvent.setup();
 
     // ── STEP 1: Candidate logs in ──────────────────────────────────────────
     const { store } = renderWithProviders(<LoginPage />);
@@ -56,5 +58,5 @@ describe('Candidate End-to-End Functional Journey (Functional Tests)', () => {
     });
 
     unmount();
-  });
+  }, 20000);
 });

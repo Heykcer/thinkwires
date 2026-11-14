@@ -7,6 +7,7 @@ const DEFAULT_MEMBERS = [
     id: 'leader-1',
     initials: 'NH',
     avatarVariant: 'primary-fixed',
+    image: '/images/team/naziya-husain.jpg',
     badgeText: '14+ Yrs Exp',
     badgeDotColor: 'cobalt',
     name: 'Naziya Husain',
@@ -20,6 +21,7 @@ const DEFAULT_MEMBERS = [
     id: 'leader-2',
     initials: 'AB',
     avatarVariant: 'secondary-container',
+    image: '/images/team/anju-balyan.jpg',
     badgeText: '17+ Yrs Exp',
     badgeDotColor: 'cobalt',
     name: 'Anju Balyan',
@@ -33,6 +35,7 @@ const DEFAULT_MEMBERS = [
     id: 'leader-3',
     initials: 'AM',
     avatarVariant: 'tertiary-fixed',
+    image: '/images/team/ananya-mehta.jpg',
     badgeText: 'Executive Search',
     badgeDotColor: 'emerald',
     name: 'Ananya Mehta',
@@ -46,6 +49,7 @@ const DEFAULT_MEMBERS = [
     id: 'leader-4',
     initials: 'AV',
     avatarVariant: 'surface-high',
+    image: '/images/team/arjun-verma.jpg',
     badgeText: '20+ Yrs Exp',
     badgeDotColor: 'cobalt',
     name: 'Arjun Verma',
@@ -58,6 +62,7 @@ const DEFAULT_MEMBERS = [
     id: 'leader-5',
     initials: 'MI',
     avatarVariant: 'primary-container',
+    image: '/images/team/meera-iyer.jpg',
     badgeText: 'Global TA & Ops',
     badgeDotColor: 'emerald',
     companies: ['BlackRock', 'Microsoft', 'IBM', 'Infosys'],
@@ -88,6 +93,7 @@ const LeadershipTeam = ({ data }) => {
             name: m.name || def.name,
             role: m.designation || m.role || def.role,
             initials: m.initials || m.avatar?.value || def.initials,
+            image: m.image || def.image,
             bio: m.bio || def.bio,
             badgeText: m.badge?.text || def.badgeText,
             companies: m.companies || def.companies,
@@ -147,7 +153,16 @@ const LeadershipTeam = ({ data }) => {
                     <div
                       className={`LeadershipTeam-avatar LeadershipTeam-avatar--${member.avatarVariant || 'primary-fixed'}`}
                     >
-                      {member.initials}
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="LeadershipTeam-avatarImg"
+                          loading="lazy"
+                        />
+                      ) : (
+                        member.initials
+                      )}
                     </div>
 
                     {member.badgeText && (

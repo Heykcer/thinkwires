@@ -22,6 +22,7 @@ import FaqPage from './pages/FaqPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MissionVisionPage from './pages/MissionVisionPage';
 import ValuesCodeOfConductPage from './pages/ValuesCodeOfConductPage';
+import LifeAtThinkwiresPage from './pages/LifeAtThinkwiresPage';
 import ComingSoonPage from './pages/ComingSoonPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 import LoadingSpinner from './components/common/LoadingSpinner';
@@ -94,7 +95,7 @@ function App() {
           <Route path="/faqs" element={<FaqPage />} />
           <Route path="/resources/faqs" element={<FaqPage />} />
           <Route path="/policies" element={<LegalPage />} />
-          <Route path="/life-at-thinkwires" element={<ComingSoonPage />} />
+          <Route path="/life-at-thinkwires" element={<LifeAtThinkwiresPage />} />
           <Route path="/benefits" element={<JobPage />} />
 
           {/* Authentication Routes */}

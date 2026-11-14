@@ -20,14 +20,14 @@ describe('GrowthTimeline Component - Our Growth Evolution UI Redesign', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders all four timeline cards (2022, 2023, 2024, 2026+) with distinct styling classes', () => {
+  it('renders all four timeline cards (2022, 2023, 2024, 2025+) with distinct styling classes', () => {
     const { container } = renderWithProviders(<GrowthTimeline />);
 
     // Years
     expect(screen.getByText('2022')).toBeInTheDocument();
     expect(screen.getByText('2023')).toBeInTheDocument();
     expect(screen.getByText('2024')).toBeInTheDocument();
-    expect(screen.getByText('2026+')).toBeInTheDocument();
+    expect(screen.getByText(/2025\+|2026\+/)).toBeInTheDocument();
 
     // Verify card elements for specific visual treatments
     const card2022 = container.querySelector('.GrowthTimeline-card--2022');

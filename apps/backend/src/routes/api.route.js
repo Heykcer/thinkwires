@@ -964,6 +964,12 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
     company,
     phone,
     jobDescription,
+    isScopingCall,
+    requestType,
+    domain,
+    consultationDate,
+    consultationTime,
+    scopeNotes,
   } = req.body;
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -978,25 +984,53 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
 
   const effectiveCompany = company && company.trim() ? company.trim() : 'Independent Client Inquiry';
 
-  logger.info('New Enterprise Talent Requisition Logged:', {
-    engagementModel,
-    targetRole,
-    headcount,
-    seniority,
-    techStack,
-    deploymentUrgency,
-    workArrangement,
-    budgetEnvelope,
-    fullName,
-    corporateEmail,
-    company: effectiveCompany,
-    phone,
-    jobDescription,
-  });
+  const isScoping = Boolean(
+    isScopingCall ||
+    requestType === 'scoping_call' ||
+    (jobDescription && jobDescription.includes('[Scoping Call Request]')) ||
+    (engagementModel && engagementModel.includes('Enterprise Consultation')) ||
+    consultationDate
+  );
+
+  logger.info(
+    isScoping
+      ? 'New Technical Scoping Call Logged:'
+      : 'New Enterprise Talent Requisition Logged:',
+    {
+      engagementModel,
+      targetRole,
+      headcount,
+      seniority,
+      techStack,
+      deploymentUrgency,
+      workArrangement,
+      budgetEnvelope,
+      fullName,
+      corporateEmail,
+      company: effectiveCompany,
+      phone,
+      jobDescription,
+      isScopingCall: isScoping,
+      consultationDate,
+      consultationTime,
+      domain,
+    }
+  );
+
+  const resolvedDomain =
+    domain ||
+    (engagementModel && engagementModel.replace('Enterprise Consultation:', '').trim()) ||
+    targetRole ||
+    'Engineering Architecture';
 
   const requisitionPayload = {
     ...req.body,
     company: effectiveCompany,
+    isScopingCall: isScoping,
+    domain: resolvedDomain,
+    consultationDate: consultationDate || null,
+    consultationTime: consultationTime || null,
+    scopeNotes: scopeNotes || null,
   };
 
   let createdRequisition = null;
@@ -1015,15 +1049,41 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
 
   // Log to centralized HelpDesk
   try {
+    const techStackDisplay = Array.isArray(techStack)
+      ? techStack.join(', ')
+      : (techStack || 'General');
+
+    const helpDeskMessage = isScoping
+      ? `Technical Scoping Call Request:
+- Company / Enterprise: ${effectiveCompany}
+- Contact Name: ${fullName}
+- Corporate Email: ${corporateEmail}
+- Phone / Contact: ${phone || 'Not Specified'}
+- Primary Domain: ${resolvedDomain}
+- Requested Consultation Slot: ${consultationDate || 'Immediate'} (${consultationTime || 'TBD'})
+- Headcount / Volume: ${headcount || 'Core Squad'}
+- Deployment Timeline: ${deploymentUrgency || 'Immediate'}
+- Required Tech Stack: ${techStackDisplay}
+- Work Arrangement: ${workArrangement || 'Remote'}
+- Project Scope & Constraints: ${scopeNotes || jobDescription || 'Direct consultation requested during call.'}`
+      : (jobDescription || `Requisition for ${headcount || 1} x ${targetRole || 'Engineer'} (${techStackDisplay})`);
+
     await recordHelpDeskInquiry({
-      category: 'Enterprise Requisition',
+      category: isScoping ? 'Enterprise Scoping' : 'Enterprise Requisition',
       fullName,
       email: corporateEmail,
       phone,
       company: effectiveCompany,
-      subject: `Enterprise Requisition: ${targetRole || 'Engineering Squad'}`,
-      message: jobDescription || `Requisition for ${headcount || 1} x ${targetRole || 'Engineer'} (${techStack || 'General'})`,
+      subject: isScoping
+        ? `[Scoping Call] ${resolvedDomain} - ${effectiveCompany}`
+        : `Enterprise Requisition: ${targetRole || 'Engineering Squad'}`,
+      message: helpDeskMessage,
       metadata: {
+        isScopingCall: isScoping,
+        consultationDate: consultationDate || null,
+        consultationTime: consultationTime || null,
+        domain: resolvedDomain,
+        scopeNotes: scopeNotes || null,
         targetRole,
         headcount,
         seniority,
@@ -1032,7 +1092,7 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
         workArrangement,
         requisitionId: createdRequisition?.requisitionId || null,
       },
-      priority: 'Urgent',
+      priority: isScoping ? 'Critical' : 'Urgent',
     });
   } catch (hdErr) {
     logger.warn('HelpDesk requisition logging warning:', hdErr.message);
@@ -1040,8 +1100,9 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
 
   res.json({
     success: true,
-    message:
-      'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.',
+    message: isScoping
+      ? 'Technical scoping call scheduled. An invitation and calendar invite will be delivered to your corporate email.'
+      : 'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.',
     requisition: createdRequisition,
   });
 });

@@ -2426,6 +2426,14 @@ export const recordInboundRequisition = async (reqData = {}) => {
           .filter(Boolean)
       : [];
 
+  const isScoping = Boolean(
+    reqData.isScopingCall ||
+    reqData.requestType === 'scoping_call' ||
+    (jobDescription && jobDescription.includes('[Scoping Call Request]')) ||
+    (engagementModel && engagementModel.includes('Enterprise Consultation')) ||
+    reqData.consultationDate
+  );
+
   const newRequisition = {
     id: reqId,
     jobId: displayJobId,
@@ -2450,12 +2458,17 @@ export const recordInboundRequisition = async (reqData = {}) => {
     status: 'Inbound Request',
     budget: resolvedBudget,
     budgetEnvelope: budgetEnvelope || 'bracket_2',
+    isScopingCall: isScoping,
+    consultationDate: reqData.consultationDate || null,
+    consultationTime: reqData.consultationTime || null,
+    domain: reqData.domain || null,
+    scopeNotes: reqData.scopeNotes || null,
     description:
       jobDescription ||
       `Enterprise talent mandate for ${headcount || 1}x ${targetRole} (${seniority || 'Senior'}) by ${company} (${fullName} - ${corporateEmail}). 5-Hour Candidate Dossier SLA active.`,
     requirements: `Required Technologies: ${skillsArray.join(', ')}. Deployment model: ${engagementModel}.`,
-    category: 'Client Requisition',
-    source: 'Client Inbound Requisition',
+    category: isScoping ? 'Enterprise Scoping' : 'Client Requisition',
+    source: isScoping ? 'Homepage Scoping Intake' : 'Client Inbound Requisition',
     isRequisition: true,
     postedDate: new Date().toISOString().split('T')[0],
     createdAt: new Date().toISOString(),
@@ -2499,12 +2512,14 @@ export const recordInboundRequisition = async (reqData = {}) => {
   }
 
   await logActivity(
-    'Staffing Requisition Inbound Request',
+    isScoping ? 'Technical Scoping Call Scheduled' : 'Staffing Requisition Inbound Request',
     'Job',
     newRequisition.id,
-    `Inbound candidate requisition received from ${company} (${fullName}) for ${newRequisition.openingsCount}x ${newRequisition.title}. Urgency: ${newRequisition.priority}.`,
+    isScoping
+      ? `Technical scoping call scheduled with ${company} (${fullName}) for ${reqData.consultationDate || 'Immediate'} (${reqData.consultationTime || 'TBD'}). Domain: ${reqData.domain || newRequisition.title}.`
+      : `Inbound candidate requisition received from ${company} (${fullName}) for ${newRequisition.openingsCount}x ${newRequisition.title}. Urgency: ${newRequisition.priority}.`,
     { name: fullName || 'Enterprise Client', role: 'client' },
-    '#7C3AED'
+    isScoping ? '#2563EB' : '#7C3AED'
   );
 
   return newRequisition;
