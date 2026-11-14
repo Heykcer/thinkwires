@@ -2865,8 +2865,8 @@ body {
 
 .Footer-topSection {
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.55fr);
-  gap: 3rem;
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.55fr);
+  gap: 3.5rem;
   margin-bottom: 2.5rem;
   align-items: start;
 }
@@ -2956,6 +2956,13 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  padding-left: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .Footer-col {
+    padding-left: 0;
+  }
 }
 
 .Footer-colTitle {
