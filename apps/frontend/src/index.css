@@ -20837,6 +20837,7 @@ textarea {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-top: 3rem;
+  align-items: stretch;
 }
 
 @media (max-width: 1200px) {
@@ -20851,6 +20852,12 @@ textarea {
   }
 }
 
+.Payroll-pillarsGrid > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .Payroll-pillarCard {
   background-color: var(--color-surface-container-lowest, #ffffff);
   border: 1px solid var(--color-card-stroke, #e2e8f0);
@@ -20860,6 +20867,9 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  flex: 1 1 auto;
   transition: all 0.25s ease;
 }
 
@@ -20921,9 +20931,28 @@ textarea {
 /* --- Beneficiaries (Audience Bento) --- */
 .Payroll-segmentsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-top: 3rem;
+  align-items: stretch;
+}
+
+@media (max-width: 1100px) {
+  .Payroll-segmentsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .Payroll-segmentsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.Payroll-segmentsGrid > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .Payroll-segmentCard {
@@ -20935,6 +20964,9 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  flex: 1 1 auto;
   transition: all 0.25s ease;
 }
 
@@ -21265,6 +21297,209 @@ textarea {
 .Payroll-selectArrow.is-open {
   transform: translateY(-50%) rotate(180deg);
   color: var(--color-cobalt-bright, #2563eb);
+}
+
+/* --- Payroll Custom Dropdown Styling --- */
+.Payroll-customSelectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.Payroll-customSelectTrigger {
+  width: 100%;
+  height: 44px;
+  padding-left: 2.5rem !important;
+  padding-right: 2.5rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  background-color: var(--color-surface-container-lowest, #ffffff);
+  font-size: 0.875rem;
+  color: var(--color-on-surface, #1a1b23);
+  font-family: inherit;
+  font-weight: 500;
+  text-align: left;
+  user-select: none;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.Payroll-customSelectTrigger:hover {
+  border-color: #cbd5e1;
+}
+
+.Payroll-customSelectTrigger:focus,
+.Payroll-customSelectTrigger.is-open {
+  border-color: var(--color-cobalt-bright, #2563eb);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  outline: none;
+}
+
+.Payroll-customSelectValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  flex: 1 1 0%;
+  min-width: 0;
+  color: var(--color-on-surface, #1a1b23);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.Payroll-customSelectValue.is-placeholder {
+  color: var(--color-outline, #747686);
+}
+
+.Payroll-customSelectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  box-shadow: 0 14px 34px -4px rgba(15, 23, 42, 0.16), 0 4px 8px -2px rgba(15, 23, 42, 0.06);
+  z-index: 1050;
+  padding: 0.35rem;
+  margin: 0;
+  list-style: none;
+  animation: PayrollDropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes PayrollDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Payroll-customSelectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  margin: 0.12rem 0;
+  border-radius: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+  text-align: left;
+}
+
+.Payroll-customSelectOption:hover,
+.Payroll-customSelectOption.is-highlighted {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.Payroll-customSelectOption.is-selected {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.Payroll-customSelectOption.is-selected:hover,
+.Payroll-customSelectOption.is-selected.is-highlighted {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.Payroll-customSelectOptionText {
+  flex: 1 1 0%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Payroll-customSelectCheck {
+  font-size: 1.15rem !important;
+  color: #ffffff !important;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Custom Scrollbar for Payroll Dropdown Menu */
+.Payroll-customSelectMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.Payroll-customSelectMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.Payroll-customSelectMenu::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+/* Dark Mode for Payroll Custom Select */
+[data-theme='dark'] .Payroll-customSelectTrigger {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .Payroll-customSelectTrigger:focus,
+[data-theme='dark'] .Payroll-customSelectTrigger.is-open {
+  border-color: var(--color-cobalt-bright, #2563eb);
+  background-color: #1e293b;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme='dark'] .Payroll-customSelectValue {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .Payroll-customSelectValue.is-placeholder {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .Payroll-customSelectMenu {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='dark'] .Payroll-customSelectOption {
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .Payroll-customSelectOption:hover,
+[data-theme='dark'] .Payroll-customSelectOption.is-highlighted {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-customSelectOption.is-selected {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-customSelectOption.is-selected:hover,
+[data-theme='dark'] .Payroll-customSelectOption.is-selected.is-highlighted {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-customSelectMenu::-webkit-scrollbar-thumb {
+  background: #475569;
 }
 
 /* --- EOR Custom Select Dropdown & Arrow Alignment --- */
