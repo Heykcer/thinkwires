@@ -340,17 +340,235 @@ export const sendRecruitmentNotificationEmail = async (
 };
 
 /**
- * Sends requisition notification email to HR team when a client highlights their demand.
+ * Sends technical scoping call notification email to HR team and administrative leadership.
  */
-export const sendRequisitionNotificationEmail = async (requisitionData) => {
+export const sendScopingCallNotificationEmail = async (scopingData) => {
   try {
     const transport = getTransporter();
 
-    const recipient =
-      process.env.RECRUITMENT_NOTIFICATION_EMAIL ||
-      process.env.RECRUITMENT_EMAIL ||
-      process.env.ADMIN_NOTIFICATION_EMAIL ||
+    const hrEmail =
+      process.env.HR_EMAIL ||
+      process.env.HR_REQUISITION_EMAIL ||
       'hr@thinkwires.com';
+
+    const allRecipients = [
+      hrEmail,
+      process.env.RECRUITMENT_NOTIFICATION_EMAIL,
+      process.env.ADMIN_NOTIFICATION_EMAIL,
+    ].filter(Boolean);
+
+    // Unique recipients
+    const recipient = [...new Set(allRecipients)].join(', ');
+
+    const fromAddress =
+      process.env.EMAIL_FROM ||
+      `"Thinkwires Technical Scoping" <${process.env.SMTP_USER || 'hr@thinkwires.com'}>`;
+
+    const domainTitle =
+      scopingData.domain ||
+      scopingData.engagementModel ||
+      scopingData.targetRole ||
+      'Engineering Architecture';
+    const clientCompany =
+      scopingData.company || scopingData.fullName || 'Enterprise Client';
+    const consultationDate = scopingData.consultationDate || 'Immediate';
+    const consultationTime =
+      scopingData.consultationTime || 'Pending Confirmation';
+
+    const subject = `[Urgent] Technical Scoping Call Scheduled: ${clientCompany} - ${domainTitle} (${consultationDate})`;
+
+    const escape = (str) =>
+      str
+        ? String(str).replace(
+            /[&<>"']/g,
+            (m) =>
+              ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+              })[m]
+          )
+        : '-';
+
+    const htmlContent = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff;">
+        
+        <!-- Header Banner -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); padding: 20px 24px; border-radius: 6px; margin-bottom: 24px; color: #ffffff;">
+          <div style="display: inline-block; padding: 4px 10px; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #7dd3fc; font-size: 11px; font-weight: 800; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+            ⚡ Urgent: Technical Scoping Call Scheduled
+          </div>
+          <h2 style="color: #ffffff; margin: 0 0 6px 0; font-size: 20px; font-weight: 700;">
+            ${escape(domainTitle)} Mandate
+          </h2>
+          <p style="color: #cbd5e1; margin: 0; font-size: 13px;">
+            A corporate engineering leader has booked a technical scoping call via the Thinkwires Homepage.
+          </p>
+        </div>
+
+        <!-- Consultation Slot Banner -->
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 14px 18px; margin-bottom: 20px;">
+          <div style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+            Requested Consultation Slot
+          </div>
+          <div style="font-size: 16px; font-weight: 800; color: #14532d;">
+            📅 ${escape(consultationDate)} &nbsp;|&nbsp; ⏰ ${escape(consultationTime)}
+          </div>
+        </div>
+
+        <!-- Mandate Overview Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+          <tbody>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 36%;">Company / Enterprise:</td>
+              <td style="padding: 10px 0; color: #0f172a; font-weight: 700;">${escape(scopingData.company)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Contact Name:</td>
+              <td style="padding: 10px 0; color: #0f172a; font-weight: 600;">${escape(scopingData.fullName)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Corporate Work Email:</td>
+              <td style="padding: 10px 0; color: #0f172a;">
+                <a href="mailto:${escape(scopingData.corporateEmail)}" style="color: #2563eb; font-weight: 600; text-decoration: none;">
+                  ${escape(scopingData.corporateEmail)}
+                </a>
+              </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Phone / WhatsApp:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(scopingData.phone)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Primary Technical Domain:</td>
+              <td style="padding: 10px 0; color: #0284c7; font-weight: 700;">${escape(domainTitle)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Target Role / Discipline:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(scopingData.targetRole)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Required Tech Stack:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(Array.isArray(scopingData.techStack) ? scopingData.techStack.join(', ') : scopingData.techStack)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Hiring Headcount:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(scopingData.headcount)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Deployment Urgency:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(scopingData.deploymentUrgency)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Work Arrangement:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(scopingData.workArrangement)}</td>
+            </tr>
+            ${
+              scopingData.scopeNotes || scopingData.jobDescription
+                ? `
+            <tr>
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600; vertical-align: top;">Scope & Constraints:</td>
+              <td style="padding: 10px 0; color: #334155; line-height: 1.5; white-space: pre-wrap;">${escape(scopingData.scopeNotes || scopingData.jobDescription)}</td>
+            </tr>
+            `
+                : ''
+            }
+          </tbody>
+        </table>
+
+        <!-- Action Box -->
+        <div style="background: #eff6ff; border-left: 4px solid #2563eb; padding: 14px 18px; border-radius: 4px; font-size: 13px; color: #1e3a8a; margin-bottom: 16px;">
+          <strong>Next Action for HR & Staffing Leadership:</strong>
+          <div style="margin-top: 4px; color: #1e40af; line-height: 1.5;">
+            1. Send the Google Meet / Zoom calendar invitation to <a href="mailto:${escape(scopingData.corporateEmail)}" style="color: #1d4ed8; font-weight: 700;">${escape(scopingData.corporateEmail)}</a> for <strong>${escape(consultationDate)} (${escape(consultationTime)})</strong>.<br>
+            2. Assign an Enterprise Staffing Director / Technical Advisor to audit requirements.<br>
+            3. Review the candidate bench pool to pre-calibrate matching profiles.
+          </div>
+        </div>
+
+        <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 20px;">
+          Thinkwires Global Talent Cloud &bull; Automated Enterprise Scoping Intake
+        </div>
+      </div>
+    `;
+
+    if (!transport) {
+      console.log('----------------------------------------------------');
+      console.log('[MOCK SCOPING EMAIL] SMTP not configured. Logged notification to HR:');
+      console.log(`To: ${recipient}`);
+      console.log(`Subject: ${subject}`);
+      console.log(`Company: ${scopingData.company} | Contact: ${scopingData.fullName} <${scopingData.corporateEmail}>`);
+      console.log(`Slot: ${consultationDate} at ${consultationTime}`);
+      console.log(`Domain: ${domainTitle} | Stack: ${scopingData.techStack}`);
+      console.log('----------------------------------------------------');
+      return {
+        success: true,
+        mode: 'mock_logged',
+        recipient,
+        subject,
+      };
+    }
+
+    const info = await transport.sendMail({
+      from: fromAddress,
+      to: recipient,
+      subject,
+      html: htmlContent,
+    });
+
+    console.log(`[EMAIL SENT] Scoping call alert delivered to HR (${recipient}): ${info.messageId}`);
+    return {
+      success: true,
+      mode: 'smtp_delivered',
+      messageId: info.messageId,
+      recipient,
+      subject,
+    };
+  } catch (error) {
+    console.error('[EMAIL ERROR] Failed to send scoping call notification email:', error.message);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+/**
+ * Sends requisition notification email to HR team when a client highlights their demand.
+ */
+export const sendRequisitionNotificationEmail = async (requisitionData) => {
+  const isScoping = Boolean(
+    requisitionData.isScopingCall ||
+    requisitionData.requestType === 'scoping_call' ||
+    (requisitionData.jobDescription &&
+      requisitionData.jobDescription.includes('[Scoping Call Request]')) ||
+    (requisitionData.engagementModel &&
+      requisitionData.engagementModel.includes('Enterprise Consultation')) ||
+    requisitionData.consultationDate
+  );
+
+  if (isScoping) {
+    return sendScopingCallNotificationEmail(requisitionData);
+  }
+
+  try {
+    const transport = getTransporter();
+
+    const hrEmail =
+      process.env.HR_EMAIL ||
+      process.env.HR_REQUISITION_EMAIL ||
+      'hr@thinkwires.com';
+
+    const allRecipients = [
+      hrEmail,
+      process.env.RECRUITMENT_NOTIFICATION_EMAIL,
+      process.env.ADMIN_NOTIFICATION_EMAIL,
+    ].filter(Boolean);
+
+    // Unique recipients ensures HR email always receives the alert
+    const recipient = [...new Set(allRecipients)].join(', ');
 
     const fromAddress =
       process.env.EMAIL_FROM ||

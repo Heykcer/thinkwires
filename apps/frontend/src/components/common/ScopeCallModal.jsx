@@ -131,6 +131,12 @@ const ScopeCallModal = ({ isOpen, onClose }) => {
       : formData.techStack;
 
     const payload = {
+      isScopingCall: true,
+      requestType: 'scoping_call',
+      domain: formData.domain,
+      consultationDate: formData.consultationDate,
+      consultationTime: formData.consultationTime,
+      scopeNotes: formData.scopeNotes.trim(),
       engagementModel: `Enterprise Consultation: ${formData.domain}`,
       targetRole: formData.targetRole.trim() || 'Enterprise Engineering Squad',
       headcount: formData.headcount,
