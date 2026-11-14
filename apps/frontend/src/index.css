@@ -22904,6 +22904,92 @@ textarea {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* ── Primary Tech Stack / Role – custom styled select ───────────────────── */
+.StaffAug-selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.StaffAug-styledSelect {
+  width: 100%;
+  padding: 0.75rem 2.75rem 0.75rem 1rem; /* right padding clears the chevron */
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #0f172a;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  /* remove browser-native arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-sizing: border-box;
+}
+
+.StaffAug-styledSelect:focus {
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* custom chevron icon */
+.StaffAug-selectChevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+  transition: transform 0.2s ease, color 0.2s;
+}
+
+.StaffAug-styledSelect:focus + .StaffAug-selectChevron {
+  color: #2563eb;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* dropdown option panel styling */
+.StaffAug-styledSelect option {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.StaffAug-styledSelect option:hover,
+.StaffAug-styledSelect option:checked {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+/* dark-mode overrides */
+[data-theme='dark'] .StaffAug-styledSelect {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme='dark'] .StaffAug-styledSelect:focus {
+  border-color: #3b82f6;
+  background-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme='dark'] .StaffAug-selectChevron {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .StaffAug-styledSelect option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
 .StaffAug-form .form-footer {
   display: flex;
   justify-content: space-between;

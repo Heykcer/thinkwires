@@ -194,30 +194,47 @@ const StaffAugConsultation = ({ data }) => {
                     <label htmlFor="roleNeeded">
                       Primary Tech Stack / Role <span className="req">*</span>
                     </label>
-                    <select
-                      id="roleNeeded"
-                      required
-                      value={formData.roleNeeded}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select required domain
-                      </option>
-                      <option value="cloud-devops">
-                        Cloud &amp; DevOps (AWS / GCP / K8s)
-                      </option>
-                      <option value="fullstack">
-                        Full-Stack (React / Node / Python)
-                      </option>
-                      <option value="data-ai">
-                        Data Engineering &amp; AI / ML
-                      </option>
-                      <option value="sap-erp">Enterprise ERP / SAP HANA</option>
-                      <option value="qa-auto">QA &amp; Test Automation</option>
-                      <option value="other">
-                        Multiple Roles / Custom Squad
-                      </option>
-                    </select>
+                    <div className="StaffAug-selectWrapper">
+                      <select
+                        id="roleNeeded"
+                        required
+                        value={formData.roleNeeded}
+                        onChange={handleChange}
+                        className="StaffAug-styledSelect"
+                      >
+                        <option value="" disabled>
+                          Select required domain
+                        </option>
+                        <option value="cloud-devops">
+                          Cloud &amp; DevOps (AWS / GCP / K8s)
+                        </option>
+                        <option value="fullstack">
+                          Full-Stack (React / Node / Python)
+                        </option>
+                        <option value="data-ai">
+                          Data Engineering &amp; AI / ML
+                        </option>
+                        <option value="sap-erp">Enterprise ERP / SAP HANA</option>
+                        <option value="qa-auto">QA &amp; Test Automation</option>
+                        <option value="other">
+                          Multiple Roles / Custom Squad
+                        </option>
+                      </select>
+                      <svg
+                        className="StaffAug-selectChevron"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 12 8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m1 1 5 5 5-5" />
+                      </svg>
+                    </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="preferredTime">
