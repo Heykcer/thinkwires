@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { fetchCapabilities } from '../../store/slices/homeSlice';
 import SectionBadge from '../common/SectionBadge';
 import ScopeCallModal from '../common/ScopeCallModal';
+import { CapabilityCardSkeleton } from '../common/Skeleton';
 
 const getCapabilityRoute = (cap) => {
   const title = (cap.title || '').toLowerCase();
@@ -73,8 +74,8 @@ const Capabilities = () => {
         </div>
 
         <div className="Capabilities-cardsGrid">
-          {status.capabilities === 'loading' ? (
-            <div>Loading capabilities...</div>
+          {status.capabilities === 'loading' || (status.capabilities === 'idle' && capabilities.length === 0) ? (
+            <CapabilityCardSkeleton count={4} />
           ) : (
             capabilities.map((cap) => (
               <div key={cap.id} className="Capabilities-card group">

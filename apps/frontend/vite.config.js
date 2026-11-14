@@ -19,6 +19,11 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    resolve: {
+      alias: {
+        xlsx: path.resolve(__dirname, './src/admin/utils/xlsxStub.js'),
+      },
+    },
     server: {
       port: frontendPort,
       proxy: {
@@ -44,7 +49,11 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 1200,
+      rolldownOptions: {
+        external: ['xlsx'],
+      },
       rollupOptions: {
+        external: ['xlsx'],
         output: {
           manualChunks(id) {
             const normalizedId = id.replace(/\\/g, '/');

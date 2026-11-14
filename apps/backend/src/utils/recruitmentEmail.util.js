@@ -22,7 +22,14 @@ const getTransporter = () => {
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
   const secure = process.env.SMTP_SECURE === 'true' || port === 465;
 
-  if (!host || !user || !pass || pass.includes('your_smtp_app_password_here') || pass.includes('placeholder')) {
+  if (
+    !host ||
+    !user ||
+    !pass ||
+    pass.includes('your_smtp_app_password_here') ||
+    pass.includes('your_zoho_app_password_here') ||
+    pass.includes('placeholder')
+  ) {
     return null;
   }
 

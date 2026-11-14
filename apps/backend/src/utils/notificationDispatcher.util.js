@@ -16,6 +16,7 @@ export const getTransporter = () => {
     !user ||
     !pass ||
     pass.includes('your_smtp_app_password_here') ||
+    pass.includes('your_zoho_app_password_here') ||
     pass.includes('placeholder')
   ) {
     return null;

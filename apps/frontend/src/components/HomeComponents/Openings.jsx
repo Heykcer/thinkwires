@@ -5,6 +5,7 @@ import { fetchOpenings } from '../../store/slices/homeSlice';
 import QuickApplyModal from '../common/QuickApplyModal';
 import SectionBadge from '../common/SectionBadge';
 import JobSpecModal from '../JobsComponents/JobSpecModal';
+import { OpeningsCardSkeleton } from '../common/Skeleton';
 
 const Openings = () => {
   const navigate = useNavigate();
@@ -85,11 +86,9 @@ const Openings = () => {
 
 
 
-        {status.openings === 'loading' ? (
-          <div
-            style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}
-          >
-            Loading priority openings...
+        {status.openings === 'loading' || (status.openings === 'idle' && openings.length === 0) ? (
+          <div className="Openings-grid">
+            <OpeningsCardSkeleton count={4} />
           </div>
         ) : (
           <>

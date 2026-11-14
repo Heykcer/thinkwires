@@ -18050,9 +18050,10 @@ textarea {
   position: absolute;
   border-radius: 9999px;
   pointer-events: none;
-  filter: blur(80px);
+  filter: blur(28px);
   z-index: 0;
   opacity: 0.6;
+  transform: translate3d(0, 0, 0);
 }
 
 .NewHero-glowPrimary {
@@ -18103,90 +18104,106 @@ textarea {
 }
 
 /* --------------------------------------------------------------------------
-   A. Liquid Aurora Layer (Fluid Volumetric Gradients)
+   A. Liquid Aurora Layer (Fluid Volumetric Gradients - GPU Accelerated)
    -------------------------------------------------------------------------- */
 .tw-aurora-mesh-container {
   position: absolute;
-  inset: -10% -5% -10% -5%;
+  inset: -5% -5% -5% -5%;
   width: 110%;
-  height: 120%;
+  height: 110%;
   pointer-events: none;
-  filter: blur(55px);
-  opacity: 0.88;
+  filter: blur(32px);
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0);
+}
+
+.tw-aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
   will-change: transform;
 }
 
 /* Primary Cobalt / Royal Blue Swell (Right & Center) */
 .tw-aurora-blob-primary {
-  position: absolute;
-  top: -5%;
-  right: 0%;
-  width: 680px;
-  height: 560px;
-  border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
+  top: -10%;
+  right: -5%;
+  width: 720px;
+  height: 600px;
   background: radial-gradient(
     ellipse at 50% 50%,
     rgba(37, 99, 235, 0.44) 0%,
-    rgba(21, 81, 209, 0.3) 42%,
-    rgba(56, 189, 248, 0.14) 68%,
-    transparent 82%
+    rgba(21, 81, 209, 0.3) 40%,
+    rgba(56, 189, 248, 0.14) 65%,
+    transparent 78%
   );
-  animation: twAuroraMorph1 24s ease-in-out infinite alternate;
+  animation: twAuroraTravel1 15s ease-in-out infinite alternate;
   transform-origin: center center;
 }
 
 /* Cyan & Soft Lavender Luminescence (Center-Right & Carousel Undercurrent) */
 .tw-aurora-blob-cyan {
-  position: absolute;
-  top: 25%;
-  right: 15%;
-  width: 620px;
-  height: 500px;
-  border-radius: 58% 42% 38% 62% / 50% 60% 40% 50%;
+  top: 18%;
+  right: 10%;
+  width: 660px;
+  height: 540px;
   background: radial-gradient(
-    circle at 55% 45%,
-    rgba(56, 189, 248, 0.38) 0%,
-    rgba(165, 180, 252, 0.28) 46%,
-    rgba(37, 99, 235, 0.12) 70%,
-    transparent 82%
+    circle at 50% 50%,
+    rgba(56, 189, 248, 0.4) 0%,
+    rgba(165, 180, 252, 0.28) 45%,
+    rgba(37, 99, 235, 0.12) 68%,
+    transparent 80%
   );
-  animation: twAuroraMorph2 28s ease-in-out infinite alternate;
+  animation: twAuroraTravel2 17s ease-in-out infinite alternate;
   transform-origin: center center;
 }
 
 /* Subtle Emerald / Spring Green Accent (Lower Center & Right Edge) */
 .tw-aurora-blob-green {
-  position: absolute;
-  bottom: 0%;
+  bottom: 2%;
   left: 28%;
-  width: 480px;
-  height: 400px;
-  border-radius: 62% 38% 54% 46% / 44% 56% 44% 56%;
+  width: 520px;
+  height: 440px;
   background: radial-gradient(
     ellipse at center,
-    rgba(34, 197, 94, 0.18) 0%,
-    rgba(56, 189, 248, 0.14) 48%,
-    transparent 74%
+    rgba(34, 197, 94, 0.2) 0%,
+    rgba(56, 189, 248, 0.14) 45%,
+    transparent 72%
   );
-  animation: twAuroraMorph3 26s ease-in-out infinite alternate;
+  animation: twAuroraTravel3 19s ease-in-out infinite alternate;
   transform-origin: center center;
 }
 
 /* Soft Lavender Backdrop (Left Column / Behind Headline for gentle depth) */
 .tw-aurora-blob-lavender {
-  position: absolute;
   top: 8%;
-  left: -5%;
-  width: 520px;
-  height: 440px;
-  border-radius: 48% 52% 40% 60% / 54% 46% 54% 46%;
+  left: -8%;
+  width: 560px;
+  height: 480px;
   background: radial-gradient(
     ellipse at center,
-    rgba(165, 180, 252, 0.22) 0%,
-    rgba(37, 99, 235, 0.08) 52%,
-    transparent 76%
+    rgba(165, 180, 252, 0.26) 0%,
+    rgba(37, 99, 235, 0.09) 50%,
+    transparent 74%
   );
-  animation: twAuroraMorph4 32s ease-in-out infinite alternate;
+  animation: twAuroraTravel4 21s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+
+/* Center Orbital Aurora Connector */
+.tw-aurora-blob-center {
+  top: 10%;
+  left: 36%;
+  width: 580px;
+  height: 460px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(56, 189, 248, 0.22) 0%,
+    rgba(165, 180, 252, 0.18) 45%,
+    rgba(37, 99, 235, 0.08) 68%,
+    transparent 78%
+  );
+  animation: twAuroraTravel5 18s ease-in-out infinite alternate;
   transform-origin: center center;
 }
 
@@ -18199,8 +18216,8 @@ textarea {
   height: 220px;
   background: linear-gradient(
     to top,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(240, 245, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(240, 245, 255, 0.42) 50%,
     transparent 100%
   );
   pointer-events: none;
@@ -18208,7 +18225,7 @@ textarea {
 }
 
 /* --------------------------------------------------------------------------
-   B. 3D Glass Ribbons Layer (Translucent Flowing Geometry & Specular Sheen)
+   B. 3D Glass Ribbons Layer (Translucent Flowing Geometry & Dynamic Sheen)
    -------------------------------------------------------------------------- */
 .tw-glass-ribbons-svg-wrap {
   position: absolute;
@@ -18216,7 +18233,7 @@ textarea {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 2;
   overflow: hidden;
 }
 
@@ -18224,157 +18241,367 @@ textarea {
   width: 100%;
   height: 100%;
   display: block;
-  transform-origin: center right;
 }
 
-/* Ribbon Group Animations */
-.tw-glass-group-primary {
-  animation: twGlassRibbonFloat1 20s ease-in-out infinite alternate;
+/* Ribbon 1: Primary Foreground Flowing Glass (Floats diagonally right to left) */
+.tw-glass-ribbon-1 {
+  animation: twGlassRibbonFloat1 16s ease-in-out infinite alternate;
   transform-origin: 75% 45%;
+  will-change: transform;
 }
 
-.tw-glass-group-secondary {
-  animation: twGlassRibbonFloat2 24s ease-in-out infinite alternate;
+/* Ribbon 2: Secondary Flowing Glass (Floats in opposite direction) */
+.tw-glass-ribbon-2 {
+  animation: twGlassRibbonFloat2 18s ease-in-out infinite alternate;
   transform-origin: 80% 50%;
+  will-change: transform;
 }
 
-.tw-glass-specular-shimmer {
-  animation: twSpecularShimmer 14s ease-in-out infinite alternate;
-  transform-origin: center center;
+/* Ribbon 3: Deep Ambient Glass Veil (Subtle floating, depth & rotation) */
+.tw-glass-ribbon-3 {
+  animation: twGlassRibbonFloat3 22s ease-in-out infinite alternate;
+  transform-origin: 70% 40%;
+  will-change: transform;
 }
 
-/* Caustic optical glow flares */
+/* Ribbon 4: Left-Side & Lower Orbital Ribbon (Gracefully frames text safe zone) */
+.tw-glass-ribbon-left {
+  animation: twGlassRibbonFloatLeft 20s ease-in-out infinite alternate;
+  transform-origin: 30% 45%;
+  will-change: transform;
+}
+
+/* Ribbon 5: Full-Width Orbital Connecting Bridge */
+.tw-glass-ribbon-bridge {
+  animation: twGlassRibbonFloatBridge 22s ease-in-out infinite alternate;
+  transform-origin: 50% 20%;
+  will-change: transform;
+}
+
+/* Dynamic Specular Light Sweep Overlay (Right Carousel) */
+.tw-glass-light-sweep {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.45) 45%,
+    rgba(56, 189, 248, 0.28) 55%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: twLightSweep 13s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* Dynamic Specular Light Sweep Overlay (Left Section) */
+.tw-glass-light-sweep-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.35) 42%,
+    rgba(56, 189, 248, 0.2) 54%,
+    transparent 72%
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: twLightSweepLeft 15s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* Caustic Optical Glow Flares */
 .tw-glass-caustic-flare {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  mix-blend-mode: screen;
+  will-change: transform, opacity;
 }
 
 .tw-glass-caustic-1 {
   top: 18%;
   right: 18%;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(56, 189, 248, 0.45) 35%,
+    rgba(37, 99, 235, 0.1) 60%,
+    transparent 75%
+  );
+  animation: twCausticPulse1 8s ease-in-out infinite alternate;
+}
+
+.tw-glass-caustic-2 {
+  top: 60%;
+  right: 10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(165, 180, 252, 0.35) 40%,
+    rgba(56, 189, 248, 0.1) 65%,
+    transparent 75%
+  );
+  animation: twCausticPulse2 10s ease-in-out infinite alternate;
+}
+
+.tw-glass-caustic-3 {
+  top: 7%;
+  left: 6%;
+  width: 140px;
+  height: 140px;
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.75) 0%,
     rgba(56, 189, 248, 0.4) 35%,
-    rgba(37, 99, 235, 0.1) 65%,
+    rgba(165, 180, 252, 0.15) 60%,
     transparent 75%
   );
-  filter: blur(12px);
-  animation: twSpecularShimmer 12s ease-in-out infinite alternate;
+  animation: twCausticPulse3 9s ease-in-out infinite alternate;
 }
 
-.tw-glass-caustic-2 {
-  top: 62%;
-  right: 8%;
-  width: 220px;
-  height: 220px;
+.tw-glass-caustic-4 {
+  top: 13%;
+  left: 48%;
+  width: 120px;
+  height: 120px;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(165, 180, 252, 0.35) 40%,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(56, 189, 248, 0.32) 40%,
+    rgba(37, 99, 235, 0.1) 60%,
     transparent 75%
   );
-  filter: blur(16px);
-  animation: twSpecularShimmer 16s ease-in-out infinite alternate-reverse;
+  animation: twCausticPulse4 11s ease-in-out infinite alternate;
 }
 
 /* --------------------------------------------------------------------------
-   Keyframe Animations
+   GPU-Composited Keyframe Animations (Transform & Opacity Only)
    -------------------------------------------------------------------------- */
-@keyframes twAuroraMorph1 {
+@keyframes twAuroraTravel1 {
   0% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-    border-radius: 42% 58% 65% 35% / 45% 45% 55% 55%;
   }
   50% {
-    transform: translate3d(-30px, 20px, 0) rotate(7deg) scale(1.06);
-    border-radius: 54% 46% 42% 58% / 56% 48% 52% 44%;
+    transform: translate3d(-75px, 45px, 0) rotate(10deg) scale(1.12);
   }
   100% {
-    transform: translate3d(24px, -18px, 0) rotate(-6deg) scale(0.96);
-    border-radius: 38% 62% 56% 44% / 40% 60% 40% 60%;
+    transform: translate3d(55px, -35px, 0) rotate(-8deg) scale(0.94);
   }
 }
 
-@keyframes twAuroraMorph2 {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    border-radius: 58% 42% 38% 62% / 50% 60% 40% 50%;
-  }
-  50% {
-    transform: translate3d(25px, -24px, 0) scale(1.08) rotate(-5deg);
-    border-radius: 44% 56% 58% 42% / 60% 45% 55% 40%;
-  }
-  100% {
-    transform: translate3d(-18px, 16px, 0) scale(0.97) rotate(6deg);
-    border-radius: 50% 50% 45% 55% / 48% 52% 48% 52%;
-  }
-}
-
-@keyframes twAuroraMorph3 {
+@keyframes twAuroraTravel2 {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(-16px, 18px, 0) scale(1.09);
+    transform: translate3d(65px, -45px, 0) rotate(-9deg) scale(1.14);
   }
   100% {
-    transform: translate3d(20px, -14px, 0) scale(0.94);
+    transform: translate3d(-55px, 35px, 0) rotate(7deg) scale(0.93);
   }
 }
 
-@keyframes twAuroraMorph4 {
+@keyframes twAuroraTravel3 {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(18px, 16px, 0) scale(1.05);
+    transform: translate3d(-60px, -30px, 0) scale(1.16);
   }
   100% {
-    transform: translate3d(-14px, -12px, 0) scale(0.97);
+    transform: translate3d(45px, 30px, 0) scale(0.9);
+  }
+}
+
+@keyframes twAuroraTravel4 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, 30px, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-35px, -25px, 0) scale(0.95);
   }
 }
 
 @keyframes twGlassRibbonFloat1 {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
   50% {
-    transform: translate3d(-14px, -16px, 0) rotate(1.2deg);
+    transform: translate3d(-65px, -35px, 0) rotate(2.2deg) scale(1.05);
   }
   100% {
-    transform: translate3d(10px, 12px, 0) rotate(-0.8deg);
+    transform: translate3d(45px, 25px, 0) rotate(-1.6deg) scale(0.97);
   }
 }
 
 @keyframes twGlassRibbonFloat2 {
   0% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
   50% {
-    transform: translate3d(16px, 14px, 0) rotate(-1.4deg);
+    transform: translate3d(60px, 40px, 0) rotate(-2.5deg) scale(1.06);
   }
   100% {
-    transform: translate3d(-12px, -10px, 0) rotate(0.9deg);
+    transform: translate3d(-50px, -25px, 0) rotate(1.8deg) scale(0.95);
   }
 }
 
-@keyframes twSpecularShimmer {
+@keyframes twGlassRibbonFloat3 {
   0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
     opacity: 0.6;
-    transform: scale(1);
   }
   50% {
-    opacity: 0.95;
-    transform: scale(1.06);
+    transform: translate3d(-40px, 35px, 0) rotate(-1.8deg) scale(1.09);
+    opacity: 0.85;
   }
   100% {
-    opacity: 0.6;
-    transform: scale(1);
+    transform: translate3d(35px, -25px, 0) rotate(1.4deg) scale(0.93);
+    opacity: 0.55;
+  }
+}
+
+@keyframes twLightSweep {
+  0% {
+    transform: translate3d(-80px, -40px, 0) rotate(4deg) scale(0.92);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate3d(40px, 30px, 0) rotate(-2deg) scale(1.08);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(120px, 70px, 0) rotate(5deg) scale(1);
+    opacity: 0.25;
+  }
+}
+
+@keyframes twCausticPulse1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(-15px, -10px, 0) scale(1.15);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(10px, 12px, 0) scale(0.98);
+    opacity: 0.55;
+  }
+}
+
+@keyframes twCausticPulse2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(18px, 14px, 0) scale(0.92);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(-12px, -8px, 0) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes twAuroraTravel5 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-45px, 30px, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(40px, -25px, 0) scale(0.95);
+  }
+}
+
+@keyframes twGlassRibbonFloatLeft {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(30px, -18px, 0) rotate(1.5deg) scale(1.04);
+  }
+  100% {
+    transform: translate3d(-24px, 22px, 0) rotate(-1.2deg) scale(0.97);
+  }
+}
+
+@keyframes twGlassRibbonFloatBridge {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 0.78;
+  }
+  50% {
+    transform: translate3d(-28px, 18px, 0) rotate(-1.4deg) scale(1.03);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(24px, -14px, 0) rotate(1.1deg) scale(0.96);
+    opacity: 0.72;
+  }
+}
+
+@keyframes twLightSweepLeft {
+  0% {
+    transform: translate3d(-50px, -20px, 0) rotate(-3deg) scale(0.94);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate3d(25px, 20px, 0) rotate(2deg) scale(1.05);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(70px, 35px, 0) rotate(-2deg) scale(1);
+    opacity: 0.18;
+  }
+}
+
+@keyframes twCausticPulse3 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0) scale(1.14);
+    opacity: 0.88;
+  }
+  100% {
+    transform: translate3d(-10px, 10px, 0) scale(0.96);
+    opacity: 0.5;
+  }
+}
+
+@keyframes twCausticPulse4 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.04);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(-14px, 12px, 0) scale(0.9);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate3d(10px, -6px, 0) scale(1.08);
+    opacity: 0.7;
   }
 }
 
@@ -18405,22 +18632,37 @@ textarea {
     height: 360px;
   }
 
+  .tw-aurora-blob-center {
+    width: 440px;
+    height: 360px;
+  }
+
   .tw-glass-caustic-1 {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     right: 12%;
   }
 
   .tw-glass-caustic-2 {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .tw-glass-caustic-3 {
+    width: 110px;
+    height: 110px;
+  }
+
+  .tw-glass-caustic-4 {
+    width: 100px;
+    height: 100px;
   }
 }
 
 @media (max-width: 640px) {
   .tw-aurora-mesh-container {
-    filter: blur(40px);
-    opacity: 0.8;
+    filter: blur(24px);
+    opacity: 0.82;
   }
 
   .tw-aurora-blob-primary {
@@ -18438,7 +18680,7 @@ textarea {
   }
 
   .tw-aurora-blob-green {
-    display: none; /* Keep mobile clean and focused */
+    display: none;
   }
 
   .tw-aurora-blob-lavender {
@@ -18447,8 +18689,19 @@ textarea {
     left: -20%;
   }
 
-  .tw-glass-caustic-2 {
+  .tw-aurora-blob-center {
     display: none;
+  }
+
+  .tw-glass-caustic-2,
+  .tw-glass-caustic-3,
+  .tw-glass-caustic-4,
+  .tw-glass-light-sweep-left {
+    display: none;
+  }
+
+  .tw-glass-ribbon-bridge {
+    opacity: 0.45;
   }
 }
 
@@ -18460,11 +18713,18 @@ textarea {
   .tw-aurora-blob-cyan,
   .tw-aurora-blob-green,
   .tw-aurora-blob-lavender,
-  .tw-glass-group-primary,
-  .tw-glass-group-secondary,
-  .tw-glass-specular-shimmer,
+  .tw-aurora-blob-center,
+  .tw-glass-ribbon-1,
+  .tw-glass-ribbon-2,
+  .tw-glass-ribbon-3,
+  .tw-glass-ribbon-left,
+  .tw-glass-ribbon-bridge,
+  .tw-glass-light-sweep,
+  .tw-glass-light-sweep-left,
   .tw-glass-caustic-1,
-  .tw-glass-caustic-2 {
+  .tw-glass-caustic-2,
+  .tw-glass-caustic-3,
+  .tw-glass-caustic-4 {
     animation: none !important;
     transition: none !important;
   }
