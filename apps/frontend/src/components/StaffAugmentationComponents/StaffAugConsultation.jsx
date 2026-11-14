@@ -220,20 +220,6 @@ const StaffAugConsultation = ({ data }) => {
                           Multiple Roles / Custom Squad
                         </option>
                       </select>
-                      <svg
-                        className="StaffAug-selectChevron"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 12 8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="m1 1 5 5 5-5" />
-                      </svg>
                     </div>
                   </div>
                   <div className="form-group">
