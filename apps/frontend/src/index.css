@@ -23230,9 +23230,9 @@ textarea {
 }
 
 .PermStaff-container {
-  max-width: 1240px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
 /* Hero */
@@ -23535,7 +23535,7 @@ textarea {
   line-height: 1.6;
   color: var(--color-secondary, #49607e);
   margin: 0;
-  min-height: 8.5rem;
+  min-height: 7.75rem;
 }
 
 .PermStaff-pillarCard .pillar-points {
@@ -23549,7 +23549,7 @@ textarea {
   flex-direction: column;
   justify-content: center;
   gap: 0.75rem;
-  min-height: 155px;
+  min-height: 165px;
 }
 
 .PermStaff-pillarCard .pillar-points li {
@@ -23614,6 +23614,7 @@ textarea {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
+  align-items: stretch;
 }
 
 @media (max-width: 1200px) {
@@ -23636,6 +23637,7 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
   transition: all 0.25s ease;
 }
@@ -23644,6 +23646,13 @@ textarea {
   transform: translateY(-3px);
   box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
   border-color: rgba(37, 99, 235, 0.3);
+}
+
+.PermStaff-processCard .step-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  margin-bottom: 1.25rem;
 }
 
 .PermStaff-processCard .step-circle {
@@ -23681,19 +23690,50 @@ textarea {
   font-weight: 700;
   color: var(--color-navy-dark, #0f172a);
   margin: 0 0 0.5rem 0;
+  line-height: 1.35;
+  min-height: 2.85rem;
+  display: flex;
+  align-items: flex-start;
 }
 
 .PermStaff-processCard .step-desc {
   font-size: 0.8125rem;
   line-height: 1.55;
   color: var(--color-secondary, #49607e);
-  margin: 0 0 1.25rem 0;
+  margin: 0;
+  min-height: 5.75rem;
+}
+
+@media (max-width: 1200px) {
+  .PermStaff-processCard .step-title {
+    min-height: 2.5rem;
+  }
+
+  .PermStaff-processCard .step-desc {
+    min-height: 4.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .PermStaff-processCard .step-title {
+    min-height: auto;
+  }
+
+  .PermStaff-processCard .step-desc {
+    min-height: auto;
+    margin-bottom: 1rem;
+  }
 }
 
 .PermStaff-processCard .step-deliverable {
-  padding: 0.75rem;
+  margin-top: auto;
+  padding: 0.85rem 1rem;
   background-color: var(--color-surface-container-low, #f3f2fe);
   border-radius: 0.5rem;
+  min-height: 4.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .PermStaff-processCard .deliv-label {
