@@ -110,6 +110,16 @@ export const runUp = async () => {
 
       await migrationModule.up({ db, mongoose });
 
+      // Verify that migration changes actually exist in the database before recording success (P1 Migration Safety)
+      if (typeof migrationModule.verify === 'function') {
+        const isVerified = await migrationModule.verify({ db, mongoose });
+        if (!isVerified) {
+          throw new Error(
+            `Verification check failed for migration '${file}': required indexes or schema states were not established in the database.`
+          );
+        }
+      }
+
       await MigrationRecord.create({
         name: file,
         batch: nextBatch,

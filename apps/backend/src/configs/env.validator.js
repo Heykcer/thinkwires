@@ -7,13 +7,6 @@ const REQUIRED_PRODUCTION_VARS = [
   'MONGODB_URI',
 ];
 
-/**
- * Validates environment configuration during startup (DEP-02, DEP-CFG-01).
- * Halts boot with fatal error if critical secrets or production database URIs are missing.
- *
- * @param {object} env Target environment object (defaults to process.env)
- * @returns {object} Validation result
- */
 export const validateBootEnvironment = (env = process.env) => {
   const isProduction = env.NODE_ENV === 'production';
   const missing = [];

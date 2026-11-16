@@ -2,6 +2,8 @@ import os
 import re
 import io
 import json
+import zipfile
+import xml.etree.ElementTree as ET
 from typing import Dict, Any, Optional, List, Tuple
 try:
     from pypdf import PdfReader
@@ -85,6 +87,87 @@ def extract_text_and_links_from_pdf(file_bytes: bytes) -> Tuple[str, List[str]]:
     except Exception as e:
         logger.warning(f"pypdf extraction error: {e}")
         return "", []
+
+def validate_file_signature(file_bytes: bytes, filename: Optional[str] = None) -> Tuple[bool, str]:
+    """
+    Validates genuine document file signature (magic bytes) to prevent executable upload,
+    polyglot files, and arbitrary file disclosure (P0 Security Requirement A).
+    """
+    if not file_bytes:
+        return False, "File buffer is empty."
+
+    # 1. PDF signature: %PDF-
+    if file_bytes.startswith(b"%PDF"):
+        return True, "pdf"
+
+    # 2. DOCX signature: PK\x03\x04 (ZIP container for Office Open XML)
+    if file_bytes.startswith(b"PK\x03\x04"):
+        try:
+            with zipfile.ZipFile(io.BytesIO(file_bytes)) as z:
+                names = z.namelist()
+                if "word/document.xml" in names or "[Content_Types].xml" in names:
+                    return True, "docx"
+        except Exception:
+            pass
+
+    # 3. Legacy DOC signature: OLE2 Compound Document Header
+    if file_bytes.startswith(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"):
+        return True, "doc"
+
+    # 4. Plain Text / Markdown: check for valid UTF-8 without NUL bytes
+    ext = (filename or "").lower()
+    if ext.endswith((".txt", ".md", ".rtf", ".text")) or not ext.endswith((".pdf", ".doc", ".docx")):
+        if b"\x00" not in file_bytes[:1024]:
+            try:
+                file_bytes[:4096].decode("utf-8")
+                return True, "txt"
+            except UnicodeDecodeError:
+                pass
+
+    return False, "Unsupported or forged file signature. Only verified PDF, DOCX, and TXT documents are allowed."
+
+def extract_text_from_docx(file_bytes: bytes) -> str:
+    """
+    Extracts text paragraphs from authentic OpenXML DOCX bytes using standard zipfile and xml parsing.
+    Prevents binary garbage decoding.
+    """
+    try:
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as docx_zip:
+            if "word/document.xml" not in docx_zip.namelist():
+                return ""
+            xml_content = docx_zip.read("word/document.xml")
+            tree = ET.fromstring(xml_content)
+            paragraphs = []
+            for p in tree.iter("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p"):
+                texts = [
+                    node.text
+                    for node in p.iter("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
+                    if node.text
+                ]
+                if texts:
+                    paragraphs.append("".join(texts))
+            return "\n".join(paragraphs)
+    except Exception as e:
+        logger.warning(f"DOCX extraction notice: {e}")
+        return ""
+
+def extract_text_from_doc(file_bytes: bytes) -> str:
+    """
+    Extracts text streams from legacy binary Microsoft Word (.doc) OLE compound documents.
+    """
+    try:
+        printable_chunks = []
+        for match in re.finditer(rb"[\x20-\x7E\r\n\t]{4,}", file_bytes):
+            try:
+                chunk = match.group(0).decode("ascii", errors="ignore").strip()
+                if len(chunk) > 3 and not chunk.startswith("WordDocument"):
+                    printable_chunks.append(chunk)
+            except Exception:
+                pass
+        return "\n".join(printable_chunks)
+    except Exception as e:
+        logger.warning(f"Legacy DOC extraction notice: {e}")
+        return ""
 
 def extract_summary_from_text(raw_text: str) -> str:
     """Attempts to isolate summary / about me section from resume text."""
@@ -283,34 +366,41 @@ async def parse_resume_content(
     file_bytes: Optional[bytes] = None,
     filename: Optional[str] = None,
     raw_text: Optional[str] = None,
-    file_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Parses resume content from PDF bytes, raw text, or a file path.
-    Uses OpenAI LLM if configured; otherwise gracefully executes rule-based heuristic parsing.
+    Parses resume content strictly from memory-resident file bytes (PDF/DOCX/TXT) or raw text.
+    Arbitrary local filesystem paths are completely forbidden (P0 Security Requirement A).
     """
     extracted_text = ""
     extracted_links = []
+    file_type = "unknown"
 
-    if file_bytes and filename:
-        if filename.lower().endswith(".pdf"):
+    if file_bytes:
+        # Validate genuine document file signature before processing
+        is_valid, sig_or_err = validate_file_signature(file_bytes, filename)
+        if not is_valid:
+            logger.warning(
+                f"[Security Defense] Blocked invalid/forged document upload: filename={filename}, error={sig_or_err}"
+            )
+            raise ValueError(f"Invalid document: {sig_or_err}")
+
+        file_type = sig_or_err
+
+        if file_type == "pdf":
             extracted_text, extracted_links = extract_text_and_links_from_pdf(file_bytes)
+        elif file_type == "docx":
+            extracted_text = extract_text_from_docx(file_bytes)
+        elif file_type == "doc":
+            extracted_text = extract_text_from_doc(file_bytes)
         else:
             try:
                 extracted_text = file_bytes.decode("utf-8", errors="ignore")
             except Exception:
                 extracted_text = ""
 
-    if not extracted_text and file_path and os.path.exists(file_path):
-        if file_path.lower().endswith(".pdf"):
-            with open(file_path, "rb") as f:
-                extracted_text, extracted_links = extract_text_and_links_from_pdf(f.read())
-        else:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                extracted_text = f.read()
-
     if not extracted_text and raw_text:
-        extracted_text = raw_text
+        extracted_text = raw_text.strip()
+        file_type = "text"
 
     if not extracted_text:
         extracted_text = (
@@ -318,8 +408,10 @@ async def parse_resume_content(
             "PostgreSQL, Docker, and AWS cloud deployments. Email: candidate@example.com, Phone: +1-555-0199."
         )
 
-    parsed_data = None
+    # Sanitize untrusted input to defend against prompt injection
     sanitized_text = sanitize_untrusted_text(extracted_text[:4000])
+
+    parsed_data = None
 
     if settings.is_llm_configured:
         prompt = f"""
@@ -354,7 +446,7 @@ async def parse_resume_content(
         parsed_data = await execute_chat_completion_with_fallback(
             prompt=prompt,
             system_instruction=system_instruction,
-            timeout_seconds=15.0,
+            timeout_seconds=settings.PARSER_TIMEOUT_SECONDS,
             temperature=0.1,
         )
         if parsed_data:
@@ -367,7 +459,6 @@ async def parse_resume_content(
     if not parsed_data:
         parsed_data = heuristic_parse_resume(extracted_text, links=extracted_links)
     elif extracted_links:
-        # Merge any PDF annotation links discovered
         for link in extracted_links:
             if "linkedin.com/in" in link and not parsed_data.get("linkedin_url"):
                 parsed_data["linkedin_url"] = link
@@ -376,7 +467,14 @@ async def parse_resume_content(
             elif not parsed_data.get("portfolio_url"):
                 parsed_data["portfolio_url"] = link
 
+    # Structured security logging
+    logger.info(
+        f"[Resume Parser Audit] Parsed document: type={file_type}, name={filename or 'inline'}, "
+        f"extracted_length={len(extracted_text)}, skills_found={len(parsed_data.get('skills', []))}"
+    )
+
+    # Return structured metadata with safe, sanitized text excerpt (never raw system content)
     return {
-        "raw_text": extracted_text[:3000],
+        "raw_text": sanitize_untrusted_text(extracted_text[:1000]),
         **parsed_data,
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { adminApi } from './adminService';
 import { CloseIcon } from './AdminIcons';
+import { escapeHtml, PRINT_CSP_META } from '../utils/printSanitizer';
 
 const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) => {
   const [dossier, setDossier] = useState(null);
@@ -345,38 +346,39 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
 
     const matrixHtml = printMatrix.length > 0
       ? printMatrix
-          .map((r) => {
-            const skillName = r.skill || r.name || r.jdRequirement || 'Technical Competency';
-            const reqText =
-              r.skill && r.jdRequirement && r.jdRequirement !== r.skill
-                ? r.jdRequirement
-                : r.jdRequirement && r.jdRequirement !== skillName
+        .map((r) => {
+          const skillName = r.skill || r.name || r.jdRequirement || 'Technical Competency';
+          const reqText =
+            r.skill && r.jdRequirement && r.jdRequirement !== r.skill
+              ? r.jdRequirement
+              : r.jdRequirement && r.jdRequirement !== skillName
                 ? r.jdRequirement
                 : `Mandatory technical proficiency in ${skillName}`;
-            const evidenceText =
-              r.candidateEvidence ||
-              r.evidence ||
-              `Demonstrated hands-on experience with ${skillName.toUpperCase()} across project deliverables`;
-            const statusText = r.status || (r.fit ? `${r.fit} Match` : 'Strong Match');
-            const isStrong = String(statusText).toLowerCase().includes('strong');
-            const isPartial = String(statusText).toLowerCase().includes('partial');
-            const statusColor = isStrong ? '#15803D' : isPartial ? '#854D0E' : '#B91C1C';
-            return `
+          const evidenceText =
+            r.candidateEvidence ||
+            r.evidence ||
+            `Demonstrated hands-on experience with ${skillName.toUpperCase()} across project deliverables`;
+          const statusText = r.status || (r.fit ? `${r.fit} Match` : 'Strong Match');
+          const isStrong = String(statusText).toLowerCase().includes('strong');
+          const isPartial = String(statusText).toLowerCase().includes('partial');
+          const statusColor = isStrong ? '#15803D' : isPartial ? '#854D0E' : '#B91C1C';
+          return `
             <tr>
-              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; font-weight: 600; color: #0F172A;">${skillName}</td>
-              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${reqText}</td>
-              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${evidenceText}</td>
-              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; text-align: center; font-weight: 700; color: ${statusColor};">${statusText}</td>
+              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; font-weight: 600; color: #0F172A;">${escapeHtml(skillName)}</td>
+              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${escapeHtml(reqText)}</td>
+              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${escapeHtml(evidenceText)}</td>
+              <td style="padding: 4px 8px; border: 1px solid #CBD5E1; text-align: center; font-weight: 700; color: ${statusColor};">${escapeHtml(statusText)}</td>
             </tr>`;
-          })
-          .join('')
+        })
+        .join('')
       : '<tr><td colspan="4" style="text-align: center; padding: 8px; color: #64748B;">Core technical alignment verified against requisition criteria.</td></tr>';
 
     const htmlContent = `
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${candidateTitle}</title>
+          ${PRINT_CSP_META}
+          <title>${escapeHtml(candidateTitle)}</title>
           <style>
             @page {
               size: A4 portrait;
@@ -522,39 +524,38 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
               <div class="brand">THINKWIRES TALENT CLOUD</div>
               <div class="tagline">Enterprise AI Technical Recruiter & Hiring Manager Dossier</div>
               <h1 style="margin: 6px 0 2px 0; font-size: 18px; color: #0F172A;">
-                ${isBlind ? anonCode : candName}
+                ${escapeHtml(isBlind ? anonCode : candName)}
               </h1>
-              ${
-                isBlind
-                  ? `<div class="blind-badge">Confidential Blind Technical Screening • Personal Identity Masked</div>`
-                  : `<div style="font-size: 10.5px; color: #475569;">${dossier.candidateEmail || ''} ${(dossier.candidatePhone) ? '• ' + dossier.candidatePhone : ''} • ${dossier.location || 'Remote'}</div>`
-              }
+              ${isBlind
+        ? `<div class="blind-badge">Confidential Blind Technical Screening • Personal Identity Masked</div>`
+        : `<div style="font-size: 10.5px; color: #475569;">${escapeHtml(dossier.candidateEmail || '')} ${(dossier.candidatePhone) ? '• ' + escapeHtml(dossier.candidatePhone) : ''} • ${escapeHtml(dossier.location || 'Remote')}</div>`
+      }
               <div style="font-size: 10.5px; font-weight: 600; color: #1E293B; margin-top: 2px;">
-                Role: ${currentRole} | Target Requisition: ${targetRole}
+                Role: ${escapeHtml(currentRole)} | Target Requisition: ${escapeHtml(targetRole)}
               </div>
             </div>
             <div style="display: flex; gap: 8px;">
               <div class="score-card" style="background: #F8FAFC; border-color: #CBD5E1; text-align: center; padding: 4px 10px;">
                 <div style="font-size: 8px; font-weight: 700; color: #475569; text-transform: uppercase;">Resume Match</div>
-                <div class="score-val" style="color: #0037B0; font-size: 18px;">${resumeScore}%</div>
-                <div style="font-size: 8px; font-weight: 600; color: #475569;">${resumeTier}</div>
+                <div class="score-val" style="color: #0037B0; font-size: 18px;">${Number(resumeScore) || 0}%</div>
+                <div style="font-size: 8px; font-weight: 600; color: #475569;">${escapeHtml(resumeTier)}</div>
               </div>
               <div class="score-card" style="text-align: center; padding: 4px 10px;">
                 <div style="font-size: 8px; font-weight: 700; color: #166534; text-transform: uppercase;">Verified Talent</div>
-                <div class="score-val" style="font-size: 18px;">${candidateScore}%</div>
-                <div style="font-size: 8px; font-weight: 700; color: #15803D;">${candidateStatus}</div>
+                <div class="score-val" style="font-size: 18px;">${Number(candidateScore) || 0}%</div>
+                <div style="font-size: 8px; font-weight: 700; color: #15803D;">${escapeHtml(candidateStatus)}</div>
               </div>
             </div>
           </div>
 
           <div style="background: ${divergence.inflationRisk === 'High' ? '#FEF2F2' : divergence.inflationRisk === 'Medium' ? '#FEF9C3' : '#F0FDF4'}; border: 1px solid ${divergence.inflationRisk === 'High' ? '#FECDD3' : divergence.inflationRisk === 'Medium' ? '#FDE047' : '#BBF7D0'}; padding: 4px 8px; border-radius: 4px; margin-bottom: 8px; font-size: 8.5px; color: ${divergence.inflationRisk === 'High' ? '#991B1B' : divergence.inflationRisk === 'Medium' ? '#854D0E' : '#166534'};">
-            <strong>Integrity Alignment (${divergence.inflationRisk} Risk, Delta: ${divergence.delta}%):</strong> ${divergence.summary}
+            <strong>Integrity Alignment (${escapeHtml(divergence.inflationRisk)} Risk, Delta: ${Number(divergence.delta) || 0}%):</strong> ${escapeHtml(divergence.summary)}
           </div>
 
           <div class="section no-break">
             <div class="section-title">1. Executive Client Submission Summary</div>
             <ol>
-              ${printSummary.length > 0 ? printSummary.map((s) => `<li>${s}</li>`).join('') : '<li>Comprehensive multi-factor alignment verified against target mandate.</li>'}
+              ${printSummary.length > 0 ? printSummary.map((s) => `<li>${escapeHtml(s)}</li>`).join('') : '<li>Comprehensive multi-factor alignment verified against target mandate.</li>'}
             </ol>
           </div>
 
@@ -571,25 +572,25 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
               </thead>
               <tbody>
                 <tr>
-                  <td>Mandatory Technical Skills</td><td>35%</td><td>35</td><td><strong>${printScorecard.mandatoryTechnicalSkills?.score ?? 34}</strong></td>
+                  <td>Mandatory Technical Skills</td><td>35%</td><td>35</td><td><strong>${Number(printScorecard.mandatoryTechnicalSkills?.score) || 34}</strong></td>
                 </tr>
                 <tr>
-                  <td>Role & Responsibilities Alignment</td><td>25%</td><td>25</td><td><strong>${printScorecard.roleAndResponsibilities?.score ?? 24}</strong></td>
+                  <td>Role & Responsibilities Alignment</td><td>25%</td><td>25</td><td><strong>${Number(printScorecard.roleAndResponsibilities?.score) || 24}</strong></td>
                 </tr>
                 <tr>
-                  <td>Relevant Experience & Seniority</td><td>15%</td><td>15</td><td><strong>${printScorecard.relevantExperience?.score ?? 15}</strong></td>
+                  <td>Relevant Experience & Seniority</td><td>15%</td><td>15</td><td><strong>${Number(printScorecard.relevantExperience?.score) || 15}</strong></td>
                 </tr>
                 <tr>
-                  <td>Technical Depth & Framework Currency</td><td>10%</td><td>10</td><td><strong>${printScorecard.technicalDepth?.score ?? 10}</strong></td>
+                  <td>Technical Depth & Framework Currency</td><td>10%</td><td>10</td><td><strong>${Number(printScorecard.technicalDepth?.score) || 10}</strong></td>
                 </tr>
                 <tr>
-                  <td>Project Relevance & Problem-Solving</td><td>10%</td><td>10</td><td><strong>${printScorecard.projectRelevance?.score ?? 9}</strong></td>
+                  <td>Project Relevance & Problem-Solving</td><td>10%</td><td>10</td><td><strong>${Number(printScorecard.projectRelevance?.score) || 9}</strong></td>
                 </tr>
                 <tr>
-                  <td>Domain & Industry Relevance</td><td>5%</td><td>5</td><td><strong>${printScorecard.domainRelevance?.score ?? 5}</strong></td>
+                  <td>Domain & Industry Relevance</td><td>5%</td><td>5</td><td><strong>${Number(printScorecard.domainRelevance?.score) || 5}</strong></td>
                 </tr>
                 <tr style="background: #F8FAFC; font-weight: 700;">
-                  <td>Total Technical Fit Score</td><td>100%</td><td>100</td><td><strong style="color: #15803D;">${matchScore} / 100</strong></td>
+                  <td>Total Technical Fit Score</td><td>100%</td><td>100</td><td><strong style="color: #15803D;">${Number(matchScore) || 0} / 100</strong></td>
                 </tr>
               </tbody>
             </table>
@@ -615,7 +616,7 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
           <div class="section no-break">
             <div class="section-title">4. Proctored Technical Assessment Breakdown (10-Question Audit Sheet)</div>
             <div style="font-size: 8.5px; color: #475569; margin-bottom: 4px;">
-              <strong>Test ID:</strong> ${assessmentAudit.testId} | <strong>Passing Threshold:</strong> ${assessmentAudit.passingThreshold}% | <strong>Result:</strong> ${candidateStatus} (${assessmentAudit.totalPointsEarned}/${assessmentAudit.totalPointsPossible} pts) | <strong>Time Spent:</strong> ${assessmentAudit.timeSpentMinutes} min
+              <strong>Test ID:</strong> ${escapeHtml(assessmentAudit.testId)} | <strong>Passing Threshold:</strong> ${Number(assessmentAudit.passingThreshold) || 75}% | <strong>Result:</strong> ${escapeHtml(candidateStatus)} (${Number(assessmentAudit.totalPointsEarned) || 0}/${Number(assessmentAudit.totalPointsPossible) || 0} pts) | <strong>Time Spent:</strong> ${Number(assessmentAudit.timeSpentMinutes) || 0} min
             </div>
             <table>
               <thead>
@@ -631,15 +632,15 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
                 ${(assessmentAudit.questions || []).map((q, idx) => `
                   <tr>
                     <td style="text-align: center; font-weight: 700;">Q${idx + 1}</td>
-                    <td><strong>${q.category || q.type}</strong><br><span style="color: #64748B; font-size: 8px;">${String(q.type).toUpperCase()}</span></td>
-                    <td>${q.prompt}</td>
+                    <td><strong>${escapeHtml(q.category || q.type)}</strong><br><span style="color: #64748B; font-size: 8px;">${escapeHtml(String(q.type).toUpperCase())}</span></td>
+                    <td>${escapeHtml(q.prompt)}</td>
                     <td>
                       ${q.type === 'mcq'
-                        ? `Option ${q.candidateAnswer !== null && q.candidateAnswer !== undefined ? q.candidateAnswer + 1 : 'N/A'} - ${q.explanation || ''}`
-                        : `"${q.candidateAnswerText || ''}"<br><span style="color: #0037B0;">Verdict:</span> ${q.evaluatorFeedback || ''}`}
+          ? `Option ${q.candidateAnswer !== null && q.candidateAnswer !== undefined ? Number(q.candidateAnswer) + 1 : 'N/A'} - ${escapeHtml(q.explanation || '')}`
+          : `"${escapeHtml(q.candidateAnswerText || '')}"<br><span style="color: #0037B0;">Verdict:</span> ${escapeHtml(q.evaluatorFeedback || '')}`}
                     </td>
                     <td style="text-align: center; font-weight: 700; color: ${q.isCorrect ? '#15803D' : '#B91C1C'};">
-                      ${q.pointsEarned} / ${q.pointsPossible}
+                      ${Number(q.pointsEarned) || 0} / ${Number(q.pointsPossible) || 0}
                     </td>
                   </tr>
                 `).join('')}
@@ -650,7 +651,7 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
           <div class="section no-break">
             <div class="section-title">5. Key Technical Strengths</div>
             <ul>
-              ${printStrengths.length > 0 ? printStrengths.map((st) => `<li>${st}</li>`).join('') : '<li>Demonstrated hands-on expertise in enterprise architecture and core stack.</li>'}
+              ${printStrengths.length > 0 ? printStrengths.map((st) => `<li>${escapeHtml(st)}</li>`).join('') : '<li>Demonstrated hands-on expertise in enterprise architecture and core stack.</li>'}
             </ul>
           </div>
 
@@ -658,7 +659,7 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
             <div class="section">
               <div class="section-title">6. Technical Gaps & Operational Considerations</div>
               <ul>
-                ${printRisks.length > 0 ? printRisks.map((r) => `<li>${r}</li>`).join('') : '<li>No critical blockers identified; standard live technical verification recommended.</li>'}
+                ${printRisks.length > 0 ? printRisks.map((r) => `<li>${escapeHtml(r)}</li>`).join('') : '<li>No critical blockers identified; standard live technical verification recommended.</li>'}
               </ul>
             </div>
 

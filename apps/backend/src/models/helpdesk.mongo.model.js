@@ -230,6 +230,9 @@ export const recordHelpDeskInquiry = async ({
   }
 
   if (!savedTicket) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('Database connection unavailable: unable to durably persist inquiry in production.');
+    }
     const memoryRecord = {
       _id: `mem-hd-${Date.now()}`,
       ...ticketData,

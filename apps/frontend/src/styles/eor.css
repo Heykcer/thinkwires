@@ -1,0 +1,430 @@
+/* ==========================================================================
+   Employer of Record (EOR) Component Styles
+   ========================================================================== */
+
+/* EOR KPI Strip */
+.Eor-kpiStrip {
+  background-color: var(--color-surface-container-low, #f3f2fe);
+  border-top: 1px solid var(--color-card-stroke, #e2e8f0);
+  border-bottom: 1px solid var(--color-card-stroke, #e2e8f0);
+  padding: 2.5rem 0;
+}
+
+.Eor-kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .Eor-kpiGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.Eor-kpiCard {
+  background-color: var(--color-surface-container-lowest, #ffffff);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.Eor-kpiValue {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.Eor-kpiValue.primary {
+  color: var(--color-primary, #0037b0);
+}
+
+.Eor-kpiValue.primary-container {
+  color: var(--color-primary-container, #1d4ed8);
+}
+
+.Eor-kpiValue.tertiary {
+  color: var(--color-tertiary, #004f35);
+}
+
+.Eor-kpiValue.secondary {
+  color: var(--color-secondary, #49607e);
+}
+
+.Eor-kpiLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-outline, #747686);
+  margin-top: 0.5rem;
+}
+
+/* --- EOR Capabilities Container & Grid (Broader cards and consistent alignment) --- */
+.Eor-capabilitiesContainer {
+  max-width: 1440px;
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin: 0 auto;
+}
+
+.Eor-capabilitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+  align-items: stretch;
+}
+
+.Eor-capabilitiesGrid .Payroll-pillarCard {
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+@media (min-width: 1201px) {
+  .Eor-capabilitiesGrid .Payroll-pillarTitle {
+    min-height: 3.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .Eor-capabilitiesGrid .Payroll-pillarDesc {
+    min-height: 7.75rem;
+  }
+}
+
+.Eor-cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-card-stroke, #e2e8f0);
+  font-size: 0.75rem;
+  color: var(--color-outline, #747686);
+  min-height: 3.25rem;
+  gap: 0.75rem;
+}
+
+.Eor-cardFooterLeft {
+  text-align: left;
+  line-height: 1.4;
+}
+
+.Eor-cardFooterRight {
+  text-align: right;
+  margin-left: auto;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .Eor-capabilitiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .Eor-capabilitiesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card 2 Footer Spacing Enhancement */
+.Eor-cardFooter--second {
+  gap: 1rem !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.Eor-cardFooterLeft--second {
+  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.Eor-cardFooterRight--second {
+  text-align: right;
+  flex: 0 0 auto;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+/* Separation Model */
+.Eor-separationGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .Eor-separationGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.Eor-separationCol {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.Eor-separationCol.client {
+  background-color: var(--color-surface-container-low, #f3f2fe);
+}
+
+.Eor-separationCol.tw {
+  background-color: var(--color-surface-container-high, #e8e7f3);
+}
+
+.Eor-separationIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.Eor-separationIcon.primary {
+  background-color: var(--color-primary-container, #1d4ed8);
+}
+
+.Eor-separationIcon.navy {
+  background-color: var(--color-navy-dark, #0f172a);
+}
+
+.Eor-separationList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-on-surface-variant, #434655);
+}
+
+.Eor-separationList li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.Eor-separationBanner {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  height: 180px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.Eor-separationBannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.Eor-separationOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(15, 23, 42, 0.85) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Comparative Table */
+.Eor-tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  background-color: var(--color-surface-container-lowest, #ffffff);
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08);
+}
+
+.Eor-tableHeader {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  background-color: var(--color-navy-dark, #0f172a);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.Eor-tableRow {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  padding: 1.25rem 1.5rem;
+  align-items: center;
+  border-bottom: 1px solid var(--color-card-stroke, #e2e8f0);
+  font-size: 0.875rem;
+}
+
+.Eor-tableRow:nth-child(even) {
+  background-color: var(--color-surface-container-low, #f3f2fe);
+}
+
+.Eor-tableRow:last-child {
+  border-bottom: none;
+}
+
+.Eor-tableFactor {
+  font-weight: 700;
+  color: var(--color-navy-dark, #0f172a);
+}
+
+.Eor-tableTraditional {
+  color: var(--color-outline, #747686);
+}
+
+.Eor-tableTwCell {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+}
+
+.Eor-tableTwCell.emerald-accent {
+  color: var(--color-tertiary-container, #006a48);
+}
+
+.Eor-tableTwCell.primary {
+  color: var(--color-primary-container, #1d4ed8);
+}
+
+.Eor-tableTwCell.tertiary-container {
+  color: var(--color-tertiary-container, #006a48);
+}
+
+.Eor-ctaStripCard {
+  margin-top: 2rem;
+  padding: 1.75rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-container, #ededf9) 0%,
+    var(--color-surface-container-low, #f3f2fe) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+}
+
+@media (min-width: 768px) {
+  .Eor-ctaStripCard {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* FAQ Accordion */
+.Eor-faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Eor-faqItem {
+  background-color: var(--color-surface-container-lowest, #ffffff);
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.Eor-faqBtn {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy-dark, #0f172a);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.Eor-faqBtn:hover {
+  color: var(--color-primary, #0037b0);
+}
+
+.Eor-faqContent {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-on-surface-variant, #434655);
+  line-height: 1.6;
+}
+
+.Eor-faqIcon {
+  transition: transform 0.2s ease;
+}
+
+.Eor-faqIcon.rotated {
+  transform: rotate(180deg);
+  color: var(--color-primary, #0037b0);
+}
+
+/* Dark Theme Support Overrides */
+[data-theme='dark'] .Payroll-pillarCard,
+[data-theme='dark'] .Payroll-segmentCard,
+[data-theme='dark'] .Payroll-formCard,
+[data-theme='dark'] .Payroll-hqCard,
+[data-theme='dark'] .Eor-kpiCard,
+[data-theme='dark'] .Eor-faqItem,
+[data-theme='dark'] .Eor-tableWrapper {
+  background-color: var(--color-surface-container, #21232b);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .Payroll-sectionTitle,
+[data-theme='dark'] .Payroll-pillarTitle,
+[data-theme='dark'] .Payroll-segmentTitle,
+[data-theme='dark'] .Payroll-featureTitle,
+[data-theme='dark'] .Payroll-hqTitle,
+[data-theme='dark'] .Payroll-formLabel,
+[data-theme='dark'] .Eor-tableFactor,
+[data-theme='dark'] .Eor-faqBtn {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-input,
+[data-theme='dark'] .Payroll-select {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+[data-theme='dark'] .Payroll-select option {
+  background-color: #1a1b23;
+  color: #ffffff;
+}

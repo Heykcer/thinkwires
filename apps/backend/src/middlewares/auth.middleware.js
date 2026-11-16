@@ -86,13 +86,24 @@ export const requireAuth = (
         designation: decoded.designation || 'System Member',
       };
 
-      if (mongoose.connection.readyState === 1) {
+      // P0 Security Requirement C: Fail closed in production when MongoDB cannot verify the user
+      if (mongoose.connection.readyState !== 1) {
+        if (process.env.NODE_ENV === 'production') {
+          return res.status(503).json({
+            success: false,
+            authenticated: false,
+            error:
+              'Database connection temporarily unavailable: canonical user database is disconnected.',
+            retryAfterSeconds: 5,
+          });
+        }
+      } else {
         try {
           const dbUser = mongoose.Types.ObjectId.isValid(decoded.id)
-            ? await UserMongo.findById(decoded.id).select('-password').lean()
+            ? await UserMongo.findById(decoded.id).select('+tokenVersion -password').lean()
             : await UserMongo.findOne({ email: decoded.email.toLowerCase() })
-                .select('-password')
-                .lean();
+              .select('+tokenVersion -password')
+              .lean();
 
           if (dbUser) {
             if (dbUser.isActive === false) {
@@ -103,7 +114,7 @@ export const requireAuth = (
               });
             }
 
-            // Issue #197: Validate tokenVersion against database record
+            // Issue #197 / P0 Security Requirement C: Validate tokenVersion against database record
             if (
               dbUser.tokenVersion !== undefined &&
               decoded.tokenVersion !== undefined &&
@@ -117,13 +128,16 @@ export const requireAuth = (
               });
             }
 
+            // Role Downgrade Protection: Canonical database role always supersedes stale JWT claims
+            const canonicalRole = typeof dbUser.role === 'string' && dbUser.role.trim()
+              ? dbUser.role.toLowerCase().trim()
+              : decoded.role.toLowerCase().trim();
+
             userObj = {
               id: dbUser._id ? dbUser._id.toString() : dbUser.id,
               name: dbUser.name,
               email: dbUser.email,
-              role: typeof dbUser.role === 'string' && dbUser.role.trim()
-                ? dbUser.role.toLowerCase().trim()
-                : decoded.role.toLowerCase().trim(),
+              role: canonicalRole,
               designation: dbUser.designation,
               isActive: dbUser.isActive,
             };
@@ -136,7 +150,6 @@ export const requireAuth = (
           }
         } catch (dbErr) {
           console.error('Admin user DB verification notice:', dbErr.message);
-          // Issue #200: Fail-closed in production if authorization check cannot be verified
           if (process.env.NODE_ENV === 'production') {
             return res.status(503).json({
               success: false,

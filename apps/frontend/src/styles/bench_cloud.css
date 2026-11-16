@@ -1,0 +1,2977 @@
+/* ==========================================================================
+   BENCH EXPLORER / TALENT CLOUD PAGE (STITCH DESIGN ALIGNMENT)
+   ========================================================================== */
+
+.BenchPage-root {
+  min-height: 100vh;
+  background-color: #080c14;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.BenchPage-main {
+  flex: 1;
+  width: 100%;
+}
+
+/* Container standardization (1280px max-width) */
+.BenchHero-container,
+.BenchExplorer-container,
+.BenchDossierFeatures-container,
+.BenchGates-container,
+.BenchCta-container {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .BenchHero-container,
+  .BenchExplorer-container,
+  .BenchDossierFeatures-container,
+  .BenchGates-container,
+  .BenchCta-container {
+    padding: 0 3rem;
+  }
+}
+
+/* --- Bench Hero --- */
+.BenchHero-section {
+  padding: 5rem 0 3.5rem;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(14, 165, 233, 0.15) 0%,
+      rgba(8, 12, 20, 0) 70%
+    ),
+    #080c14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.BenchHero-badgeWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.BenchHero-livePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+}
+
+.BenchHero-liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: benchPulse 1.8s infinite;
+}
+
+@keyframes benchPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.BenchHero-readyTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.BenchHero-readyIcon {
+  color: #38bdf8;
+  font-size: 1.1rem;
+}
+
+.BenchHero-content {
+  max-width: 900px;
+  margin-bottom: 2rem;
+}
+
+.BenchHero-title {
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.BenchHero-highlight {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.BenchHero-subtitle {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: #94a3b8;
+  max-width: 760px;
+  margin: 0;
+}
+
+.BenchHero-slaCard {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-left: 4px solid #38bdf8;
+  border-radius: 12px;
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.BenchHero-slaHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.BenchHero-slaIcon {
+  color: #38bdf8;
+  font-size: 1.2rem;
+}
+
+.BenchHero-slaTag {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.BenchHero-slaTitle {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.BenchHero-slaDesc {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.BenchHero-badgesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.BenchHero-badgeCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+
+.BenchHero-badgeCard:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.BenchHero-badgeIconWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(14, 165, 233, 0.12);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.BenchHero-badgeIconWrap .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.BenchHero-badgeInfo {
+  min-width: 0;
+}
+
+.BenchHero-badgeTitle {
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem;
+}
+
+.BenchHero-badgeDesc {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* --- Bench Explorer Section --- */
+.BenchExplorer-section {
+  padding: 3.5rem 0 5rem;
+}
+
+/* Filter Bar */
+.BenchFilter-wrapper {
+  position: relative;
+  z-index: 40;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.BenchFilter-wrapper.has-open-dropdown {
+  z-index: 100;
+}
+
+.BenchFilter-searchBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.BenchFilter-searchInputWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+}
+
+.BenchFilter-searchIcon {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.BenchFilter-searchInput {
+  width: 100%;
+  padding: 0.85rem 2.75rem 0.85rem 2.85rem;
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.BenchFilter-searchInput:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.BenchFilter-clearBtn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.BenchFilter-clearBtn:hover {
+  color: #ffffff;
+}
+
+.BenchFilter-activeCounter {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.BenchFilter-counterBadge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-weight: 800;
+  font-size: 0.875rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+}
+
+.BenchFilter-counterText {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Specialty Pills */
+.BenchFilter-specialtyPills {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.BenchFilter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.5rem 1.1rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.BenchFilter-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.BenchFilter-pill.is-active {
+  background: rgba(14, 165, 233, 0.15);
+  border-color: #0284c7;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.BenchFilter-pillBadge {
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+}
+
+.BenchFilter-pill.is-active .BenchFilter-pillBadge {
+  background: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+
+/* Quick Notice Period Toggles (Issue #166) */
+.BenchFilter-quickTogglesRow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.BenchFilter-quickTogglesLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.BenchFilter-quickTogglesLabel .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.BenchFilter-quickTogglesGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.BenchFilter-quickToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.BenchFilter-quickToggleBtn .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.BenchFilter-quickToggleBtn:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+}
+
+.BenchFilter-quickToggleBtn.is-active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+/* Dropdown Filters Row */
+.BenchFilter-dropdownRow {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.BenchFilter-dropdownGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.BenchFilter-dropdownRowBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.BenchFilter-selectField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.BenchFilter-selectLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #64748b;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.BenchFilter-selectLabel .material-symbols-outlined {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.BenchFilter-select {
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.45rem 1.75rem 0.45rem 0.75rem;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.BenchFilter-select:focus {
+  border-color: #38bdf8;
+}
+
+.BenchFilter-sortField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Custom Dropdown in Bench Filter Bar */
+.BenchFilter-nativeSelectHidden {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  overflow: hidden !important;
+}
+
+.BenchFilter-customSelectContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.BenchFilter-customSelectContainer.is-open {
+  z-index: 1000;
+}
+
+.BenchFilter-customTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #f1f5f9;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 0.75rem;
+  min-width: 140px;
+  max-width: 270px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.BenchFilter-customTrigger:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.BenchFilter-customTrigger:focus-visible,
+.BenchFilter-customTrigger.is-open {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+  background: rgba(11, 15, 25, 0.98);
+}
+
+.BenchFilter-triggerValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.BenchFilter-dropdownChevron {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.BenchFilter-customTrigger.is-open .BenchFilter-dropdownChevron {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+.BenchFilter-customMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: 320px;
+  max-height: 340px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px -4px rgba(15, 23, 42, 0.25), 0 8px 16px -4px rgba(15, 23, 42, 0.15);
+  padding: 0.35rem;
+  list-style: none;
+  margin: 0;
+  z-index: 1050;
+  animation: benchDropdownFadeIn 0.15s ease-out;
+}
+
+.BenchFilter-customMenu::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.BenchFilter-customMenu.is-align-right {
+  left: auto;
+  right: 0;
+}
+
+@keyframes benchDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.BenchFilter-customOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  user-select: none;
+}
+
+.BenchFilter-customOption:hover,
+.BenchFilter-customOption.is-highlighted {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.BenchFilter-customOption.is-selected {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.BenchFilter-customOption.is-selected .BenchFilter-optionText {
+  color: #ffffff;
+}
+
+.BenchFilter-dropdownCheck {
+  width: 1.05rem;
+  height: 1.05rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Candidate Grid */
+.BenchGrid-wrapper {
+  width: 100%;
+}
+
+.BenchGrid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.75rem;
+}
+
+.BenchGrid-emptyState {
+  text-align: center;
+  padding: 5rem 1.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}
+
+.BenchGrid-emptyIcon {
+  font-size: 3.5rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.BenchGrid-emptyTitle {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.BenchGrid-emptyDesc {
+  color: #94a3b8;
+  max-width: 520px;
+  margin: 0 auto;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Candidate Card */
+.BenchCard-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: all 0.25s ease;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.BenchCard-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.BenchCard-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  padding-right: 125px;
+  flex-wrap: wrap;
+}
+
+.BenchCard-codeBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.BenchCard-codeIcon {
+  font-size: 1rem;
+  color: #60a5fa;
+}
+
+.BenchCard-urgencyBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.BenchCard-urgencyBadge.is-immediate {
+  color: #34d399;
+}
+
+.BenchCard-urgencyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.BenchCard-profileRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.BenchCard-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  font-weight: 800;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.BenchCard-avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+
+.BenchCard-titleWrap {
+  flex: 1;
+  min-width: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.BenchCard-roleTitle {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+  min-height: 2.7em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+.BenchCard-metaLine {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  flex-wrap: wrap;
+}
+
+.BenchCard-metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.BenchCard-metaItem .material-symbols-outlined {
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.BenchCard-metaDot {
+  color: #475569;
+}
+
+.BenchCard-rateBox {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.75rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.BenchCard-rateNum {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.BenchCard-ratePeriod {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Vetting Score Section */
+.BenchCard-scoreSection {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.BenchCard-scoreInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.BenchCard-scoreLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.BenchCard-scoreLabel .material-symbols-outlined {
+  font-size: 1rem;
+  color: #10b981;
+}
+
+.BenchCard-scorePercent {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #34d399;
+}
+
+.BenchCard-scoreTrack {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.BenchCard-scoreFill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #38bdf8 100%);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* Quote Box */
+.BenchCard-quoteBox {
+  position: relative;
+  background: rgba(255, 255, 255, 0.025);
+  border-left: 3px solid #10b981;
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+}
+
+.BenchCard-quoteIcon {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.BenchCard-quoteText {
+  color: #cbd5e1;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Skills List */
+.BenchCard-skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.BenchCard-skillPill {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #93c5fd;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+}
+
+/* Card Footer Actions */
+.BenchCard-footer {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.BenchCard-btnSecondary,
+.BenchCard-btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.BenchCard-btnSecondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.BenchCard-btnSecondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.BenchCard-btnPrimary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+.BenchCard-btnPrimary:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+}
+
+.BenchCard-btnSecondary .material-symbols-outlined,
+.BenchCard-btnPrimary .material-symbols-outlined {
+  font-size: 1.05rem;
+}
+
+/* --- Slide-Over Dossier Drawer --- */
+.BenchDrawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  justify-content: flex-end;
+  animation: benchFadeIn 0.2s ease-out;
+}
+
+@keyframes benchFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.BenchDrawer-content {
+  width: 100%;
+  max-width: 620px;
+  height: 100vh;
+  background: #0b0f19;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+  animation: benchSlideLeft 0.25s ease-out;
+}
+
+@keyframes benchSlideLeft {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.BenchDrawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080c14;
+}
+
+.BenchDrawer-headerTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.BenchDrawer-headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.BenchDrawer-headerTitleIcon {
+  font-size: 1.35rem;
+  color: #38bdf8;
+}
+
+.BenchDrawer-headerSubBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.BenchDrawer-headerCode {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.BenchDrawer-badgeIcon {
+  font-size: 1.15rem;
+}
+
+.BenchDrawer-closeBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  color: #94a3b8;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.BenchDrawer-closeBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.BenchDrawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Profile Banner */
+.BenchDrawer-profileBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.BenchDrawer-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  font-size: 1.35rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.BenchDrawer-avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+
+.BenchDrawer-profileDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.BenchDrawer-metaRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.4rem;
+}
+
+.BenchDrawer-codeBadge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #93c5fd;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.BenchDrawer-statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.BenchDrawer-statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #34d399;
+}
+
+.BenchDrawer-roleName {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+}
+
+.BenchDrawer-specRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  flex-wrap: wrap;
+}
+
+.BenchDrawer-specRow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.BenchDrawer-specRow .material-symbols-outlined {
+  font-size: 0.95rem;
+}
+
+.BenchDrawer-rateHighlight {
+  color: #38bdf8 !important;
+  font-weight: 700;
+}
+
+/* Drawer Card Section */
+.BenchDrawer-cardSection {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.BenchDrawer-sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.BenchDrawer-sectionTitle .material-symbols-outlined {
+  color: #38bdf8;
+  font-size: 1.15rem;
+}
+
+/* Rubric Grid */
+.BenchDrawer-rubricGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.BenchDrawer-rubricItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.BenchDrawer-rubricHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: #cbd5e1;
+}
+
+.BenchDrawer-scoreHighlight {
+  color: #34d399;
+  font-weight: 700;
+}
+
+.BenchDrawer-meter {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.BenchDrawer-meterFill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #38bdf8);
+  border-radius: 9999px;
+}
+
+/* Quote & Eval Detail */
+.BenchDrawer-quoteHighlight {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #10b981;
+  padding: 0.75rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.BenchDrawer-quoteHighlight .material-symbols-outlined {
+  color: #10b981;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.BenchDrawer-quoteHighlight p {
+  color: #e2e8f0;
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.BenchDrawer-evalDetail {
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Skills Wrap */
+.BenchDrawer-skillsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.BenchDrawer-skillBadge {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #bae6fd;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+}
+
+/* Compliance List */
+.BenchDrawer-complianceList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.BenchDrawer-complianceItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.BenchDrawer-checkIcon {
+  color: #10b981;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.BenchDrawer-complianceItem strong {
+  display: block;
+  color: #f1f5f9;
+  font-size: 0.8125rem;
+  margin-bottom: 0.15rem;
+}
+
+.BenchDrawer-complianceItem p {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Booking Card & Form */
+.BenchDrawer-bookingCard {
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.1) 0%,
+    rgba(15, 23, 42, 0.85) 100%
+  );
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.BenchDrawer-bookingTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+
+.BenchDrawer-bookingTitle .material-symbols-outlined {
+  color: #38bdf8;
+}
+
+.BenchDrawer-bookingSubtitle {
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  margin: 0 0 1.25rem;
+  line-height: 1.45;
+}
+
+.BenchDrawer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.BenchDrawer-formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.BenchDrawer-formRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.BenchDrawer-formGroup label {
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.BenchDrawer-formGroup input,
+.BenchDrawer-formGroup select {
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  padding: 0.65rem 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.BenchDrawer-formGroup input:focus,
+.BenchDrawer-formGroup select:focus {
+  border-color: #38bdf8;
+}
+
+.BenchDrawer-submitBtn {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+}
+
+.BenchDrawer-submitBtn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+}
+
+.BenchDrawer-bookingSuccess {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.BenchDrawer-successIcon {
+  font-size: 3rem;
+  color: #10b981;
+  margin-bottom: 0.5rem;
+}
+
+.BenchDrawer-bookingSuccess h5 {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.BenchDrawer-bookingSuccess p {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 0 0 1.25rem;
+}
+
+.BenchDrawer-btnDone {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.BenchDrawer-errorText {
+  color: #ef4444;
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+/* --- Dossier Features Showcase --- */
+.BenchDossierFeatures-section {
+  padding: 5rem 0;
+  background: #0b0f19;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.BenchDossierFeatures-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 3.5rem;
+}
+
+.BenchDossierFeatures-tag {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.BenchDossierFeatures-title {
+  color: #ffffff;
+  font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+.BenchDossierFeatures-subtitle {
+  color: #94a3b8;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.BenchDossierFeatures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+.BenchDossierFeatures-reveal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.BenchDossierFeatures-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.BenchDossierFeatures-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-3px);
+}
+
+.BenchDossierFeatures-cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.BenchDossierFeatures-step {
+  font-family: monospace;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.BenchDossierFeatures-iconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(14, 165, 233, 0.12);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.BenchDossierFeatures-iconWrap .material-symbols-outlined {
+  font-size: 1.35rem;
+}
+
+.BenchDossierFeatures-cardTitle {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.65rem;
+}
+
+.BenchDossierFeatures-cardDesc {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  flex: 1;
+}
+
+.BenchDossierFeatures-cardHighlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: auto;
+}
+
+.BenchDossierFeatures-cardHighlight .material-symbols-outlined {
+  font-size: 0.95rem;
+}
+
+/* --- Vetting Gates Funnel --- */
+.BenchGates-section {
+  padding: 5rem 0;
+  background: #080c14;
+}
+
+.BenchGates-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 3.5rem;
+}
+
+.BenchGates-tag {
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.BenchGates-title {
+  color: #ffffff;
+  font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+.BenchGates-subtitle {
+  color: #94a3b8;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.BenchGates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+}
+
+.BenchGates-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s;
+}
+
+.BenchGates-card:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+  transform: translateY(-3px);
+}
+
+.BenchGates-cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.BenchGates-gateNumber {
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.BenchGates-passRate {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.BenchGates-cardTitle {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.85rem;
+}
+
+.BenchGates-badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  width: fit-content;
+  margin-bottom: 1.25rem;
+}
+
+.BenchGates-badgePill .material-symbols-outlined {
+  font-size: 0.95rem;
+  color: #38bdf8;
+}
+
+.BenchGates-detailsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.BenchGates-detailsList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.BenchGates-detailsList .material-symbols-outlined {
+  color: #10b981;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* --- Requisition CTA --- */
+.BenchCta-section {
+  padding: 4rem 0 6rem;
+}
+
+.BenchCta-card {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(2, 6, 23, 0.95) 100%
+  );
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 20px;
+  padding: 3.5rem 3rem;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.BenchCta-tag {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.BenchCta-title {
+  color: #ffffff;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+.BenchCta-desc {
+  color: #94a3b8;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 600px;
+}
+
+.BenchCta-btnGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.BenchCta-btnPrimary,
+.BenchCta-btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.BenchCta-btnPrimary {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+
+.BenchCta-btnPrimary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+}
+
+.BenchCta-btnSecondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.BenchCta-btnSecondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.BenchCta-graphic {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.BenchCta-statBox {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  transition: all 0.25s ease;
+}
+
+.BenchCta-statBox:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-2px);
+}
+
+.BenchCta-statNumber {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #38bdf8;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.BenchCta-statLabel {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+/* --- Inline Requisition Form (Issue #171) --- */
+.BenchRequisition-card {
+  grid-template-columns: 1.8fr 1fr;
+  align-items: stretch;
+}
+
+.BenchRequisition-form {
+  margin-top: 1.5rem;
+}
+
+.BenchRequisition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.15rem 1rem;
+}
+
+.BenchRequisition-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.BenchRequisition-field.full-width {
+  grid-column: span 2;
+}
+
+.BenchRequisition-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.02em;
+}
+
+.BenchRequisition-label .req-star {
+  color: #f87171;
+  margin-left: 2px;
+}
+
+.BenchRequisition-input,
+.BenchRequisition-select {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.BenchRequisition-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1rem;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+.BenchRequisition-select option {
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+.BenchRequisition-input:focus,
+.BenchRequisition-select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  background-color: rgba(15, 23, 42, 0.95);
+}
+
+/* Custom Dropdowns in Bench Requisition Form */
+.BenchRequisition-nativeSelectHidden {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  overflow: hidden !important;
+}
+
+.BenchRequisition-field {
+  position: relative;
+}
+
+.BenchRequisition-field.is-open {
+  z-index: 100;
+}
+
+.BenchRequisition-customSelectContainer {
+  position: relative;
+  width: 100%;
+}
+
+.BenchRequisition-customTrigger {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.BenchRequisition-customTrigger:hover {
+  background-color: rgba(15, 23, 42, 0.85);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.BenchRequisition-customTrigger:focus-visible,
+.BenchRequisition-customTrigger.is-open {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+  background-color: rgba(15, 23, 42, 0.95);
+}
+
+.BenchRequisition-triggerValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.BenchRequisition-dropdownChevron {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.BenchRequisition-customTrigger.is-open .BenchRequisition-dropdownChevron {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+.BenchRequisition-customMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px -4px rgba(15, 23, 42, 0.25), 0 8px 16px -4px rgba(15, 23, 42, 0.15);
+  padding: 0.35rem;
+  list-style: none;
+  margin: 0;
+  z-index: 1050;
+  animation: benchDropdownFadeIn 0.15s ease-out;
+  box-sizing: border-box;
+}
+
+.BenchRequisition-customMenu::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.BenchRequisition-customOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  user-select: none;
+}
+
+.BenchRequisition-customOption:hover,
+.BenchRequisition-customOption.is-highlighted {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.BenchRequisition-customOption.is-selected {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.BenchRequisition-customOption.is-selected .BenchRequisition-optionText {
+  color: #ffffff;
+}
+
+.BenchRequisition-dropdownCheck {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.BenchRequisition-input::placeholder {
+  color: #64748b;
+  font-size: 0.8125rem;
+}
+
+.BenchRequisition-actionRow {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.BenchRequisition-submitBtn {
+  border: none;
+  cursor: pointer;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.9rem;
+}
+
+.BenchRequisition-submitBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.BenchRequisition-hrNote {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.BenchRequisition-hrLink {
+  color: #38bdf8;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.BenchRequisition-hrLink:hover {
+  color: #7dd3fc;
+}
+
+.BenchRequisition-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+}
+
+.BenchRequisition-alertSuccess {
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+
+.BenchRequisition-alertSuccess p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: #a7f3d0;
+}
+
+.BenchRequisition-alertError {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+@media (max-width: 900px) {
+  .BenchRequisition-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .BenchCta-statBox {
+    flex: 1 1 200px;
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .BenchRequisition-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .BenchRequisition-field.full-width {
+    grid-column: span 1;
+  }
+
+  .BenchRequisition-submitBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   TALENT CLOUD / BENCH PAGE – RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* --- Prevent horizontal overflow on the entire page --- */
+.BenchPage-root,
+.BenchPage-main {
+  overflow-x: clip;
+}
+
+/* ========================  TABLET  (max-width: 1024px) ======================== */
+@media (max-width: 1024px) {
+  .BenchHero-section {
+    padding: 4rem 0 3rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .BenchGrid-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  }
+
+  .BenchDossierFeatures-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .BenchGates-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
+
+  .BenchCta-card {
+    grid-template-columns: 1fr;
+    padding: 2.5rem 2rem;
+    gap: 2rem;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .BenchCta-statBox {
+    flex: 1;
+  }
+}
+
+/* ========================  MOBILE  (max-width: 768px) ======================== */
+@media (max-width: 768px) {
+  /* --- Page Root --- */
+  .BenchHero-container,
+  .BenchExplorer-container,
+  .BenchDossierFeatures-container,
+  .BenchGates-container,
+  .BenchCta-container {
+    padding: 0 1rem;
+  }
+
+  /* --- Hero Section --- */
+  .BenchHero-section {
+    padding: 3rem 0 2rem;
+  }
+
+  .BenchHero-badgeWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-livePill {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .BenchHero-title {
+    font-size: clamp(1.65rem, 6vw, 2.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .BenchHero-title br {
+    display: none;
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchHero-slaCard {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .BenchHero-slaTitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .BenchHero-badgeCard {
+    padding: 0.85rem;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-badgeTitle {
+    font-size: 0.8rem;
+  }
+
+  .BenchHero-badgeDesc {
+    font-size: 0.7rem;
+  }
+
+  /* --- Explorer / Filter Bar --- */
+  .BenchExplorer-section {
+    padding: 2rem 0 3rem;
+  }
+
+  .BenchFilter-wrapper {
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.75rem;
+  }
+
+  .BenchFilter-searchBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .BenchFilter-searchInputWrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .BenchFilter-searchInput {
+    font-size: 0.875rem;
+    padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+  }
+
+  .BenchFilter-activeCounter {
+    justify-content: center;
+  }
+
+  .BenchFilter-specialtyPills {
+    gap: 0.5rem;
+    margin: 1rem 0 1rem;
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .BenchFilter-specialtyPills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .BenchFilter-pill {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-dropdownRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .BenchFilter-dropdownGroup,
+  .BenchFilter-dropdownRowBottom {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.85rem;
+  }
+
+  .BenchFilter-selectField {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .BenchFilter-selectLabel {
+    min-width: 90px;
+  }
+
+  .BenchFilter-select {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-customSelectContainer {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .BenchFilter-customTrigger {
+    width: 100%;
+  }
+
+  .BenchFilter-customMenu {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .BenchFilter-sortField {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* --- Candidate Grid --- */
+  .BenchGrid-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* --- Candidate Card --- */
+  .BenchCard-card {
+    padding: 1.35rem;
+    gap: 1rem;
+    border-radius: 14px;
+  }
+
+  .BenchCard-card:hover {
+    transform: none;
+  }
+
+  .BenchCard-header {
+    padding-right: 110px;
+    gap: 0.5rem;
+  }
+
+  .BenchCard-profileRow {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .BenchCard-titleWrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .BenchCard-roleTitle {
+    font-size: 1rem;
+  }
+
+  .BenchCard-rateBox {
+    position: absolute;
+    top: 1.35rem;
+    right: 1.35rem;
+  }
+
+  .BenchCard-metaLine {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-quoteText {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-footer {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .BenchCard-btnSecondary,
+  .BenchCard-btnPrimary {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.8125rem;
+    min-height: 44px;
+  }
+
+  /* --- Dossier Features --- */
+  .BenchDossierFeatures-section {
+    padding: 3rem 0;
+  }
+
+  .BenchDossierFeatures-header {
+    margin-bottom: 2rem;
+    padding: 0 0.25rem;
+  }
+
+  .BenchDossierFeatures-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+
+  .BenchDossierFeatures-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .BenchDossierFeatures-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .BenchDossierFeatures-card {
+    padding: 1.35rem;
+  }
+
+  .BenchDossierFeatures-cardTitle {
+    font-size: 1rem;
+  }
+
+  .BenchDossierFeatures-cardDesc {
+    font-size: 0.8125rem;
+  }
+
+  /* --- Vetting Gates --- */
+  .BenchGates-section {
+    padding: 3rem 0;
+  }
+
+  .BenchGates-header {
+    margin-bottom: 2rem;
+    padding: 0 0.25rem;
+  }
+
+  .BenchGates-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+
+  .BenchGates-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .BenchGates-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .BenchGates-card {
+    padding: 1.35rem;
+  }
+
+  .BenchGates-cardTitle {
+    font-size: 1rem;
+  }
+
+  .BenchGates-detailsList li {
+    font-size: 0.75rem;
+  }
+
+  /* --- CTA Section --- */
+  .BenchCta-section {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .BenchCta-card {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.5rem;
+    gap: 1.75rem;
+    border-radius: 16px;
+  }
+
+  .BenchCta-title {
+    font-size: clamp(1.35rem, 5vw, 1.85rem);
+  }
+
+  .BenchCta-desc {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .BenchCta-btnGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .BenchCta-btnPrimary,
+  .BenchCta-btnSecondary {
+    justify-content: center;
+    padding: 0.85rem 1.25rem;
+    min-height: 48px;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: row;
+    gap: 0.85rem;
+  }
+
+  .BenchCta-statBox {
+    flex: 1;
+    padding: 1rem;
+  }
+
+  .BenchCta-statNumber {
+    font-size: 1.65rem;
+  }
+
+  .BenchCta-statLabel {
+    font-size: 0.75rem;
+  }
+
+  /* --- Dossier Drawer (Full-width on mobile) --- */
+  .BenchDrawer-content {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .BenchDrawer-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .BenchDrawer-headerCode {
+    font-size: 0.65rem;
+  }
+
+  .BenchDrawer-headerTitle {
+    font-size: 1rem;
+  }
+
+  .BenchDrawer-headerSubBadge {
+    font-size: 0.65rem;
+  }
+
+  .BenchDrawer-body {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .BenchDrawer-profileBanner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.25rem;
+  }
+
+  .BenchDrawer-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .BenchDrawer-roleName {
+    font-size: 1.1rem;
+  }
+
+  .BenchDrawer-specRow {
+    font-size: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .BenchDrawer-cardSection {
+    padding: 1rem 1.15rem;
+  }
+
+  .BenchDrawer-sectionTitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchDrawer-formRow {
+    flex-direction: column;
+  }
+
+  .BenchDrawer-bookingCard {
+    padding: 1.25rem;
+  }
+
+  .BenchDrawer-bookingTitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchDrawer-submitBtn {
+    min-height: 48px;
+  }
+}
+
+/* ====================  EXTRA-SMALL PHONES  (max-width: 480px) ==================== */
+@media (max-width: 480px) {
+  .BenchHero-container,
+  .BenchExplorer-container,
+  .BenchDossierFeatures-container,
+  .BenchGates-container,
+  .BenchCta-container {
+    padding: 0 0.75rem;
+  }
+
+  .BenchHero-section {
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .BenchHero-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-badgeCard {
+    padding: 0.75rem;
+  }
+
+  .BenchHero-slaCard {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchHero-slaTag {
+    font-size: 0.65rem;
+  }
+
+  .BenchHero-slaTitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchHero-slaDesc {
+    font-size: 0.8rem;
+  }
+
+  /* Filter */
+  .BenchFilter-wrapper {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .BenchFilter-pill {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .BenchFilter-searchInput {
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-counterBadge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .BenchFilter-counterText {
+    font-size: 0.8rem;
+  }
+
+  /* Cards */
+  .BenchCard-card {
+    padding: 1.15rem;
+    gap: 0.85rem;
+  }
+
+  .BenchCard-header {
+    padding-right: 95px;
+  }
+
+  .BenchCard-codeBadge {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-roleTitle {
+    font-size: 0.9375rem;
+  }
+
+  .BenchCard-rateBox {
+    top: 1.15rem;
+    right: 1.15rem;
+  }
+
+  .BenchCard-rateNum {
+    font-size: 1rem;
+  }
+
+  .BenchCard-scoreSection {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .BenchCard-skillPill {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Dossier Features */
+  .BenchDossierFeatures-card {
+    padding: 1.15rem;
+  }
+
+  .BenchDossierFeatures-step {
+    font-size: 1.05rem;
+  }
+
+  .BenchDossierFeatures-iconWrap {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Gates */
+  .BenchGates-card {
+    padding: 1.15rem;
+  }
+
+  .BenchGates-cardHeader {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* CTA */
+  .BenchCta-card {
+    padding: 1.5rem 1.15rem;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: column;
+  }
+
+  .BenchCta-statNumber {
+    font-size: 1.5rem;
+  }
+
+  /* Drawer */
+  .BenchDrawer-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchDrawer-body {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .BenchDrawer-profileBanner {
+    padding: 1rem;
+  }
+
+  .BenchDrawer-cardSection {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchDrawer-bookingCard {
+    padding: 1rem;
+  }
+
+  .BenchDrawer-formGroup input,
+  .BenchDrawer-formGroup select {
+    font-size: 0.8125rem;
+    padding: 0.55rem 0.75rem;
+  }
+}
+
+/* =================  VERY SMALL PHONES  (max-width: 380px) ================= */
+@media (max-width: 380px) {
+  .BenchHero-livePill {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .BenchHero-title {
+    font-size: 1.3rem;
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-wrapper {
+    padding: 0.85rem;
+  }
+
+  .BenchFilter-pill {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .BenchCard-card {
+    padding: 1rem;
+  }
+
+  .BenchCard-rateBox {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .BenchCard-btnSecondary,
+  .BenchCard-btnPrimary {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .BenchCard-btnSecondary .material-symbols-outlined,
+  .BenchCard-btnPrimary .material-symbols-outlined {
+    font-size: 0.95rem;
+  }
+
+  .BenchDossierFeatures-title,
+  .BenchGates-title {
+    font-size: 1.25rem;
+  }
+
+  .BenchCta-title {
+    font-size: 1.2rem;
+  }
+
+  .BenchCta-btnPrimary,
+  .BenchCta-btnSecondary {
+    font-size: 0.8125rem;
+    padding: 0.75rem 1rem;
+  }
+}

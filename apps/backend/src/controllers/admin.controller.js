@@ -3311,6 +3311,7 @@ export const getCmsArticles = async (req, res) => {
 };
 
 export const createCmsArticle = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const newArt = await articlesStore.createArticle(req.body, req.user);
     inMemoryData.articles = inMemoryArticles;
@@ -3335,6 +3336,7 @@ export const createCmsArticle = async (req, res) => {
 };
 
 export const updateCmsArticle = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
     const updated = await articlesStore.updateArticle(id, req.body, req.user);
@@ -3361,6 +3363,7 @@ export const updateCmsArticle = async (req, res) => {
 };
 
 export const togglePublishCmsArticle = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
     const { article, newStatus } = await articlesStore.togglePublishArticle(id, req.user);
@@ -3388,6 +3391,7 @@ export const togglePublishCmsArticle = async (req, res) => {
 };
 
 export const deleteCmsArticle = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
     const deleted = await articlesStore.deleteArticle(id, req.user);
@@ -3448,6 +3452,7 @@ export const getCmsMedia = async (req, res) => {
 };
 
 export const createCmsMedia = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { title, fileUrl, fileType, fileSizeKb, dimensions, altText } =
       req.body;
@@ -3517,6 +3522,7 @@ export const createCmsMedia = async (req, res) => {
 };
 
 export const deleteCmsMedia = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
 
@@ -3574,6 +3580,7 @@ export const getSeoSettings = async (req, res) => {
 };
 
 export const updateSeoSettings = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { pageId, metaTitle, metaDescription, ogImage, isIndexed } = req.body;
 
@@ -3660,6 +3667,7 @@ export const getAnnouncements = async (req, res) => {
 };
 
 export const createAnnouncement = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { title, message, audience, priority, status, activeUntil } =
       req.body;
@@ -3715,6 +3723,7 @@ export const createAnnouncement = async (req, res) => {
 };
 
 export const togglePublishAnnouncement = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
     const idx = inMemoryData.announcements.findIndex(
@@ -3747,6 +3756,7 @@ export const togglePublishAnnouncement = async (req, res) => {
 };
 
 export const deleteAnnouncement = async (req, res) => {
+  if (!requireProductionDb(res)) return;
   try {
     const { id } = req.params;
 

@@ -124,18 +124,19 @@ export const disconnectMongoDB = async () => {
 };
 
 /**
- * Synchronize compound ESR and partial unique indexes across all registered Mongoose models
+ * Create compound ESR and partial unique indexes across all registered Mongoose models
+ * Uses createIndexes() instead of syncIndexes() to prevent dropping migration-created indexes (P1 Migration Safety)
  */
 export const synchronizeIndexes = async () => {
   if (mongoose.connection.readyState !== 1) return;
   try {
     const models = Object.values(mongoose.models);
     for (const model of models) {
-      if (model && typeof model.syncIndexes === 'function') {
-        await model.syncIndexes();
+      if (model && typeof model.createIndexes === 'function') {
+        await model.createIndexes();
       }
     }
-    console.log('[MongoDB] Production compound indexes synchronized successfully.');
+    console.log('[MongoDB] Production compound indexes created safely without dropping migration indexes.');
   } catch (err) {
     console.warn('[MongoDB] Index synchronization notice:', err.message);
   }

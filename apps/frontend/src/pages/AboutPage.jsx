@@ -1,3 +1,4 @@
+import '../styles/about.css';
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';

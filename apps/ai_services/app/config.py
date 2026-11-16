@@ -25,6 +25,11 @@ class Settings:
     PORT: int = int(os.getenv("PORT", 8000))
     DEBUG: bool = os.getenv("DEBUG", "false").lower() in ("true", "1", "yes")
 
+    # Inter-Service Authentication & Security Restrictions
+    AI_SERVICE_API_KEY: str = os.getenv("AI_SERVICE_API_KEY", "").strip()
+    MAX_UPLOAD_SIZE_BYTES: int = int(os.getenv("MAX_UPLOAD_SIZE_BYTES", 10 * 1024 * 1024))  # 10MB limit
+    PARSER_TIMEOUT_SECONDS: float = float(os.getenv("PARSER_TIMEOUT_SECONDS", "15.0"))
+
     # CORS Allowed Origins
     _DEFAULT_CORS_ORIGINS: List[str] = [
         "http://localhost:5173",

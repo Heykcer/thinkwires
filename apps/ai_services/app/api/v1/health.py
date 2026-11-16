@@ -27,6 +27,7 @@ def get_service_status():
     }
 
 @router.get("/health")
+@router.get("/healthz")
 def health_check():
     """Lightweight Kubernetes / container liveness probe."""
     return {"status": "healthy"}

@@ -135,9 +135,9 @@ export const updateCandidateProfile = async (req, res) => {
       updateFields.technicalSkills = Array.isArray(technicalSkills)
         ? technicalSkills
         : technicalSkills
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean);
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean);
     }
     if (experience !== undefined)
       updateFields.experience = Number(experience) || 0;
@@ -321,10 +321,37 @@ export const applyForJob = async (req, res) => {
       ? uploadedFile.filename
       : req.body.resumeFileName || resumeOriginalName || '';
     const resumePath = uploadedFile ? uploadedFile.path : '';
-    // BOLA-2 Remediation: Only allow genuine uploaded files or candidate's verified existing resume
+    // BOLA-2 & P1 Object Storage Remediation: Upload file to storage before persisting DB reference
     let finalResumeUrl = '';
+    let storageKey = '';
     if (uploadedFile) {
-      finalResumeUrl = `/uploads/resumes/${uploadedFile.filename}`;
+      try {
+        const fileBuffer = await fs.promises.readFile(uploadedFile.path);
+        const uploadResult = await storageService.saveFile(
+          fileBuffer,
+          uploadedFile.originalname || uploadedFile.filename,
+          uploadedFile.mimetype,
+          'resumes'
+        );
+        finalResumeUrl = uploadResult.url;
+        storageKey = uploadResult.key;
+
+        // Clean up temporary local disk file if uploaded to cloud S3/R2
+        if (storageService.driver === 's3' && uploadedFile.path && fs.existsSync(uploadedFile.path)) {
+          fs.promises.unlink(uploadedFile.path).catch(() => { });
+        } else {
+          finalResumeUrl = `/uploads/resumes/${uploadedFile.filename}`;
+          storageKey = `resumes/${uploadedFile.filename}`;
+        }
+      } catch (uploadErr) {
+        if (uploadedFile.path && fs.existsSync(uploadedFile.path)) {
+          fs.promises.unlink(uploadedFile.path).catch(() => { });
+        }
+        return res.status(500).json({
+          success: false,
+          error: `Failed to upload resume to persistent storage: ${uploadErr.message}`,
+        });
+      }
     } else if (candidate && candidate.resumeUrl) {
       if (clientResumeUrl && clientResumeUrl !== candidate.resumeUrl) {
         return res.status(400).json({
@@ -628,7 +655,7 @@ export const applyForJob = async (req, res) => {
           console.error('Async email error:', err.message);
           await JobApplication.findByIdAndUpdate(application._id, {
             emailNotificationStatus: 'Failed',
-          }).catch(() => {});
+          }).catch(() => { });
         });
 
       return res.status(201).json({
@@ -1558,36 +1585,36 @@ export const downloadResume = async (req, res) => {
       }
     }
 
-    if (storageService.driver === 's3') {
-      const remoteUrl = storageService.getFileUrl(safeFilename, 'resumes');
-      return res.redirect(remoteUrl);
-    }
-
     const resumesDir = process.env.VERCEL
       ? path.resolve('/tmp', 'uploads', 'resumes')
       : path.resolve(process.cwd(), 'uploads/resumes');
     const filePath = path.resolve(resumesDir, safeFilename);
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({
-        success: false,
-        error: 'Requested resume document not found.',
-      });
+    // Backward compatibility: If the file exists on local disk, serve it directly
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="${safeFilename}"`);
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+
+      const mimeMap = {
+        '.pdf': 'application/pdf',
+        '.doc': 'application/msword',
+        '.docx':
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      };
+      res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream');
+      return res.sendFile(filePath);
     }
 
-    // Set strict download and nosniff headers
-    res.setHeader('Content-Disposition', `attachment; filename="${safeFilename}"`);
-    res.setHeader('X-Content-Type-Options', 'nosniff');
+    // In cloud S3 / R2 mode, generate authentic time-limited signed download URL
+    if (storageService.driver === 's3') {
+      const signedUrl = storageService.getSignedDownloadUrl(safeFilename, 'resumes', 900);
+      return res.redirect(signedUrl);
+    }
 
-    const mimeMap = {
-      '.pdf': 'application/pdf',
-      '.doc': 'application/msword',
-      '.docx':
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    };
-    res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream');
-
-    return res.sendFile(filePath);
+    return res.status(404).json({
+      success: false,
+      error: 'Requested resume document not found.',
+    });
   } catch (err) {
     console.error('Resume download error:', err);
     return res.status(500).json({

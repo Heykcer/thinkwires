@@ -51,6 +51,9 @@ const resolvePostgresUri = () => {
   if (process.env.DATABASE_URL) {
     return process.env.DATABASE_URL;
   }
+  if (process.env.POSTGRES_URL) {
+    return process.env.POSTGRES_URL;
+  }
   const user = process.env.POSTGRES_USER || process.env.PGUSER;
   const password = process.env.POSTGRES_PASSWORD || process.env.PGPASSWORD;
   const host = process.env.POSTGRES_HOST || process.env.PGHOST || 'localhost';

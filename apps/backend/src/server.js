@@ -13,6 +13,30 @@ import { validateBootEnvironment } from './configs/env.validator.js';
 const PORT = config.PORT || 5000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+/**
+ * Bounded retry policy for canonical MongoDB connection (P0 Backend Reliability)
+ */
+export const connectMongoDBWithRetry = async (maxRetries = 5, retryDelayMs = 2000) => {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    attempt++;
+    try {
+      console.log(`[MongoDB] Connecting to canonical database (attempt ${attempt}/${maxRetries})...`);
+      const conn = await connectMongoDB();
+      console.log('[MongoDB] Connected: canonical primary datastore active.');
+      return conn;
+    } catch (err) {
+      console.error(`[MongoDB] Connection attempt ${attempt} failed: ${err.message}`);
+      if (attempt < maxRetries) {
+        console.log(`[MongoDB] Retrying in ${retryDelayMs / 1000}s...`);
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+      } else {
+        throw new Error(`Failed to establish canonical MongoDB connection after ${maxRetries} attempts: ${err.message}`);
+      }
+    }
+  }
+};
+
 const startServer = async () => {
   // Fail fast on startup if environment schema or secrets are missing/invalid in production (DEP-02)
   if (!process.env.VITEST) {
@@ -22,7 +46,46 @@ const startServer = async () => {
   // Fail fast on startup if JWT_SECRET is missing, insecure, or weak
   getJwtSecret();
 
-  // Start HTTP server immediately bound to 0.0.0.0 for containerized environments (DEP-03)
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  // In production, await canonical MongoDB connection before accepting traffic
+  if (isProduction) {
+    try {
+      await connectMongoDBWithRetry(5, 2000);
+    } catch (err) {
+      console.error('💥 [Server] Critical Startup Failure: Unable to establish canonical MongoDB connection in production.');
+      console.error(err.message);
+      if (!process.env.VITEST) {
+        process.exit(1);
+      }
+      throw err;
+    }
+  } else {
+    // Development / test mode: non-blocking connection attempt allows UI development without local MongoDB
+    connectMongoDB()
+      .then(() => {
+        console.log('[MongoDB] Connected in development mode.');
+      })
+      .catch((error) => {
+        console.warn(
+          '⚠️ [MongoDB] Local connection bypassed/failed in development:',
+          error.message || error
+        );
+        console.log(
+          '[MongoDB] Operating with in-memory fallback store for local development.'
+        );
+      });
+  }
+
+  // Preserve migration-created indexes: do not execute destructive automatic syncIndexes() on startup.
+  // Schema index creation is opt-in via RUN_AUTO_INDEX_SYNC to protect versioned migrations.
+  if (process.env.RUN_AUTO_INDEX_SYNC === 'true') {
+    synchronizeIndexes().catch((err) => {
+      console.warn('[MongoDB] Index synchronization notice:', err.message);
+    });
+  }
+
+  // Start HTTP server (in production, only after primary database connection is verified)
   const server = app.listen(PORT, HOST, () => {
     console.log(
       `[Server] Thinkwires API server running on http://${HOST}:${PORT}`
@@ -51,27 +114,6 @@ const startServer = async () => {
       );
       console.log(
         '[PostgreSQL] Operating with in-memory seed dataset for API routes.'
-      );
-    });
-
-  // MongoDB (Mongoose) - Graceful connection with automatic retry
-  connectMongoDB()
-    .then(async () => {
-      console.log('[MongoDB] Connected: dual-mode active persistence enabled.');
-      await synchronizeIndexes();
-    })
-    .catch((error) => {
-      console.warn(
-        '⚠️ [MongoDB] Initial connection notice:',
-        error.message || error
-      );
-      if (process.env.NODE_ENV === 'production') {
-        console.warn(
-          '⚠️ [MongoDB] Production note: Ensure Render outbound IPs are permitted in your MongoDB Atlas Network Access (0.0.0.0/0 recommended for dynamic cloud containers).'
-        );
-      }
-      console.log(
-        '[MongoDB] Operating with dual-mode in-memory store for Admin & CMS while reconnection proceeds.'
       );
     });
 
@@ -136,4 +178,6 @@ const startServer = async () => {
 
 export { startServer };
 
-startServer();
+if (!process.env.VITEST) {
+  startServer();
+}

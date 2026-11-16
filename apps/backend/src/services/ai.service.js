@@ -1,4 +1,5 @@
 import { createRequire } from 'module';
+import zlib from 'zlib';
 import config from '../configs/dotenv.js';
 
 const require = createRequire(import.meta.url);
@@ -107,6 +108,58 @@ export const sanitizeUntrustedText = (text = '') => {
 };
 
 /**
+ * Extracts plain text from DOCX document buffer via standard zip inflator (P1 Document Parsing)
+ */
+export const extractTextFromDocxBuffer = (buffer) => {
+  if (!buffer || buffer.length < 30) return '';
+  // Check ZIP signature PK\x03\x04
+  if (buffer[0] !== 0x50 || buffer[1] !== 0x4b || buffer[2] !== 0x03 || buffer[3] !== 0x04) {
+    return '';
+  }
+  try {
+    let offset = 0;
+    while (offset + 30 <= buffer.length) {
+      if (buffer.readUInt32LE(offset) !== 0x04034b50) {
+        break;
+      }
+      const compMethod = buffer.readUInt16LE(offset + 8);
+      const compSize = buffer.readUInt32LE(offset + 18);
+      const nameLen = buffer.readUInt16LE(offset + 26);
+      const extraLen = buffer.readUInt16LE(offset + 28);
+      const fileName = buffer.toString('utf8', offset + 30, offset + 30 + nameLen);
+      const dataOffset = offset + 30 + nameLen + extraLen;
+
+      if (fileName === 'word/document.xml' && dataOffset + compSize <= buffer.length) {
+        const compressedData = buffer.subarray(dataOffset, dataOffset + compSize);
+        let xmlStr = '';
+        if (compMethod === 8) {
+          xmlStr = zlib.inflateRawSync(compressedData).toString('utf8');
+        } else if (compMethod === 0) {
+          xmlStr = compressedData.toString('utf8');
+        }
+        if (xmlStr) {
+          return xmlStr
+            .replace(/<\/w:p>/g, '\n')
+            .replace(/<w:br[^>]*>/g, '\n')
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'")
+            .replace(/[ \t]+/g, ' ')
+            .trim();
+        }
+      }
+      offset = dataOffset + compSize;
+    }
+  } catch (err) {
+    console.warn('DOCX ZIP extraction notice:', err.message);
+  }
+  return '';
+};
+
+/**
  * AI Service Integration Client
  * Communicates with the FastAPI AI Microservice on port 8000.
  * Includes resilient fallbacks to ensure uninterrupted candidate portal operations
@@ -131,6 +184,18 @@ class AIServiceClient {
   }
 
   /**
+   * Generates authentication headers for inter-service backend-to-AI requests
+   */
+  getAuthHeaders(baseHeaders = {}) {
+    const headers = { ...baseHeaders };
+    const apiKey = process.env.AI_SERVICE_API_KEY || config.AI_SERVICE_API_KEY;
+    if (apiKey) {
+      headers['X-API-Key'] = apiKey;
+    }
+    return headers;
+  }
+
+  /**
    * Parse resume file or text into structured candidate fields
    * @param {Buffer|null} fileBuffer - Binary buffer of uploaded resume file
    * @param {string} originalname - Original file name (e.g. resume.pdf)
@@ -152,6 +217,7 @@ class AIServiceClient {
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
+          headers: this.getAuthHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -170,6 +236,7 @@ class AIServiceClient {
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
+          headers: this.getAuthHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -215,7 +282,7 @@ class AIServiceClient {
     try {
       const response = await fetch(this.resolveUrl('api/resume/match-score'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(8000),
       });
@@ -250,7 +317,7 @@ class AIServiceClient {
     try {
       const response = await fetch(this.resolveUrl('api/screening/evaluate-candidate'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(10000),
       });
@@ -336,7 +403,7 @@ class AIServiceClient {
         this.resolveUrl('api/screening/generate-test'),
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }
@@ -371,7 +438,7 @@ class AIServiceClient {
         this.resolveUrl('api/screening/evaluate-test'),
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }
@@ -402,10 +469,11 @@ class AIServiceClient {
     let text = rawText || '';
 
     if (!text && fileBuffer) {
+      const lowerName = (originalname || '').toLowerCase();
       if (
         pdfParse &&
-        (originalname.toLowerCase().endsWith('.pdf') ||
-          !originalname.includes('.'))
+        (lowerName.endsWith('.pdf') || !lowerName.includes('.')) &&
+        fileBuffer.slice(0, 5).toString() === '%PDF-'
       ) {
         try {
           const parser = new pdfParse.PDFParse({ data: fileBuffer });
@@ -414,7 +482,13 @@ class AIServiceClient {
         } catch (pdfErr) {
           console.warn('Node PDF extraction error:', pdfErr.message);
         }
+      } else if (lowerName.endsWith('.docx') || (fileBuffer[0] === 0x50 && fileBuffer[1] === 0x4b)) {
+        text = extractTextFromDocxBuffer(fileBuffer);
+      } else if (lowerName.endsWith('.doc')) {
+        // Legacy OLE2 DOC files: extract printable ASCII/Latin1 text safely
+        text = fileBuffer.toString('latin1').replace(/[^\x20-\x7E\t\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
       }
+
       if (!text) {
         try {
           text = fileBuffer.toString('utf-8');
@@ -867,8 +941,8 @@ class AIServiceClient {
     const techGaps =
       missingSkills.length > 0
         ? missingSkills.map(
-            (m) => `Mandatory requirement ${m} lacks explicit production evidence in resume.`
-          )
+          (m) => `Mandatory requirement ${m} lacks explicit production evidence in resume.`
+        )
         : ['No critical mandatory skill gaps identified in submitted profile.'];
 
     const operationalRisks = [

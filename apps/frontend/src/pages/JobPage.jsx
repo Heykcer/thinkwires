@@ -1,3 +1,4 @@
+import '../styles/jobs.css';
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
