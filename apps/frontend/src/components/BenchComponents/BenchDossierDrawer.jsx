@@ -286,8 +286,8 @@ const BenchDossierDrawer = () => {
       r.skill && r.jdRequirement && r.jdRequirement !== r.skill
         ? r.jdRequirement
         : r.jdRequirement && r.jdRequirement !== skillName
-          ? r.jdRequirement
-          : `Mandatory technical proficiency in ${skillName}`;
+        ? r.jdRequirement
+        : `Mandatory technical proficiency in ${skillName}`;
     const statusText = r.status || (r.fit ? `${r.fit} Match` : 'Strong Match');
     return {
       ...r,
@@ -309,8 +309,8 @@ const BenchDossierDrawer = () => {
   const clientSummary = Array.isArray(rawSummary) && rawSummary.length > 0
     ? rawSummary.slice(0, 4)
     : typeof rawSummary === 'string' && rawSummary.trim().length > 0
-      ? [rawSummary]
-      : [
+    ? [rawSummary]
+    : [
         `${selectedTalent.role} with ${selectedTalent.yearsExp || 'senior'} verified experience in distributed systems.`,
         `Demonstrated technical mastery across ${((selectedTalent.skills || []).slice(0, 4)).join(', ')}.`,
         `Cleared multi-stage Thinkwires system design defenses and live technical audits with ${matchScore}/100 benchmark.`,
@@ -330,19 +330,19 @@ const BenchDossierDrawer = () => {
 
     const matrixHtml = matrix.length > 0
       ? matrix
-        .map((r) => {
-          const isStrong = String(r.status).toLowerCase().includes('strong');
-          const isPartial = String(r.status).toLowerCase().includes('partial');
-          const statusColor = isStrong ? '#15803D' : isPartial ? '#854D0E' : '#B91C1C';
-          return `
+          .map((r) => {
+            const isStrong = String(r.status).toLowerCase().includes('strong');
+            const isPartial = String(r.status).toLowerCase().includes('partial');
+            const statusColor = isStrong ? '#15803D' : isPartial ? '#854D0E' : '#B91C1C';
+            return `
             <tr>
               <td style="padding: 4px 8px; border: 1px solid #CBD5E1; font-weight: 600; color: #0F172A;">${escapeHtml(r.skill)}</td>
               <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${escapeHtml(r.jdRequirement)}</td>
               <td style="padding: 4px 8px; border: 1px solid #CBD5E1; color: #334155;">${escapeHtml(r.candidateEvidence)}</td>
               <td style="padding: 4px 8px; border: 1px solid #CBD5E1; text-align: center; font-weight: 700; color: ${statusColor};">${escapeHtml(r.status)}</td>
             </tr>`;
-        })
-        .join('')
+          })
+          .join('')
       : '<tr><td colspan="4" style="text-align: center; padding: 8px; color: #64748B;">Core technical alignment verified against requisition criteria.</td></tr>';
 
     const printStrengths = strengths.length > 0 ? strengths : [
@@ -535,8 +535,8 @@ const BenchDossierDrawer = () => {
                     <td>${escapeHtml(q.prompt)}</td>
                     <td>
                       ${q.type === 'mcq'
-        ? `Option ${q.candidateAnswer !== null && q.candidateAnswer !== undefined ? Number(q.candidateAnswer) + 1 : 'N/A'} - ${escapeHtml(q.explanation || '')}`
-        : `"${escapeHtml(q.candidateAnswerText || '')}"<br><span style="color: #0037B0;">Verdict:</span> ${escapeHtml(q.evaluatorFeedback || '')}`}
+                        ? `Option ${q.candidateAnswer !== null && q.candidateAnswer !== undefined ? Number(q.candidateAnswer) + 1 : 'N/A'} - ${escapeHtml(q.explanation || '')}`
+                        : `"${escapeHtml(q.candidateAnswerText || '')}"<br><span style="color: #0037B0;">Verdict:</span> ${escapeHtml(q.evaluatorFeedback || '')}`}
                     </td>
                     <td style="text-align: center; font-weight: 700; color: ${q.isCorrect ? '#15803D' : '#B91C1C'};">
                       ${Number(q.pointsEarned) || 0} / ${Number(q.pointsPossible) || 0}

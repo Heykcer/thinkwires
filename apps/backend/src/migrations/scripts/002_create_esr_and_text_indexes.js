@@ -145,6 +145,6 @@ export const down = async ({ db }) => {
   for (const { col, idx } of drops) {
     try {
       await db.collection(col).dropIndex(idx);
-    } catch { }
+    } catch {}
   }
 };

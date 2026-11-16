@@ -51,16 +51,16 @@ export const down = async ({ db }) => {
       .dropIndex('department_1_location_1_workMode_1');
     await db.collection('jobrequirements').dropIndex('status_1');
     await db.collection('jobrequirements').dropIndex('requiredSkills_1');
-  } catch { }
+  } catch {}
   try {
     await db.collection('candidates').dropIndex('technicalSkills_1');
     await db.collection('candidates').dropIndex('experience_1');
     await db.collection('candidates').dropIndex('status_1');
-  } catch { }
+  } catch {}
   try {
     await db.collection('articles').dropIndex('category_1_status_1');
-  } catch { }
+  } catch {}
   try {
     await db.collection('pages').dropIndex('category_1_status_1');
-  } catch { }
+  } catch {}
 };

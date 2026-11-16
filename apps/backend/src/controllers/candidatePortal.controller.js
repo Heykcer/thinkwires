@@ -135,9 +135,9 @@ export const updateCandidateProfile = async (req, res) => {
       updateFields.technicalSkills = Array.isArray(technicalSkills)
         ? technicalSkills
         : technicalSkills
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean);
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
     }
     if (experience !== undefined)
       updateFields.experience = Number(experience) || 0;
@@ -338,14 +338,14 @@ export const applyForJob = async (req, res) => {
 
         // Clean up temporary local disk file if uploaded to cloud S3/R2
         if (storageService.driver === 's3' && uploadedFile.path && fs.existsSync(uploadedFile.path)) {
-          fs.promises.unlink(uploadedFile.path).catch(() => { });
+          fs.promises.unlink(uploadedFile.path).catch(() => {});
         } else {
           finalResumeUrl = `/uploads/resumes/${uploadedFile.filename}`;
           storageKey = `resumes/${uploadedFile.filename}`;
         }
       } catch (uploadErr) {
         if (uploadedFile.path && fs.existsSync(uploadedFile.path)) {
-          fs.promises.unlink(uploadedFile.path).catch(() => { });
+          fs.promises.unlink(uploadedFile.path).catch(() => {});
         }
         return res.status(500).json({
           success: false,
@@ -655,7 +655,7 @@ export const applyForJob = async (req, res) => {
           console.error('Async email error:', err.message);
           await JobApplication.findByIdAndUpdate(application._id, {
             emailNotificationStatus: 'Failed',
-          }).catch(() => { });
+          }).catch(() => {});
         });
 
       return res.status(201).json({

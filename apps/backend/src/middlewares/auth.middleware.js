@@ -102,8 +102,8 @@ export const requireAuth = (
           const dbUser = mongoose.Types.ObjectId.isValid(decoded.id)
             ? await UserMongo.findById(decoded.id).select('+tokenVersion -password').lean()
             : await UserMongo.findOne({ email: decoded.email.toLowerCase() })
-              .select('+tokenVersion -password')
-              .lean();
+                .select('+tokenVersion -password')
+                .lean();
 
           if (dbUser) {
             if (dbUser.isActive === false) {

@@ -941,8 +941,8 @@ class AIServiceClient {
     const techGaps =
       missingSkills.length > 0
         ? missingSkills.map(
-          (m) => `Mandatory requirement ${m} lacks explicit production evidence in resume.`
-        )
+            (m) => `Mandatory requirement ${m} lacks explicit production evidence in resume.`
+          )
         : ['No critical mandatory skill gaps identified in submitted profile.'];
 
     const operationalRisks = [
