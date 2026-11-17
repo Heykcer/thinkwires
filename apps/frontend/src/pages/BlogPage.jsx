@@ -1,4 +1,3 @@
-import '../styles/blog.css';
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';

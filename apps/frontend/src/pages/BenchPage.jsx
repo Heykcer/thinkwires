@@ -1,5 +1,3 @@
-import '../styles/bench_cloud.css';
-import '../styles/bench.css';
 import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';

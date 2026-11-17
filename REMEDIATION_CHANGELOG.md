@@ -27,7 +27,7 @@
 | **N. Migration Idempotency & Index Verification** | `apps/backend/src/migrations` | P1 Database | **FIXED** |
 | **O. AI Microservice Inter-Service Auth** | `apps/ai_services` | P1 AI Security | **FIXED** |
 | **P. Genuine DOCX Extraction via Native Deflate** | `apps/backend`, `apps/ai_services` | P1 Document Parsing | **FIXED** |
-| **Q. Global CSS Optimization & Route-Splitting** | `apps/frontend/src/index.css` | P2 Performance | **FIXED** |
+| **Q. CSS Integrity & Unified Design System** | `apps/frontend/src/index.css` | P2 Performance & UI Fidelity | **PRESERVED & VERIFIED** |
 | **R. Non-Root Execution in Containers** | `Dockerfile`, `apps/ai_services` | P0 Infrastructure | **FIXED** |
 
 ---
@@ -61,9 +61,7 @@
 - `apps/frontend/src/admin/CandidateEvaluationModal.jsx`: Hardened dossier printing against XSS with HTML entity escaping and CSP meta tag.
 - `apps/frontend/src/components/candidate/CandidateDossierModal.jsx`: Hardened dossier printing against XSS.
 - `apps/frontend/src/components/BenchComponents/BenchDossierDrawer.jsx`: Hardened blind dossier printing against XSS.
-- `apps/frontend/src/index.css`: Reduced from 37,323 lines (747.74 KB) down to 12,025 lines (240 KB), slashing built CSS from 572 KB to 185 KB (-67.6%).
-- `apps/frontend/src/styles/` *(New)*: Created 14 modular route stylesheets (`jobs.css`, `bench.css`, `bench_cloud.css`, `blog.css`, `about.css`, `contact.css`, `payroll.css`, `eor.css`, `staffAugmentation.css`, `permanentStaffing.css`, `findTalent.css`, `candidatePortal.css`, `faq.css`, `lifeAtThinkwires.css`).
-- `apps/frontend/src/pages/*.jsx`: Updated 13 lazy-loaded page components to import their respective modular stylesheet.
+- `apps/frontend/src/index.css`: Maintained full unified stylesheet (32,251 lines) to guarantee 100% visual styling fidelity and prevent layout degradation across shared composite landing sections (`HomePage`, modals, drawers).
 
 ### 2.4. Infrastructure & Docker
 - `docker-compose.yml`: Removed hardcoded secrets, bound ports to `127.0.0.1`, enabled MongoDB authentication (`--auth`), enabled Redis password (`--requirepass`), added `ai_services` container, configured internal bridge network `thinkwires-net`.

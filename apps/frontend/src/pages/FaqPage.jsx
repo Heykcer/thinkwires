@@ -1,4 +1,3 @@
-import '../styles/faq.css';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, Link } from 'react-router-dom';
