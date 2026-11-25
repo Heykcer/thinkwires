@@ -531,7 +531,8 @@ const LifeAtThinkwires = () => {
 
           {activeGalleryCategory === 'All' ? (
             /* 5-Column Staggered Editorial Layout (Noir Reference Style) */
-            <div className="TW-GalleryNoir-grid">
+            <>
+              <div className="TW-GalleryNoir-grid">
               {/* Column 1: Editorial Headline Block + Photo 1 */}
               <div className="TW-GalleryNoir-col TW-GalleryNoir-col--1">
                 <div className="TW-GalleryNoir-headerCard">
@@ -800,6 +801,43 @@ const LifeAtThinkwires = () => {
                 )}
               </div>
             </div>
+
+            {/* Extended Gallery Grid for Additional Real Company Moments */}
+            {filteredGalleryItems.length > 8 && (
+              <div className="TW-GalleryNoir-secondaryGrid">
+                {filteredGalleryItems.slice(8).map((photo, index) => {
+                  const realIndex = 8 + index;
+                  return (
+                    <div
+                      key={photo.id}
+                      className="TW-GalleryCard-root TW-GalleryCard--secondary"
+                      onClick={() => setActiveGalleryIndex(realIndex)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setActiveGalleryIndex(realIndex);
+                        }
+                      }}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Open photo: ${photo.title}`}
+                    >
+                      <img
+                        src={photo.src}
+                        alt={photo.title}
+                        className="TW-GalleryCard-img"
+                        loading="lazy"
+                      />
+                      <div className="TW-GalleryCard-overlay">
+                        <span className="TW-GalleryCard-category">{photo.category}</span>
+                        <h4 className="TW-GalleryCard-title">{photo.title}</h4>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
           ) : (
             /* Filtered Category Grid */
             <div>

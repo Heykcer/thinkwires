@@ -162,7 +162,7 @@ describe('LifeAtThinkwires Component (Comprehensive Culture & Experience Tests)'
     // Open first photo
     fireEvent.click(galleryCards[0]);
 
-    const lightbox = screen.getByRole('dialog', { name: /Engineering Team Hub & Daily Standup/i });
+    const lightbox = screen.getByRole('dialog', { name: /Thinkwires Global Delivery Floor/i });
     expect(lightbox).toBeInTheDocument();
     expect(within(lightbox).getByText(/Photo 1 of/i)).toBeInTheDocument();
 
