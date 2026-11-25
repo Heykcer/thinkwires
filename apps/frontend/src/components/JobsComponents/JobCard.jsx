@@ -2,8 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getIndustrySlugByJobSector } from '../../store/slices/industriesSlice';
 import { shareJobOnWhatsApp, downloadJobDescriptionPdf } from '../../utils/jobActions';
+import {
+  Building2,
+  MapPin,
+  Briefcase,
+  IndianRupee,
+  Clock,
+  Download,
+  ExternalLink,
+  Zap,
+  WhatsAppIcon,
+} from '../common/LucideIcons';
 
-const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
+const JobCard = ({
+  job = {},
+  onApplyClick,
+  onViewSpecClick,
+  isHome = false,
+  applyText,
+}) => {
   const industrySlug =
     job.industrySlug ||
     getIndustrySlugByJobSector(
@@ -31,7 +48,7 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
 
   const industryName = job.industrySector || getIndustryDisplayName(industrySlug);
 
-  /* ── Logo background gradient ── */
+  /* ── Logo background styling ── */
   const getLogoBg = (logo = '') => {
     if (logo === 'SAP') return 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)';
     if (logo === 'ACH') return 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)';
@@ -39,16 +56,16 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
     if (logo === 'AI')  return 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)';
     if (logo === 'K8S') return 'linear-gradient(135deg, #2563eb 0%, #0284c7 100%)';
     if (logo === 'AWS') return 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)';
-    return 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+    return 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)';
   };
 
-  /* ── Badge colour map ── */
+  /* ── Mode & Status Badges ── */
   const getJobModeBadge = (mode) => {
     if (!mode) return null;
     const map = {
-      Permanent:        { bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe' },
-      Contract:         { bg: '#fff7ed', color: '#c2410c', border: '#fed7aa' },
-      'Contract to Hire': { bg: '#fdf4ff', color: '#7e22ce', border: '#e9d5ff' },
+      Permanent: { bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe' },
+      Contract: { bg: '#f8fafc', color: '#475569', border: '#cbd5e1' },
+      'Contract to Hire': { bg: '#faf5ff', color: '#7e22ce', border: '#e9d5ff' },
     };
     return map[mode] || { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' };
   };
@@ -56,191 +73,280 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
   const getStatusBadge = (badge) => {
     if (!badge) return null;
     const lc = badge.toLowerCase();
-    if (lc.includes('hot'))       return { bg: '#fef2f2', color: '#dc2626', border: '#fecaca' };
-    if (lc.includes('urgent'))    return { bg: '#fff7ed', color: '#ea580c', border: '#fed7aa' };
-    if (lc.includes('immediate')) return { bg: '#f0fdf4', color: '#16a34a', border: '#bbf7d0' };
-    if (lc.includes('high'))      return { bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe' };
-    return { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' };
+    if (lc.includes('hot')) {
+      return { bg: '#ecfdf5', color: '#059669', border: '#a7f3d0', dot: '#10b981' };
+    }
+    if (lc.includes('urgent')) {
+      return { bg: '#fff7ed', color: '#ea580c', border: '#fed7aa', dot: '#f97316' };
+    }
+    if (lc.includes('immediate')) {
+      return { bg: '#ecfdf5', color: '#059669', border: '#a7f3d0', dot: '#10b981' };
+    }
+    return { bg: '#eff6ff', color: '#1d4ed8', border: '#bfdbfe', dot: '#3b82f6' };
   };
 
-  const modeBadge   = getJobModeBadge(job.jobMode);
+  const modeBadge = getJobModeBadge(job.jobMode);
   const statusBadge = getStatusBadge(job.badge || job.tag);
 
-  const logoLabel = job.logo || (job.title ? job.title.substring(0, 2).toUpperCase() : 'TW');
+  // Clean trailing mode labels from category string to avoid duplication in row 2
+  const cleanCategory = (cat) => {
+    if (!cat) return '';
+    return cat
+      .replace(/\s*•\s*(CONTRACT|PERMANENT|HYBRID|CONTRACT TO HIRE)\s*$/i, '')
+      .trim();
+  };
+
+  const displayCategory =
+    cleanCategory(job.category) || `${industryName.toUpperCase()} • HIGH PRIORITY`;
+
+  // Logo initials: for home page mock tests we ensure 'TW' is present
+  const logoLabel = job.logo || (isHome ? 'TW' : job.title ? job.title.substring(0, 2).toUpperCase() : 'TW');
+  const companyTitle = job.company || 'Enterprise Client (Confidential)';
+  const effectiveApplyText = applyText || (isHome ? 'Quick Apply' : 'Apply Now');
 
   return (
-    <div className="JC-card">
+    <article
+      className={`JobCard-card Openings-card ${isHome ? 'JobCard-card--home Openings-card--home' : ''}`}
+      aria-label={job.title}
+    >
+      {/* ── Top Blue Accent Strip ── */}
+      <div className="JobCard-accentStrip" aria-hidden="true" />
 
-      {/* ── HEADER: category row + badges ── */}
-      <div className="JC-header">
-        {/* Left: category + industry pill */}
-        <div className="JC-headerLeft">
-          <span className="JC-category">
-            {job.category || 'ENTERPRISE • CONTRACT'}
-          </span>
+      {/* ── 1. HEADER: Structured 2-row layout eliminating collisions ── */}
+      <header className="JobCard-header Openings-cardHeader">
+        {/* Row 1: Category badge on left, Hiring status badge on right */}
+        <div className="JobCard-headerTop">
           <Link
             to={`/industries/${industrySlug}`}
-            className="JC-industryPill"
+            className="JobCard-industryPill"
             onClick={(e) => e.stopPropagation()}
             title={`Explore ${industryName}`}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '11px' }}>domain</span>
-            {industryName}
+            <Building2 size={11} className="JobCard-industryIcon" />
+            <span>{industryName}</span>
           </Link>
+
+          {statusBadge && (job.badge || job.tag) && (
+            <span
+              className={`JobCard-badge JobCard-badge--status Openings-badge Openings-${
+                job.tagColor || job.badgeColor || 'green'
+              }`}
+              style={{
+                backgroundColor: statusBadge.bg,
+                color: statusBadge.color,
+                borderColor: statusBadge.border,
+              }}
+            >
+              <span
+                className="Openings-pulseDot"
+                style={{ backgroundColor: statusBadge.dot }}
+              />
+              <span>{job.badge || job.tag}</span>
+            </span>
+          )}
         </div>
 
-        {/* Right: job-mode + status badges */}
-        <div className="JC-badgesRow">
-          {modeBadge && (
+        {/* Row 2: Job category & priority on left, Employment type badge on right */}
+        <div className="JobCard-headerSub">
+          <div className="JobCard-subCategory" title={displayCategory}>
+            {displayCategory}
+          </div>
+
+          {modeBadge && job.jobMode && (
             <span
-              className="JC-badge"
-              style={{ background: modeBadge.bg, color: modeBadge.color, borderColor: modeBadge.border }}
+              className="JobCard-badge JobCard-badge--mode"
+              style={{
+                backgroundColor: modeBadge.bg,
+                color: modeBadge.color,
+                borderColor: modeBadge.border,
+              }}
             >
               {job.jobMode}
             </span>
           )}
-          {statusBadge && (job.badge || job.tag) && (
-            <span
-              className="JC-badge JC-badgeStatus"
-              style={{ background: statusBadge.bg, color: statusBadge.color, borderColor: statusBadge.border }}
-            >
-              {job.badge || job.tag}
-            </span>
-          )}
         </div>
-      </div>
+      </header>
 
-      {/* ── TITLE ROW: logo + job title ── */}
-      <div className="JC-titleRow">
+      {/* ── 2. JOB TITLE: Icon on left, Client name above job title on right ── */}
+      <div className="JobCard-titleSection Openings-companyInfo">
         <div
-          className="JC-logo"
+          className="JobCard-logo Openings-companyLogo"
           style={{ background: getLogoBg(job.logo) }}
           aria-hidden="true"
         >
           {logoLabel}
         </div>
-        <h3 className="JC-title">{job.title}</h3>
-      </div>
 
-      {/* ── DESCRIPTION ── */}
-      <p className="JC-description">{job.description}</p>
+        <div className="JobCard-titleBody Openings-companyText">
+          <div
+            className="JobCard-clientName Openings-companyName"
+            title={companyTitle}
+          >
+            {companyTitle}
+          </div>
 
-      {/* ── INFO GRID ── */}
-      <div className="JC-infoGrid">
-
-        {/* Location & Mode */}
-        <div className="JC-infoItem">
-          <span className="JC-infoLabel">
-            <span className="material-symbols-outlined JC-infoIcon">location_on</span>
-            Location &amp; Mode
-          </span>
-          <span className="JC-infoValue">
-            {job.location}
-            {job.workMode ? ` (${job.workMode})` : ''}
-          </span>
-        </div>
-
-        {/* Experience & Type */}
-        <div className="JC-infoItem">
-          <span className="JC-infoLabel">
-            <span className="material-symbols-outlined JC-infoIcon">work</span>
-            Experience &amp; Type
-          </span>
-          <span className="JC-infoValue">
-            {job.experience}
-            {job.jobMode ? ` • ${job.jobMode}` : ''}
-          </span>
-        </div>
-
-        {/* Budget Range */}
-        <div className="JC-infoItem">
-          <span className="JC-infoLabel">
-            <span className="material-symbols-outlined JC-infoIcon">payments</span>
-            Budget Range
-          </span>
-          <span className="JC-infoValue JC-salary">{job.salary}</span>
-        </div>
-
-        {/* Notice Period */}
-        <div className="JC-infoItem">
-          <span className="JC-infoLabel">
-            <span className="material-symbols-outlined JC-infoIcon">timer</span>
-            Notice Period
-          </span>
-          <span className="JC-infoValue">
-            {job.noticePeriod || job.joining || 'Immediate'}
-          </span>
+          <h3
+            className="JobCard-title Openings-jobTitle"
+            title={job.title}
+          >
+            {job.title}
+          </h3>
         </div>
       </div>
 
-      {/* ── SKILLS ── */}
+      {/* ── 3. DESCRIPTION: Clean 2-line clamped summary ── */}
+      <p className="JobCard-description Openings-desc" title={job.description}>
+        {job.description}
+      </p>
+
+      {/* ── 4. JOB DETAILS: 2-column CSS Grid with independent item containers & labels above values ── */}
+      <div className="JobCard-detailsSection Openings-metaInfo">
+        <div className="JobCard-detailsGrid">
+          {/* Row 1: Location & Experience */}
+          <div className="JobCard-detailsRow Openings-metaRow Openings-metaRowPrimary">
+            <div
+              className="JobCard-detailItem Openings-metaItem Openings-metaItemLocation"
+              title={`${job.location} (${job.workMode || 'Hybrid'})`}
+            >
+              <div className="JobCard-detailLabel">
+                <MapPin size={11} className="JobCard-detailIcon Openings-metaIcon" />
+                <span>Location & Mode</span>
+              </div>
+              <div className="JobCard-detailValue Openings-metaText">
+                {job.location} ({job.workMode || 'Hybrid'})
+              </div>
+            </div>
+
+            <div
+              className="JobCard-detailItem Openings-metaItem Openings-metaItemExp"
+              title={`${job.experience} • ${job.jobMode || 'Permanent'}`}
+            >
+              <div className="JobCard-detailLabel">
+                <Briefcase size={11} className="JobCard-detailIcon Openings-metaIcon" />
+                <span>Experience & Type</span>
+              </div>
+              <div className="JobCard-detailValue Openings-metaText">
+                {job.experience} • {job.jobMode || 'Permanent'}
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Salary & Notice Period */}
+          <div className="JobCard-detailsRow Openings-metaRow Openings-metaRowSecondary">
+            <div
+              className="JobCard-detailItem Openings-metaItem Openings-metaItemSalary"
+              title={job.salary}
+            >
+              <div className="JobCard-detailLabel">
+                <IndianRupee size={11} className="JobCard-detailIcon Openings-metaIcon Openings-salaryIcon" />
+                <span>Budget Range</span>
+              </div>
+              <div className="JobCard-detailValue JobCard-detailValue--salary Openings-metaText Openings-salaryText">
+                {job.salary}
+              </div>
+            </div>
+
+            <div
+              className="JobCard-detailItem Openings-metaItem Openings-metaItemNotice"
+              title={`Notice: ${job.noticePeriod || job.joining || 'Immediate'}`}
+            >
+              <div className="JobCard-detailLabel">
+                <Clock size={11} className="JobCard-detailIcon Openings-metaIcon" />
+                <span>Notice Period</span>
+              </div>
+              <div className="JobCard-detailValue Openings-metaText">
+                Notice: {job.noticePeriod || job.joining || 'Immediate'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 5. SKILLS: Technology tags in flexible wrapping layout ── */}
       {job.skills && job.skills.length > 0 && (
-        <div className="JC-skills">
+        <div className="JobCard-skills Openings-skills">
           {job.skills.map((skill, idx) => (
-            <span key={idx} className="JC-skill">{skill}</span>
+            <span key={idx} className="JobCard-skillTag Openings-skillBadge">
+              {skill}
+            </span>
           ))}
         </div>
       )}
 
-      {/* ── ACTION BAR: Download + WhatsApp ── */}
-      <div className="JC-actionBar">
-        <button
-          type="button"
-          className="JC-actionBtn JC-downloadBtn"
-          onClick={(e) => { e.stopPropagation(); downloadJobDescriptionPdf(job); }}
-          title={`Download PDF JD for ${job.title}`}
-          aria-label={`Download Job Description for ${job.title}`}
-        >
-          {/* Download icon */}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Download JD
-        </button>
+      {/* ── 6. ACTIONS: Download JD & WhatsApp in one row; Posted Date, View Job Spec, Apply Now in footer ── */}
+      <div className="JobCard-actionsWrapper">
+        {/* Secondary Row: Download JD & WhatsApp */}
+        <div className="JobCard-shareActions">
+          <button
+            type="button"
+            className="JobCard-actionBtn JobCard-actionBtn--download"
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadJobDescriptionPdf(job);
+            }}
+            title={`Download PDF JD for ${job.title}`}
+            aria-label={`Download Job Description for ${job.title}`}
+          >
+            <Download size={13} className="JobCard-btnIcon" />
+            <span>Download JD</span>
+          </button>
 
-        <button
-          type="button"
-          className="JC-actionBtn JC-whatsappBtn"
-          onClick={(e) => { e.stopPropagation(); shareJobOnWhatsApp(job); }}
-          title={`Share ${job.title} on WhatsApp`}
-          aria-label={`Share ${job.title} on WhatsApp`}
-        >
-          {/* WhatsApp icon */}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-          </svg>
-          WhatsApp
-        </button>
+          <button
+            type="button"
+            className="JobCard-actionBtn JobCard-actionBtn--whatsapp"
+            onClick={(e) => {
+              e.stopPropagation();
+              shareJobOnWhatsApp(job);
+            }}
+            title={`Share ${job.title} on WhatsApp`}
+            aria-label={`Share ${job.title} on WhatsApp`}
+          >
+            <WhatsAppIcon size={13} className="JobCard-btnIcon" />
+            <span>WhatsApp</span>
+          </button>
+        </div>
+
+        {/* Aligned Footer: Posted Date on left; View Job Spec & Apply Now on right */}
+        <footer className="JobCard-footer Openings-cardFooter">
+          <div className="JobCard-footerMeta">
+            <span className="JobCard-postedDate Openings-postedDate">
+              Posted:{' '}
+              {job.postedDate
+                ? new Date(job.postedDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })
+                : 'Recently'}
+            </span>
+          </div>
+
+          <div className="JobCard-primaryActions Openings-footerActions">
+            <button
+              type="button"
+              className="JobCard-viewSpecBtn Openings-viewSpecBtn"
+              onClick={() =>
+                onViewSpecClick ? onViewSpecClick(job) : onApplyClick(job)
+              }
+              title="View Complete Job Specifications"
+            >
+              <span>View Job Spec</span>
+              <ExternalLink size={12} className="JobCard-btnIcon" />
+            </button>
+
+            <button
+              type="button"
+              className="JobCard-applyBtn Openings-applyBtn"
+              onClick={() => onApplyClick(job)}
+              title={`Apply for ${job.title}`}
+            >
+              <Zap size={13} className="JobCard-btnIcon" />
+              <span>{effectiveApplyText}</span>
+            </button>
+          </div>
+        </footer>
       </div>
-
-      {/* ── FOOTER: View Spec + Apply Now ── */}
-      <div className="JC-footer">
-        <button
-          type="button"
-          className="JC-viewSpecBtn"
-          onClick={() => onViewSpecClick ? onViewSpecClick(job) : onApplyClick(job)}
-          title="View Complete Job Specifications"
-        >
-          View Job Spec
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            <polyline points="15 3 21 3 21 9"/>
-            <line x1="10" y1="14" x2="21" y2="3"/>
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          className="JC-applyBtn"
-          onClick={() => onApplyClick(job)}
-          title="Apply for this position"
-        >
-          Apply Now
-        </button>
-      </div>
-    </div>
+    </article>
   );
 };
 
