@@ -21,19 +21,45 @@ const JobCard = ({
   isHome = false,
   applyText,
 }) => {
+  // Prioritize the industry directly assigned in the Admin Dashboard (job.industry or job.industrySector)
+  const rawIndustry = job.industry || job.industrySector;
+
   const industrySlug =
     job.industrySlug ||
     getIndustrySlugByJobSector(
-      [job.industrySector, job.category, job.title, job.department, job.company]
+      rawIndustry ||
+      [job.category, job.department, job.title, job.company]
         .filter(Boolean)
         .join(' ')
     );
 
-  const getIndustryDisplayName = (slug) => {
+  const getIndustryDisplayName = (ind, slug) => {
+    // Map industry sectors from Admin Dashboard to standardized card badge labels
+    const map = {
+      'Information Technology & Cloud': 'Tech & Cloud',
+      'Financial Services & FinTech': 'BFSI & FinTech',
+      'Healthcare & MedTech': 'Healthcare & MedTech',
+      'Automotive & Embedded Systems': 'Automotive & Mobility',
+      'E-Commerce & Digital Retail': 'Retail & Commerce',
+      'Telecommunications & 5G': 'Telecom & 5G',
+      'Manufacturing & Industrial IoT': 'Industrial & Mfg',
+      'Energy, Oil & CleanTech': 'Energy & CleanTech',
+      'Cybersecurity & Defense': 'Cybersecurity & Defense',
+      'Media, Gaming & Entertainment': 'Media & Gaming',
+      'EdTech & Education': 'EdTech',
+      'Supply Chain & Logistics': 'Supply Chain',
+      'Consulting & Professional Services': 'Consulting',
+      'Aerospace & Defense': 'Aerospace & Defense',
+      'Others': 'Enterprise Sector',
+    };
+
+    if (ind && map[ind]) return map[ind];
+    if (ind) return ind;
+
     switch (slug) {
       case 'information-technology': return 'Tech & Cloud';
       case 'bfsi': return 'BFSI & FinTech';
-      case 'healthcare-life-sciences': return 'Healthcare & Bio';
+      case 'healthcare-life-sciences': return 'Healthcare & MedTech';
       case 'automobile-manufacturing': return 'Industrial & Mfg';
       case 'automotive-mobility': return 'Automotive & Mobility';
       case 'telecommunications': return 'Telecom & 5G';
@@ -46,7 +72,7 @@ const JobCard = ({
     }
   };
 
-  const industryName = job.industrySector || getIndustryDisplayName(industrySlug);
+  const industryName = getIndustryDisplayName(rawIndustry, industrySlug);
 
   /* ── Logo background styling ── */
   const getLogoBg = (logo = '') => {

@@ -167,6 +167,7 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
     val.includes('fhir') ||
     val.includes('hipaa') ||
     val.includes('medical') ||
+    val.includes('medtech') ||
     val.includes('life sciences')
   ) {
     return 'healthcare-life-sciences';
@@ -174,6 +175,7 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
   if (
     val.includes('defense') ||
     val.includes('aerospace') ||
+    val.includes('cybersecurity') ||
     val.includes('avionics') ||
     val.includes('military') ||
     val.includes('satellite') ||
@@ -196,16 +198,20 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
     val.includes('commerce') ||
     val.includes('shopify') ||
     val.includes('cart') ||
-    val.includes('ecommerce')
+    val.includes('ecommerce') ||
+    val.includes('supply chain') ||
+    val.includes('logistics')
   ) {
     return 'retail-ecommerce';
   }
   if (
     val.includes('energy') ||
     val.includes('utility') ||
+    val.includes('utilities') ||
     val.includes('smart grid') ||
     val.includes('der') ||
     val.includes('scada') ||
+    val.includes('cleantech') ||
     val.includes('renewable')
   ) {
     return 'energy-utilities';
@@ -221,9 +227,9 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
   }
   if (
     val.includes('automotive') ||
+    val.includes('embedded') ||
     val.includes('ev') ||
     val.includes('adas') ||
-    val.includes('autonomous') ||
     val.includes('autosar') ||
     val.includes('battery')
   ) {
@@ -231,10 +237,12 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
   }
   if (
     val.includes('manufacturing') ||
+    val.includes('industrial') ||
     val.includes('mes') ||
     val.includes('oee') ||
     val.includes('plc') ||
     val.includes('industry 4.0') ||
+    val.includes('iot') ||
     val.includes('automobile')
   ) {
     return 'automobile-manufacturing';
@@ -250,6 +258,7 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
   }
   if (
     val.includes('cloud') ||
+    val.includes('information technology') ||
     val.includes('software') ||
     val.includes('saas') ||
     val.includes('tech') ||
@@ -259,7 +268,10 @@ export const getIndustrySlugByJobSector = (jobSectorOrTitle) => {
     val.includes('data') ||
     val.includes('ai') ||
     val.includes('frontend') ||
-    val.includes('backend')
+    val.includes('backend') ||
+    val.includes('media') ||
+    val.includes('gaming') ||
+    val.includes('entertainment')
   ) {
     return 'information-technology';
   }

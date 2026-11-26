@@ -7,6 +7,7 @@ import JobCard from '../../components/JobsComponents/JobCard';
 const mockJobHot = {
   id: 14,
   category: 'CLOUD & CYBERSECURITY • CONTRACT',
+  industry: 'Information Technology & Cloud',
   badge: 'Urgent Requirement',
   badgeColor: 'blue',
   logo: 'AWS',
@@ -29,6 +30,7 @@ const mockJobHot = {
 const mockJobImmediate = {
   id: 15,
   category: 'DISTRIBUTED SYSTEMS • HYBRID',
+  industry: 'Financial Services & FinTech',
   badge: 'Immediate Joining',
   badgeColor: 'purple',
   logo: 'ACH',
@@ -46,13 +48,24 @@ const mockJobImmediate = {
 };
 
 describe('JobCard Component - Alignment & Layout Verification', () => {
+  it('renders industry badge directly taken from admin dashboard job.industry', () => {
+    const { container } = renderWithProviders(
+      <JobCard job={{ ...mockJobHot, industry: 'Healthcare & MedTech' }} />
+    );
+
+    const industryPill = container.querySelector('.JobCard-industryPill');
+    expect(industryPill).toBeInTheDocument();
+    expect(industryPill).toHaveTextContent('Healthcare & MedTech');
+    expect(industryPill).toHaveAttribute('href', '/industries/healthcare-life-sciences');
+  });
+
   it('renders 2-row header eliminating badge collisions and truncation', () => {
     const { container } = renderWithProviders(<JobCard job={mockJobHot} />);
 
     // Row 1: Category on left, Status badge on right
     const headerTop = container.querySelector('.JobCard-headerTop');
     expect(headerTop).toBeInTheDocument();
-    expect(headerTop).toHaveTextContent(/BFSI & FinTech|Tech & Cloud|Cloud/i);
+    expect(headerTop).toHaveTextContent('Tech & Cloud');
     expect(screen.getByText('Urgent Requirement')).toBeInTheDocument();
 
     // Row 2: Sub-category on left, Mode badge on right
