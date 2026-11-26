@@ -7,6 +7,7 @@ const initialOpenings = (mockData.openings || []).map((j) => ({
   ...j,
   company: 'Enterprise Client (Confidential)',
   client: 'Enterprise Client (Confidential)',
+  industry: j.industry || 'Information Technology & Cloud',
 }));
 const {
   techStack: staticTechStack = [],

@@ -430,6 +430,7 @@
         "Vector DB"
       ],
       "department": "AI & Data Engineering",
+      "industry": "Information Technology & Cloud",
       "postedDate": "2026-10-13",
       "priority": 1
     },
@@ -458,6 +459,7 @@
         "DevSecOps"
       ],
       "department": "Cloud & DevOps",
+      "industry": "Cybersecurity & Defense",
       "postedDate": "2026-10-13",
       "priority": 2
     },
@@ -486,6 +488,7 @@
         "Docker"
       ],
       "department": "FinTech & Systems",
+      "industry": "Financial Services & FinTech",
       "postedDate": "2026-10-12",
       "priority": 3
     },
@@ -514,6 +517,7 @@
         "BTP"
       ],
       "department": "SAP & Enterprise",
+      "industry": "Manufacturing & Industrial IoT",
       "postedDate": "2026-10-11",
       "priority": 4
     },
@@ -540,6 +544,7 @@
       ],
       "workMode": "Work From Office",
       "department": "SAP & Enterprise",
+      "industry": "Information Technology & Cloud",
       "postedDate": "2026-10-04",
       "priority": 5,
       "jobMode": "Contract",
@@ -568,6 +573,7 @@
       ],
       "workMode": "Work From Home",
       "department": "Full Stack & Frontend",
+      "industry": "Financial Services & FinTech",
       "postedDate": "2026-10-03",
       "priority": 6,
       "jobMode": "Permanent",
@@ -596,6 +602,7 @@
       ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
+      "industry": "E-Commerce & Digital Retail",
       "postedDate": "2026-10-02",
       "priority": 7,
       "jobMode": "Contract to Hire",
@@ -624,6 +631,7 @@
       ],
       "workMode": "Work From Home",
       "department": "AI & Data Engineering",
+      "industry": "Information Technology & Cloud",
       "postedDate": "2026-10-01",
       "priority": 8,
       "jobMode": "Permanent",
@@ -652,6 +660,7 @@
       ],
       "workMode": "Work From Office",
       "department": "Cloud & DevOps",
+      "industry": "Information Technology & Cloud",
       "postedDate": "2026-09-30",
       "priority": 9,
       "jobMode": "Permanent",
@@ -680,6 +689,7 @@
       ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
+      "industry": "Information Technology & Cloud",
       "postedDate": "2026-09-28",
       "priority": 10,
       "jobMode": "Permanent",

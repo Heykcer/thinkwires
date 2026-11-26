@@ -84,7 +84,7 @@ const FeaturedPositions = ({
                 direction="up"
                 delay={(idx % 3) * 0.08}
                 distance={40}
-                style={{ display: 'flex' }}
+                style={{ display: 'flex', height: '100%', width: '100%' }}
               >
                 <JobCard
                   job={job}

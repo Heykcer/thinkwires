@@ -6,6 +6,7 @@ import QuickApplyModal from '../common/QuickApplyModal';
 import SectionBadge from '../common/SectionBadge';
 import JobSpecModal from '../JobsComponents/JobSpecModal';
 import { OpeningsCardSkeleton } from '../common/Skeleton';
+import JobCard from '../JobsComponents/JobCard';
 
 const Openings = () => {
   const navigate = useNavigate();
@@ -94,119 +95,13 @@ const Openings = () => {
           <>
             <div className={'Openings-grid'}>
               {displayOpenings.map((job) => (
-                <div key={job.id} className={'Openings-card'}>
-                  <div className={'Openings-cardHeader'}>
-                    <div className={'Openings-companyInfo'}>
-                      <div className={'Openings-companyLogo'}>TW</div>
-                      <div className={'Openings-companyText'}>
-                        <span className={'Openings-companyName'}>
-                          Enterprise Client (Confidential)
-                        </span>
-                        <h3 className={'Openings-jobTitle'}>{job.title}</h3>
-                      </div>
-                    </div>
-                    <div
-                      className={`Openings-badge Openings-${job.tagColor || job.badgeColor || 'green'}`}
-                    >
-                      <span className="Openings-pulseDot"></span>
-                      <span>{job.tag || job.badge || 'Active Opening'}</span>
-                    </div>
-                  </div>
-
-                  <div className={'Openings-metaInfo'}>
-                    <div className={'Openings-metaRow Openings-metaRowPrimary'}>
-                      <div className={'Openings-metaItem Openings-metaItemLocation'}>
-                        <span
-                          className="material-symbols-outlined Openings-metaIcon"
-                        >
-                          {job.workMode === 'Work From Home'
-                            ? 'home'
-                            : job.workMode === 'Work From Office'
-                              ? 'domain'
-                              : 'location_on'}
-                        </span>
-                        <span className={'Openings-metaText'}>
-                          {job.location} ({job.workMode || 'Hybrid'})
-                        </span>
-                      </div>
-                      <div className={'Openings-metaItem Openings-metaItemExp'}>
-                        <span
-                          className="material-symbols-outlined Openings-metaIcon"
-                        >
-                          schedule
-                        </span>
-                        <span className={'Openings-metaText'}>
-                          {job.experience} • {job.jobMode || 'Permanent'}
-                        </span>
-                      </div>
-                      <div className={'Openings-metaItem Openings-metaItemSalary'}>
-                        <span
-                          className="material-symbols-outlined Openings-metaIcon"
-                        >
-                          payments
-                        </span>
-                        <span className={'Openings-metaText'}>{job.salary}</span>
-                      </div>
-                    </div>
-                    <div className={'Openings-metaRow Openings-metaRowSecondary'}>
-                      <div className={'Openings-metaItem Openings-metaItemNotice'}>
-                        <span
-                          className="material-symbols-outlined Openings-metaIcon"
-                        >
-                          timer
-                        </span>
-                        <span className={'Openings-metaText'}>
-                          Notice: {job.noticePeriod || job.joining || 'Immediate'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className={'Openings-desc'}>{job.description}</p>
-
-                  <div className={'Openings-skills'}>
-                    {job.skills &&
-                      job.skills.map((skill) => (
-                        <span key={skill} className={'Openings-skillBadge'}>
-                          {skill}
-                        </span>
-                      ))}
-                  </div>
-
-                  <div className={'Openings-cardFooter'}>
-                    <span className={'Openings-postedDate'}>
-                      Posted:{' '}
-                      {job.postedDate
-                        ? new Date(job.postedDate).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })
-                        : 'Recently'}
-                    </span>
-                    <div className={'Openings-footerActions'}>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedJobForSpec(job)}
-                        className={'Openings-viewSpecBtn'}
-                      >
-                        View Job Spec
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleApplyClick(job)}
-                        className={'Openings-applyBtn'}
-                      >
-                        <span
-                          className="material-symbols-outlined Openings-btnIcon"
-                        >
-                          bolt
-                        </span>
-                        <span>Quick Apply</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  onApplyClick={handleApplyClick}
+                  onViewSpecClick={(j) => setSelectedJobForSpec(j)}
+                  isHome={true}
+                />
               ))}
             </div>
 
