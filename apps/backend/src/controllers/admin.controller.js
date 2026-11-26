@@ -775,16 +775,200 @@ export const getCandidates = async (req, res) => {
     const cursorPagination = parseCursorPagination(req.query, 50, 100);
     const { page, skip } = parsePagination(req.query, 50, 100);
     const { limit, cursor, isCursorMode } = cursorPagination;
+    const view =
+      typeof req.query.view === 'string' ? req.query.view.trim() : '';
     const search =
       typeof req.query.search === 'string' ? req.query.search.trim() : '';
     const status =
       typeof req.query.status === 'string' ? req.query.status.trim() : '';
+    const workMode =
+      typeof req.query.workMode === 'string' ? req.query.workMode.trim() : '';
     const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     let items = [];
     let total = 0;
     let hasNextPage = false;
     let nextCursor = null;
+
+    // Dedicated Master Candidate Directory mode (Candidates Data tab)
+    if (view === 'directory') {
+      if (isMongoActive()) {
+        let candQuery = { isDeleted: { $ne: true } };
+        if (workMode && workMode !== 'All') {
+          candQuery.workMode = workMode;
+        }
+        if (status && status !== 'All') {
+          candQuery.status = status;
+        }
+        if (safeSearch) {
+          candQuery.$or = [
+            { name: { $regex: safeSearch, $options: 'i' } },
+            { email: { $regex: safeSearch, $options: 'i' } },
+            { currentRole: { $regex: safeSearch, $options: 'i' } },
+            { technicalSkills: { $in: [new RegExp(safeSearch, 'i')] } },
+          ];
+        }
+
+        total = await Candidate.countDocuments(candQuery);
+
+        if (isCursorMode && cursor) {
+          candQuery = buildCursorQuery(candQuery, cursor, 'createdAt', -1);
+        }
+
+        const fetchLimit = isCursorMode ? limit + 1 : limit;
+        const registeredCandidates = await Candidate.find(candQuery)
+          .select(
+            'name email phone currentRole jobId jobTitle client rateCard currentCTC ' +
+            'relevantExperience currentCompany preferredLocation applicationDate month ' +
+            'noticePeriod location technicalSkills experience expectedSalary status workMode ' +
+            'assessmentStatus assessmentScore vettingScore fitScore avatarUrl avatarType ' +
+            'benchAvatarCode resumeUrl linkedinUrl githubUrl portfolioUrl notes bio createdAt updatedAt'
+          )
+          .sort({ createdAt: -1, _id: -1 })
+          .skip(isCursorMode ? 0 : skip)
+          .limit(fetchLimit)
+          .lean();
+
+        if (isCursorMode && registeredCandidates.length > limit) {
+          hasNextPage = true;
+          registeredCandidates.pop();
+        }
+
+        const candIds = registeredCandidates.map((c) => c._id);
+        const appStatsMap = new Map();
+        if (candIds.length > 0) {
+          const stats = await JobApplication.aggregate([
+            {
+              $match: {
+                candidate: { $in: candIds },
+                isDeleted: { $ne: true },
+              },
+            },
+            {
+              $group: {
+                _id: '$candidate',
+                totalApps: { $sum: 1 },
+                activeApps: {
+                  $sum: {
+                    $cond: [
+                      { $in: ['$status', ['Rejected', 'Withdrawn']] },
+                      0,
+                      1,
+                    ],
+                  },
+                },
+              },
+            },
+          ]);
+          stats.forEach((s) => appStatsMap.set(String(s._id), s));
+        }
+
+        items = registeredCandidates.map((cand) => {
+          const st = appStatsMap.get(String(cand._id)) || {
+            totalApps: 0,
+            activeApps: 0,
+          };
+          return {
+            id: String(cand._id),
+            _id: cand._id,
+            candidateId: cand._id,
+            name: cand.name,
+            email: cand.email,
+            phone: cand.phone || '',
+            currentRole: cand.currentRole || 'Software Engineer',
+            jobId: cand.jobId || '',
+            positionApplied:
+              cand.positionApplied || cand.jobTitle || 'General Talent Pool',
+            jobTitle: cand.jobTitle || 'General Talent Pool',
+            client: cand.client || 'Enterprise Partner',
+            rateCard: cand.rateCard || '',
+            currentCTC: cand.currentCTC || '',
+            relevantExperience: cand.relevantExperience || 0,
+            currentCompany: cand.currentCompany || '',
+            preferredLocation: cand.preferredLocation || '',
+            noticePeriod: cand.noticePeriod || 'Immediate',
+            workMode: cand.workMode || 'Open to Opportunities',
+            location: cand.location || 'Remote',
+            technicalSkills: cand.technicalSkills || [],
+            experience: cand.experience || 0,
+            expectedSalary: cand.expectedSalary || 'Market Standard',
+            status: cand.status || 'Applied',
+            assessmentStatus: cand.assessmentStatus || 'Not Started',
+            assessmentScore: cand.assessmentScore ?? null,
+            vettingScore: cand.vettingScore ?? null,
+            fitScore: cand.fitScore ?? null,
+            avatarUrl: cand.avatarUrl || '',
+            avatarType: cand.avatarType || 'initials',
+            anonymousCode: cand.benchAvatarCode || 'TW-CAND-01',
+            resumeUrl: cand.resumeUrl || '',
+            linkedinUrl: cand.linkedinUrl || '',
+            githubUrl: cand.githubUrl || '',
+            portfolioUrl: cand.portfolioUrl || '',
+            notes: cand.notes || cand.bio || '',
+            applicationCount: st.totalApps,
+            activeApplicationCount: st.activeApps,
+            createdAt: cand.createdAt || new Date().toISOString(),
+            updatedAt: cand.updatedAt || cand.createdAt,
+          };
+        });
+      } else {
+        let filtered = inMemoryData.candidates || [];
+        if (workMode && workMode !== 'All') {
+          filtered = filtered.filter((c) => c.workMode === workMode);
+        }
+        if (safeSearch) {
+          const s = search.toLowerCase();
+          filtered = filtered.filter(
+            (cand) =>
+              (cand.name || '').toLowerCase().includes(s) ||
+              (cand.email || '').toLowerCase().includes(s) ||
+              (cand.currentRole || '').toLowerCase().includes(s) ||
+              (cand.technicalSkills || []).some((sk) =>
+                (sk || '').toLowerCase().includes(s)
+              )
+          );
+        }
+        total = filtered.length;
+        items = filtered.slice(skip, skip + limit);
+      }
+
+      if (isCursorMode) {
+        const lastItem = items[items.length - 1];
+        if (lastItem) {
+          nextCursor = hasNextPage
+            ? encodeCursor({
+                id: lastItem.id || lastItem._id,
+                sortValue: lastItem.createdAt,
+              })
+            : null;
+        }
+      } else {
+        hasNextPage = page * limit < total;
+        if (hasNextPage && items.length > 0) {
+          const lastItem = items[items.length - 1];
+          nextCursor = encodeCursor({
+            id: lastItem.id || lastItem._id,
+            sortValue: lastItem.createdAt,
+          });
+        }
+      }
+
+      return res.json({
+        success: true,
+        candidates: items,
+        pagination: {
+          total,
+          page: isCursorMode ? undefined : page,
+          limit,
+          totalPages: isCursorMode
+            ? undefined
+            : Math.ceil(total / limit) || 1,
+          cursor: req.query.cursor || null,
+          nextCursor,
+          hasNextPage,
+        },
+      });
+    }
 
     if (isMongoActive()) {
       let appQuery = { isDeleted: { $ne: true } };
@@ -1079,6 +1263,243 @@ export const getCandidates = async (req, res) => {
   } catch (err) {
     console.error('getCandidates error:', err);
     res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+/**
+ * Retrieve Active Job Application Pipeline for Admins (Excludes Rejected & Withdrawn)
+ * GET /api/admin/applications
+ */
+export const getApplicationPipeline = async (req, res) => {
+  try {
+    const cursorPagination = parseCursorPagination(req.query, 50, 100);
+    const { page, skip } = parsePagination(req.query, 50, 100);
+    const { limit, cursor, isCursorMode } = cursorPagination;
+    const search =
+      typeof req.query.search === 'string' ? req.query.search.trim() : '';
+    const status =
+      typeof req.query.status === 'string' ? req.query.status.trim() : '';
+    const jobId =
+      typeof req.query.jobId === 'string' ? req.query.jobId.trim() : '';
+    const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    const ACTIVE_PIPELINE_STAGES = [
+      'Applied',
+      'Screening',
+      'Interview',
+      'Offered',
+      'Hired',
+    ];
+    const CLOSED_STAGES = ['Rejected', 'Withdrawn'];
+
+    // Closed applications never appear in the active application pipeline
+    if (status && CLOSED_STAGES.includes(status)) {
+      return res.json({
+        success: true,
+        applications: [],
+        candidates: [],
+        pagination: {
+          total: 0,
+          page: isCursorMode ? undefined : page,
+          limit,
+          totalPages: isCursorMode ? undefined : 1,
+          cursor: null,
+          nextCursor: null,
+          hasNextPage: false,
+        },
+      });
+    }
+
+    let items = [];
+    let total = 0;
+    let hasNextPage = false;
+    let nextCursor = null;
+
+    if (isMongoActive()) {
+      let appQuery = {
+        isDeleted: { $ne: true },
+        status: { $nin: CLOSED_STAGES },
+      };
+
+      if (status && status !== 'All' && ACTIVE_PIPELINE_STAGES.includes(status)) {
+        appQuery.status = status;
+      }
+      if (jobId) {
+        appQuery.jobId = jobId;
+      }
+      if (safeSearch) {
+        appQuery.$or = [
+          { candidateName: { $regex: safeSearch, $options: 'i' } },
+          { firstName: { $regex: safeSearch, $options: 'i' } },
+          { lastName: { $regex: safeSearch, $options: 'i' } },
+          { email: { $regex: safeSearch, $options: 'i' } },
+          { jobTitle: { $regex: safeSearch, $options: 'i' } },
+          { currentEmployer: { $regex: safeSearch, $options: 'i' } },
+          { skills: { $in: [new RegExp(safeSearch, 'i')] } },
+        ];
+      }
+
+      total = await JobApplication.countDocuments(appQuery);
+
+      if (isCursorMode && cursor) {
+        appQuery = buildCursorQuery(appQuery, cursor, 'createdAt', -1);
+      }
+
+      const fetchLimit = isCursorMode ? limit + 1 : limit;
+      const applications = await JobApplication.find(appQuery)
+        .select(
+          'candidate candidateName firstName lastName email mobileNumber currentEmployer ' +
+          'totalExperienceYears relevantExperienceYears expectedCTC status assessmentStatus ' +
+          'assessmentScore screeningPassed fitScore fitBadge avatarUrl anonymousCode ' +
+          'resumeUrl resumeOriginalName candidateNote notes createdAt updatedAt jobId jobTitle ' +
+          'client rateCard currentCTC preferredLocation applicationDate month noticePeriod department location skills'
+        )
+        .populate({
+          path: 'candidate',
+          select:
+            'name email phone currentRole status experience avatarUrl avatarType ' +
+            'technicalSkills location benchAvatarCode vettingScore',
+        })
+        .sort({ createdAt: -1, _id: -1 })
+        .skip(isCursorMode ? 0 : skip)
+        .limit(fetchLimit)
+        .lean();
+
+      if (isCursorMode && applications.length > limit) {
+        hasNextPage = true;
+        applications.pop();
+      }
+
+      items = applications.map((app) => {
+        const cand =
+          app.candidate && typeof app.candidate === 'object'
+            ? app.candidate
+            : null;
+        const candidateName =
+          (
+            app.candidateName || `${app.firstName || ''} ${app.lastName || ''}`
+          ).trim() ||
+          (cand && cand.name) ||
+          'Applicant Candidate';
+
+        return {
+          id: String(app._id),
+          _id: app._id,
+          applicationId: app._id,
+          candidateId: cand ? cand._id : app.candidate,
+          name: candidateName,
+          email: app.email || (cand && cand.email) || '',
+          phone: app.mobileNumber || (cand && cand.phone) || '',
+          currentRole:
+            app.currentEmployer ||
+            (cand && cand.currentRole) ||
+            'Software Engineer',
+          jobId: app.jobId || '',
+          positionApplied: app.jobTitle || 'General Technical Position',
+          jobTitle: app.jobTitle || 'General Technical Position',
+          client: app.client || 'Enterprise Partner',
+          rateCard: app.rateCard || '',
+          currentCTC: app.currentCTC || '',
+          relevantExperience: app.relevantExperienceYears
+            ? Number(app.relevantExperienceYears) || 0
+            : 0,
+          currentCompany: app.currentEmployer || '',
+          preferredLocation: app.preferredLocation || '',
+          applicationDate: app.applicationDate || '',
+          month: app.month || '',
+          noticePeriod: app.noticePeriod || 'Immediate',
+          department: app.department || 'Engineering',
+          location:
+            app.location ||
+            (cand && cand.location) ||
+            'Remote',
+          technicalSkills:
+            app.skills && app.skills.length > 0
+              ? app.skills
+              : (cand && cand.technicalSkills) || [],
+          experience: app.totalExperienceYears
+            ? Number(app.totalExperienceYears) || app.totalExperienceYears
+            : (cand && cand.experience) || 0,
+          expectedSalary: app.expectedCTC || 'Market Standard',
+          status: app.status || 'Applied',
+          assessmentStatus: app.assessmentStatus || 'Not Started',
+          assessmentScore:
+            app.assessmentScore !== undefined && app.assessmentScore !== null
+              ? app.assessmentScore
+              : cand && cand.assessmentScore,
+          vettingScore: cand && cand.vettingScore,
+          screeningPassed: app.screeningPassed ?? false,
+          fitScore: app.fitScore || 85,
+          fitBadge: app.fitBadge || 'Top Match',
+          avatarUrl: app.avatarUrl || (cand && cand.avatarUrl) || '',
+          avatarType: (cand && cand.avatarType) || 'initials',
+          anonymousCode:
+            app.anonymousCode || (cand && cand.benchAvatarCode) || 'TW-ENG-01',
+          resumeUrl: app.resumeUrl || '',
+          resumeOriginalName: app.resumeOriginalName || '',
+          notes: app.candidateNote || app.notes || '',
+          createdAt: app.createdAt || new Date().toISOString(),
+          updatedAt: app.updatedAt || app.createdAt,
+        };
+      });
+    } else {
+      let filtered = (inMemoryData.candidates || []).filter(
+        (c) => !CLOSED_STAGES.includes(c.status)
+      );
+      if (status && status !== 'All' && ACTIVE_PIPELINE_STAGES.includes(status)) {
+        filtered = filtered.filter((c) => c.status === status);
+      }
+      if (safeSearch) {
+        const s = search.toLowerCase();
+        filtered = filtered.filter(
+          (c) =>
+            (c.name || '').toLowerCase().includes(s) ||
+            (c.email || '').toLowerCase().includes(s) ||
+            (c.jobTitle || '').toLowerCase().includes(s)
+        );
+      }
+      total = filtered.length;
+      items = filtered.slice(skip, skip + limit);
+    }
+
+    if (isCursorMode) {
+      const lastItem = items[items.length - 1];
+      if (lastItem) {
+        nextCursor = hasNextPage
+          ? encodeCursor({
+              id: lastItem.id || lastItem._id,
+              sortValue: lastItem.createdAt,
+            })
+          : null;
+      }
+    } else {
+      hasNextPage = page * limit < total;
+      if (hasNextPage && items.length > 0) {
+        const lastItem = items[items.length - 1];
+        nextCursor = encodeCursor({
+          id: lastItem.id || lastItem._id,
+          sortValue: lastItem.createdAt,
+        });
+      }
+    }
+
+    return res.json({
+      success: true,
+      applications: items,
+      candidates: items,
+      pagination: {
+        total,
+        page: isCursorMode ? undefined : page,
+        limit,
+        totalPages: isCursorMode ? undefined : Math.ceil(total / limit) || 1,
+        cursor: req.query.cursor || null,
+        nextCursor,
+        hasNextPage,
+      },
+    });
+  } catch (err) {
+    console.error('getApplicationPipeline error:', err);
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 

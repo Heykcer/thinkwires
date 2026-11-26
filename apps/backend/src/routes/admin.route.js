@@ -7,6 +7,7 @@ import {
   updateEmployee,
   deleteEmployee,
   getCandidates,
+  getApplicationPipeline,
   getCandidateDossier,
   reEvaluateCandidate,
   createCandidate,
@@ -116,6 +117,7 @@ router.put('/employees/:id', manpowerGuard, updateEmployee);
 router.delete('/employees/:id', manpowerGuard, deleteEmployee);
 
 router.get('/candidates', manpowerGuard, getCandidates);
+router.get('/applications', manpowerGuard, getApplicationPipeline);
 router.get('/candidates/:id/dossier', manpowerGuard, getCandidateDossier);
 router.post('/candidates/:id/re-evaluate', manpowerGuard, reEvaluateCandidate);
 router.post('/candidates', manpowerGuard, createCandidate);

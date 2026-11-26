@@ -202,6 +202,9 @@ describe('Mobile Modals and Admin Tables (Issue #118)', () => {
       vi.spyOn(adminApi, 'getCandidates').mockResolvedValue({
         candidates: mockCandidates,
       });
+      vi.spyOn(adminApi, 'getApplicationPipeline').mockResolvedValue({
+        applications: mockCandidates,
+      });
 
       const { container } = renderWithProviders(
         <CandidatesView />
@@ -226,6 +229,48 @@ describe('Mobile Modals and Admin Tables (Issue #118)', () => {
       expect(labels).toContain('Skills');
       expect(labels).toContain('Comp Expectation');
       expect(labels).toContain('Stage');
+      expect(labels).toContain('Actions');
+    });
+
+    it('renders Candidates Data tab table rows with data-label attributes', async () => {
+      const mockDirectory = [
+        {
+          id: 'cand_dir_1',
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          currentRole: 'Staff Engineer',
+          technicalSkills: ['React', 'TypeScript'],
+          workMode: 'On-Bench',
+          vettingScore: 88,
+          activeApplicationCount: 1,
+          applicationCount: 2,
+        },
+      ];
+
+      vi.spyOn(adminApi, 'getApplicationPipeline').mockResolvedValue({
+        applications: [],
+      });
+      vi.spyOn(adminApi, 'getCandidates').mockResolvedValue({
+        candidates: mockDirectory,
+      });
+
+      const { container } = renderWithProviders(<CandidatesView />);
+
+      const candidatesTab = screen.getByRole('tab', { name: /Candidates Data/i });
+      fireEvent.click(candidatesTab);
+
+      const candName = await screen.findByText('Jane Doe');
+      expect(candName).toBeInTheDocument();
+
+      const cells = container.querySelectorAll('.tw-table tbody tr td');
+      const labels = Array.from(cells).map((td) => td.getAttribute('data-label'));
+
+      expect(labels).toContain('Candidate');
+      expect(labels).toContain('Current Role & Exp');
+      expect(labels).toContain('Skills');
+      expect(labels).toContain('Work Mode & Notice');
+      expect(labels).toContain('Vetting Score');
+      expect(labels).toContain('Applications');
       expect(labels).toContain('Actions');
     });
   });

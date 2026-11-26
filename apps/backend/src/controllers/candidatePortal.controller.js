@@ -1428,7 +1428,27 @@ export const uploadAvatar = async (req, res) => {
       });
     }
 
-    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    const safeAvatarName = req.file.filename || storageService.sanitizeFilename(req.file.originalname);
+    let avatarUrl = `/uploads/avatars/${safeAvatarName}`;
+
+    try {
+      const fileBuffer =
+        req.file.buffer ||
+        (req.file.path ? await fs.promises.readFile(req.file.path) : null);
+
+      if (fileBuffer) {
+        avatarUrl = await storageService.saveFile(
+          fileBuffer,
+          safeAvatarName,
+          req.file.mimetype || 'image/jpeg',
+          'avatars'
+        );
+      }
+    } finally {
+      if (req.file.path && storageService.driver === 's3') {
+        await cleanUpFile(req.file.path);
+      }
+    }
 
     if (mongoose.connection.readyState === 1) {
       await Candidate.findByIdAndUpdate(candidateId, {
@@ -1732,6 +1752,59 @@ export const downloadResume = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: 'An internal error occurred while downloading the resume.',
+    });
+  }
+};
+
+/**
+ * Serves candidate avatar images from Cloudflare R2 / S3 object storage or local disk.
+ * GET /uploads/avatars/:filename
+ */
+export const downloadAvatar = async (req, res, next) => {
+  try {
+    const safeFilename = storageService.sanitizeFilename(req.params.filename);
+    const ext = path.extname(safeFilename).toLowerCase();
+    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    if (!allowedExts.includes(ext)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid avatar image format.',
+      });
+    }
+
+    const mimeMap = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.webp': 'image/webp',
+    };
+
+    if (storageService.driver === 's3' && storageService.s3Client) {
+      try {
+        const stream = await storageService.getFileStream(safeFilename, 'avatars');
+        res.setHeader('Content-Type', mimeMap[ext] || 'image/jpeg');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        if (typeof stream.pipe === 'function') {
+          return stream.pipe(res);
+        }
+        const bytes = await stream.transformToByteArray();
+        return res.send(Buffer.from(bytes));
+      } catch (s3Err) {
+        if (s3Err.name === 'NoSuchKey' || s3Err.$metadata?.httpStatusCode === 404) {
+          return next();
+        }
+        throw s3Err;
+      }
+    }
+
+    return next();
+  } catch (err) {
+    console.error('Avatar download error:', err);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve avatar image.',
     });
   }
 };

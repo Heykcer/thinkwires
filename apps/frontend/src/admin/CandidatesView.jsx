@@ -22,16 +22,24 @@ const PIPELINE_STAGES = [
   'Interview',
   'Offered',
   'Hired',
-  'Rejected',
+];
+
+const WORK_MODES = [
+  'On-Bench',
+  'Full-Time Looking',
+  'Contract Only',
+  'Open to Opportunities',
 ];
 
 const CandidatesView = () => {
   const { showToast, activeRole } = useOutletContext();
+  const [activeTab, setActiveTab] = useState('pipeline'); // 'pipeline' | 'candidates'
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 350);
   const [selectedStage, setSelectedStage] = useState('All');
+  const [workModeFilter, setWorkModeFilter] = useState('All');
   const [viewMode, setViewMode] = useState('pipeline'); // 'pipeline' | 'table'
 
   // Modals & Drawers
@@ -61,15 +69,28 @@ const CandidatesView = () => {
 
   const fetchCandidates = () => {
     setLoading(true);
-    adminApi
-      .getCandidates({ search: debouncedSearch, status: selectedStage })
+    const requestPromise =
+      activeTab === 'candidates'
+        ? adminApi.getCandidates({
+            view: 'directory',
+            search: debouncedSearch,
+            workMode: workModeFilter,
+          })
+        : adminApi.getApplicationPipeline({
+            search: debouncedSearch,
+            status: selectedStage,
+          });
+
+    requestPromise
       .then((res) => {
-        setCandidates(res.candidates || []);
+        setCandidates(res.applications || res.candidates || []);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-        showToast(`Failed to load candidates: ${err.message}`);
+        showToast(
+          `Failed to load ${activeTab === 'candidates' ? 'candidates data' : 'application pipeline'}: ${err.message}`
+        );
       });
   };
 
@@ -77,13 +98,24 @@ const CandidatesView = () => {
     const abortController = new AbortController();
     setLoading(true);
 
-    adminApi
-      .getCandidates(
-        { search: debouncedSearch, status: selectedStage },
-        { signal: abortController.signal }
-      )
+    const requestPromise =
+      activeTab === 'candidates'
+        ? adminApi.getCandidates(
+            {
+              view: 'directory',
+              search: debouncedSearch,
+              workMode: workModeFilter,
+            },
+            { signal: abortController.signal }
+          )
+        : adminApi.getApplicationPipeline(
+            { search: debouncedSearch, status: selectedStage },
+            { signal: abortController.signal }
+          );
+
+    requestPromise
       .then((res) => {
-        setCandidates(res.candidates || []);
+        setCandidates(res.applications || res.candidates || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -91,13 +123,15 @@ const CandidatesView = () => {
           return; // Ignore aborted requests cleanly without UI flicker
         }
         setLoading(false);
-        showToast(`Failed to load candidates: ${err.message}`);
+        showToast(
+          `Failed to load ${activeTab === 'candidates' ? 'candidates data' : 'application pipeline'}: ${err.message}`
+        );
       });
 
     return () => {
       abortController.abort();
     };
-  }, [debouncedSearch, selectedStage, showToast]);
+  }, [activeTab, debouncedSearch, selectedStage, workModeFilter, showToast]);
 
   const handleStageChange = (candidateId, newStage) => {
     if (activeRole === 'viewer') {
@@ -257,20 +291,22 @@ const CandidatesView = () => {
             <span>Import</span>
           </button>
 
-          <div className="tw-period-filter-group">
-            <button
-              className={`tw-period-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
-              onClick={() => setViewMode('pipeline')}
-            >
-              Kanban Board
-            </button>
-            <button
-              className={`tw-period-btn ${viewMode === 'table' ? 'active' : ''}`}
-              onClick={() => setViewMode('table')}
-            >
-              List View
-            </button>
-          </div>
+          {activeTab === 'pipeline' && (
+            <div className="tw-period-filter-group">
+              <button
+                className={`tw-period-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
+                onClick={() => setViewMode('pipeline')}
+              >
+                Kanban Board
+              </button>
+              <button
+                className={`tw-period-btn ${viewMode === 'table' ? 'active' : ''}`}
+                onClick={() => setViewMode('table')}
+              >
+                List View
+              </button>
+            </div>
+          )}
 
           <button
             className="tw-btn-primary"
@@ -308,6 +344,62 @@ const CandidatesView = () => {
         </div>
       </div>
 
+      {/* Top-Level Tab Switcher: Active Application Pipeline vs Master Candidates Data */}
+      <div
+        role="tablist"
+        aria-label="Candidates and Application Pipeline Tabs"
+        style={{
+          display: 'flex',
+          gap: '0.5rem',
+          borderBottom: '1px solid #E2E8F0',
+          marginBottom: '1.15rem',
+          paddingBottom: '0.5rem',
+        }}
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'pipeline'}
+          onClick={() => {
+            setActiveTab('pipeline');
+            setSelectedStage('All');
+          }}
+          style={{
+            padding: '0.55rem 1.1rem',
+            borderRadius: '8px',
+            border: activeTab === 'pipeline' ? '1px solid #1E40AF' : '1px solid transparent',
+            backgroundColor: activeTab === 'pipeline' ? '#EFF6FF' : 'transparent',
+            color: activeTab === 'pipeline' ? '#1E40AF' : '#64748B',
+            fontWeight: 600,
+            fontSize: '0.86rem',
+            cursor: 'pointer',
+          }}
+        >
+          Application Pipeline
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'candidates'}
+          onClick={() => {
+            setActiveTab('candidates');
+            setWorkModeFilter('All');
+          }}
+          style={{
+            padding: '0.55rem 1.1rem',
+            borderRadius: '8px',
+            border: activeTab === 'candidates' ? '1px solid #1E40AF' : '1px solid transparent',
+            backgroundColor: activeTab === 'candidates' ? '#EFF6FF' : 'transparent',
+            color: activeTab === 'candidates' ? '#1E40AF' : '#64748B',
+            fontWeight: 600,
+            fontSize: '0.86rem',
+            cursor: 'pointer',
+          }}
+        >
+          Candidates Data
+        </button>
+      </div>
+
       {/* Filter Strip */}
       <div
         style={{
@@ -323,34 +415,235 @@ const CandidatesView = () => {
           <SkillSearchInput
             id="candidates-filter-search"
             className="tw-filter-input"
-            placeholder="Search candidate name or skill..."
+            placeholder={
+              activeTab === 'candidates'
+                ? 'Search candidate name, email, or skill...'
+                : 'Search applicant, job title, or skill...'
+            }
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onSelect={(skill) => setSearch(skill)}
             wrapperClassName="tw-filter-search-wrap"
           />
 
-          <select
-            className="tw-filter-select"
-            value={selectedStage}
-            onChange={(e) => setSelectedStage(e.target.value)}
-          >
-            <option value="All">All Stages</option>
-            {PIPELINE_STAGES.map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
+          {activeTab === 'pipeline' ? (
+            <select
+              className="tw-filter-select"
+              value={selectedStage}
+              onChange={(e) => setSelectedStage(e.target.value)}
+            >
+              <option value="All">All Active Stages</option>
+              {PIPELINE_STAGES.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select
+              className="tw-filter-select"
+              value={workModeFilter}
+              onChange={(e) => setWorkModeFilter(e.target.value)}
+            >
+              <option value="All">All Work Modes</option>
+              {WORK_MODES.map((wm) => (
+                <option key={wm} value={wm}>
+                  {wm}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
-          Total active candidates: <strong>{candidates.length}</strong>
+          {activeTab === 'candidates' ? 'Total candidates: ' : 'Active applications: '}
+          <strong>{candidates.length}</strong>
         </div>
       </div>
 
-      {/* Mode 1: Kanban Pipeline Board */}
-      {viewMode === 'pipeline' ? (
+      {/* Tab 1: Master Candidates Data Directory */}
+      {activeTab === 'candidates' ? (
+        <div className="tw-table-container">
+          <div style={{ overflowX: 'auto' }}>
+            <table className="tw-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Current Role & Exp</th>
+                  <th>Skills</th>
+                  <th>Work Mode & Notice</th>
+                  <th>Vetting Score</th>
+                  <th>Applications</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                      Loading candidates directory...
+                    </td>
+                  </tr>
+                ) : candidates.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                      No candidate profiles match your filters.
+                    </td>
+                  </tr>
+                ) : (
+                  candidates.map((cand) => (
+                    <tr key={cand.id || cand._id}>
+                      <td data-label="Candidate">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                          <div
+                            style={{
+                              width: '34px',
+                              height: '34px',
+                              borderRadius: '50%',
+                              overflow: 'hidden',
+                              background: '#E2E8F0',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 700,
+                              fontSize: '0.78rem',
+                              color: '#0037B0',
+                              flexShrink: 0,
+                            }}
+                          >
+                            {cand.avatarUrl ? (
+                              <img
+                                src={cand.avatarUrl}
+                                alt={cand.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                            ) : (
+                              (cand.name?.slice(0, 2) || 'TW').toUpperCase()
+                            )}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 600 }}>{cand.name}</div>
+                            <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
+                              {cand.email}
+                            </div>
+                            {cand.phone && (
+                              <div style={{ fontSize: '0.71rem', color: '#94A3B8' }}>
+                                {cand.phone}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td data-label="Current Role & Exp">
+                        <div style={{ fontWeight: 500 }}>{cand.currentRole || 'Software Engineer'}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                          {cand.experience ? `${cand.experience}y exp` : 'Experienced'} • {cand.location || 'Remote'}
+                        </div>
+                      </td>
+                      <td data-label="Skills">
+                        <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '210px' }}>
+                          {(cand.technicalSkills || []).slice(0, 5).map((sk, idx) => (
+                            <span
+                              key={idx}
+                              style={{
+                                fontSize: '0.65rem',
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '4px',
+                                backgroundColor: '#EBF2FC',
+                                color: '#3478D4',
+                              }}
+                            >
+                              {sk}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td data-label="Work Mode & Notice">
+                        <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>
+                          {cand.workMode || 'Open to Opportunities'}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                          Notice: {cand.noticePeriod || 'Immediate'}
+                        </div>
+                      </td>
+                      <td data-label="Vetting Score">
+                        {cand.vettingScore !== null && cand.vettingScore !== undefined ? (
+                          <span
+                            style={{
+                              fontSize: '0.72rem',
+                              padding: '0.15rem 0.45rem',
+                              borderRadius: '4px',
+                              fontWeight: 700,
+                              backgroundColor: cand.vettingScore >= 75 ? '#DCFCE7' : '#FEE2E2',
+                              color: cand.vettingScore >= 75 ? '#15803D' : '#B91C1C',
+                            }}
+                          >
+                            {cand.vettingScore}%
+                          </span>
+                        ) : cand.assessmentScore !== null && cand.assessmentScore !== undefined ? (
+                          <span
+                            style={{
+                              fontSize: '0.72rem',
+                              padding: '0.15rem 0.45rem',
+                              borderRadius: '4px',
+                              fontWeight: 700,
+                              backgroundColor: cand.assessmentScore >= 75 ? '#DCFCE7' : '#FEE2E2',
+                              color: cand.assessmentScore >= 75 ? '#15803D' : '#B91C1C',
+                            }}
+                          >
+                            {cand.assessmentScore}%
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: '0.74rem', color: '#94A3B8' }}>Not Assessed</span>
+                        )}
+                      </td>
+                      <td data-label="Applications">
+                        <span
+                          style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            color: '#1E40AF',
+                            backgroundColor: '#EFF6FF',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '9999px',
+                          }}
+                        >
+                          {cand.activeApplicationCount ?? 0} active / {cand.applicationCount ?? 0} total
+                        </span>
+                      </td>
+                      <td data-label="Actions" style={{ textAlign: 'right' }}>
+                        <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+                          <button
+                            className="tw-action-icon-btn"
+                            onClick={() => setSelectedCandidate(cand)}
+                            title="View Candidate Profile"
+                          >
+                            <EyeIcon size={14} />
+                          </button>
+                          <button
+                            className="tw-action-icon-btn danger"
+                            onClick={() => {
+                              if (activeRole === 'viewer') {
+                                showToast('Viewer accounts cannot delete candidates.');
+                                return;
+                              }
+                              setDeleteConfirmId(cand.id || cand._id);
+                            }}
+                            title="Delete Candidate"
+                          >
+                            <TrashIcon size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : /* Tab 2: Mode 1: Kanban Pipeline Board */
+      viewMode === 'pipeline' ? (
         <div className="tw-pipeline-board">
           {PIPELINE_STAGES.map((stage) => {
             const stageCandidates = candidates.filter(

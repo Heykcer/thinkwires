@@ -17,7 +17,7 @@ import contactRoutes from './routes/contact.route.js';
 import articlesRoutes from './routes/articles.route.js';
 import industriesRoutes from './routes/industries.route.js';
 import servicesRoutes from './routes/services.route.js';
-import { downloadResume } from './controllers/candidatePortal.controller.js';
+import { downloadResume, downloadAvatar } from './controllers/candidatePortal.controller.js';
 import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
 import sanitizeInputs from './middlewares/sanitize.middleware.js';
 import { isAuthorizedDiagnosticRequest } from './middlewares/auth.middleware.js';
@@ -136,6 +136,7 @@ const resumesDir = path.resolve(uploadsDir, 'resumes');
 });
 
 // Issue #178: Public static access is restricted strictly to avatar images. Resumes require authentication.
+app.get('/uploads/avatars/:filename', downloadAvatar);
 app.use('/uploads/avatars', express.static(avatarsDir));
 app.get('/uploads/resumes/:filename', downloadResume);
 

@@ -337,10 +337,17 @@ export const adminApi = {
     return json;
   },
 
-  // Candidates
+  // Candidates & Active Application Pipeline
   async getCandidates(params = {}, options = {}) {
     const query = new URLSearchParams(params).toString();
     const res = await adminFetch(`/candidates${query ? `?${query}` : ''}`, options);
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    return res.json();
+  },
+
+  async getApplicationPipeline(params = {}, options = {}) {
+    const query = new URLSearchParams(params).toString();
+    const res = await adminFetch(`/applications${query ? `?${query}` : ''}`, options);
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },

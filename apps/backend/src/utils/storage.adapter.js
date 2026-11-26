@@ -16,14 +16,16 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
  */
 export class StorageService {
   constructor(options = {}) {
+    const configuredBucket =
+      options.bucket || process.env.S3_BUCKET || process.env.R2_BUCKET || '';
     this.driver =
       options.driver ||
       process.env.STORAGE_DRIVER ||
-      (process.env.S3_BUCKET ? 's3' : 'local');
+      (configuredBucket ? 's3' : 'local');
 
-    this.bucket = options.bucket || process.env.S3_BUCKET || 'thinkwires-storage';
-    this.region = options.region || process.env.S3_REGION || 'us-east-1';
-    this.cdnDomain = options.cdnDomain || process.env.CDN_DOMAIN || '';
+    this.bucket = configuredBucket || 'thinkwires-storage';
+    this.region = options.region || process.env.S3_REGION || process.env.R2_REGION || 'auto';
+    this.cdnDomain = options.cdnDomain || process.env.CDN_DOMAIN || process.env.R2_PUBLIC_DOMAIN || '';
 
     this.localBaseDir =
       options.localBaseDir ||
@@ -36,14 +38,17 @@ export class StorageService {
       const clientConfig = {
         region: this.region,
       };
-      if (process.env.S3_ENDPOINT) {
-        clientConfig.endpoint = process.env.S3_ENDPOINT;
+      const endpoint = process.env.S3_ENDPOINT || process.env.R2_ENDPOINT;
+      if (endpoint) {
+        clientConfig.endpoint = endpoint;
         clientConfig.forcePathStyle = true;
       }
-      if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+      const accessKeyId = process.env.AWS_ACCESS_KEY_ID || process.env.R2_ACCESS_KEY_ID;
+      const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || process.env.R2_SECRET_ACCESS_KEY;
+      if (accessKeyId && secretAccessKey) {
         clientConfig.credentials = {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          accessKeyId,
+          secretAccessKey,
         };
       }
       this.s3Client = new S3Client(clientConfig);
