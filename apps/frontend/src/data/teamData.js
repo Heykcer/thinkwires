@@ -188,58 +188,133 @@ export const TEAM_MEMBERS = [
 
 export const EMPLOYEE_BENEFITS = [
   {
-    id: 'ben-health',
-    title: 'Comprehensive Health & Wellness',
-    tag: 'Whole-Person Care',
+    id: 'ben-compensation',
+    title: 'Reliable & Timely Compensation',
+    tag: 'Financial Stability',
     description:
-      'Premium family healthcare coverage, periodic wellness retreats, and regular mental health support workshops that value sustainable success over burnout.',
-    icon: 'shield',
-    badge: '100% Covered',
+      'Receive your salary accurately, consistently, and on time every month, ensuring financial stability and peace of mind.',
+    icon: 'wallet',
+    badge: 'On-Time Payroll',
   },
   {
-    id: 'ben-global',
-    title: 'Global Client Footprint',
-    tag: 'Borderless Impact',
-    description:
-      'Collaborate directly with engineering counterparts in Silicon Valley, Toronto, New York, and European tech corridors without relocation friction.',
-    icon: 'globe',
-    badge: '3 Continents',
-  },
-  {
-    id: 'ben-upskilling',
-    title: 'Continuous Tech Upskilling',
-    tag: 'Skill Mastery',
-    description:
-      'Sponsorship for Tier-1 cloud certifications (AWS, Azure, GCP), GenAI hackathons, and enterprise solution architecture workshops.',
-    icon: 'graduation',
-    badge: 'Paid Certifications',
-  },
-  {
-    id: 'ben-agility',
-    title: 'Work-Life Agility',
+    id: 'ben-harmony',
+    title: 'Work-Life Harmony',
     tag: 'Flexibility First',
     description:
-      'Choose from completely remote, hybrid, or on-site modes. Flexible overlap schedules tailored to your individual family needs.',
+      'Promoting a balanced lifestyle through flexible working arrangements, hybrid or remote opportunities where applicable, and a culture that respects personal time and well-being.',
     icon: 'laptop',
     badge: 'Remote & Hybrid',
   },
   {
-    id: 'ben-career',
-    title: 'Transparent Career Pathing',
-    tag: 'Merit-Based Growth',
+    id: 'ben-learning',
+    title: 'Learning & Professional Growth',
+    tag: 'Continuous Upskilling',
     description:
-      'Bi-annual performance evaluations, direct promotions to Staff/Principal engineering cohorts, and clear payroll progression charts.',
-    icon: 'trending',
-    badge: 'Bi-Annual Reviews',
+      'Grow your career through continuous learning, skill enhancement, mentorship, constructive feedback, and opportunities to expand your professional capabilities.',
+    icon: 'graduation',
+    badge: 'Mentorship & Growth',
   },
   {
-    id: 'ben-csr',
-    title: 'Impact & Social Purpose',
-    tag: 'Community Value',
+    id: 'ben-statutory',
+    title: 'Statutory & Employee Benefits',
+    tag: 'Social Security',
     description:
-      'Join our CSR initiatives: village children educational support, healthcare drives, and tree planting programs that empower local communities.',
-    icon: 'heart',
-    badge: '1,000+ Trees',
+      'Access to applicable employee benefits and social security provisions, including ESIC, insurance coverage, Employees’ Compensation, Provident Fund (EPF), and Employee Pension Scheme (EPS).',
+    icon: 'shield',
+    badge: 'EPF, ESIC & EPS',
+  },
+  {
+    id: 'ben-opportunities',
+    title: 'Career Opportunities & Flexibility',
+    tag: 'Diverse Pathways',
+    description:
+      'Explore diverse career pathways, a supportive work environment, professional recognition, and opportunities to take on new challenges and responsibilities.',
+    icon: 'trending',
+    badge: 'Recognition & Scope',
+  },
+  {
+    id: 'ben-guidance',
+    title: 'Career Guidance & Development',
+    tag: 'Structured Support',
+    description:
+      'Receive personalized career guidance, professional counseling, and structured skill-development support to help you strengthen your expertise and achieve your career aspirations.',
+    icon: 'compass',
+    badge: '1:1 Counseling',
+  },
+  {
+    id: 'ben-global',
+    title: 'Global Career Exposure',
+    tag: 'Borderless Impact',
+    description:
+      'Work on opportunities with leading Indian and international organizations, gaining valuable industry exposure, experience, and access to a wider professional landscape.',
+    icon: 'globe',
+    badge: 'India & Global',
+  },
+];
+
+export const EMPLOYEE_CENTRIC_CULTURE = [
+  {
+    id: 'culture-diverse',
+    number: '01',
+    title: 'Encourage Diverse Perspectives',
+    description:
+      'Building an employee-focused culture begins with transparent, consistent, and meaningful communication between leaders and their teams. Employees should feel comfortable sharing ideas, opinions, and concerns, even when their perspectives differ from conventional approaches. Encouraging individuality, open dialogue, and freedom of expression helps people feel respected, valued, and included.',
+  },
+  {
+    id: 'culture-development',
+    number: '02',
+    title: 'Invest in Continuous Professional Development',
+    description:
+      'Empowering employees to strengthen their capabilities is fundamental to building a progressive workplace. Through regular one-to-one conversations, constructive guidance, mentoring, and performance feedback, leaders help individuals identify their strengths and areas for improvement, supporting long-term confidence and career success.',
+  },
+  {
+    id: 'culture-celebrate',
+    number: '03',
+    title: 'Celebrate Contributions and Achievements',
+    description:
+      'A culture of appreciation motivates people to perform at their best. Recognizing dedication, meaningful contributions, and outstanding performance reinforces a sense of belonging, strengthens collaboration, builds positive relationships, and creates an environment where success is shared and celebrated collectively.',
+  },
+  {
+    id: 'culture-feedback',
+    number: '04',
+    title: 'Listen, Learn, and Act on Employee Feedback',
+    description:
+      'Creating a truly employee-centric workplace requires listening to employees and translating their feedback into meaningful action. Regular surveys, feedback sessions, and accessible communication channels help identify opportunities to improve culture, flexibility, and engagement—building trust across the organization.',
+  },
+];
+
+export const EMPLOYEE_TESTIMONIALS = [
+  {
+    id: 'test-sanjana',
+    name: 'Sanjana Choudry',
+    role: 'SAP Consultant',
+    initials: 'SC',
+    quote:
+      'Thinkwires gave me the opportunity to begin my career with a reputed organization, opening doors to new experiences and possibilities. Every day brings fresh challenges, learning opportunities, and professional growth. The impact Thinkwires has made on my career at such an early stage is truly remarkable, and I am grateful for the journey.',
+  },
+  {
+    id: 'test-vishal',
+    name: 'Vishal Kumar',
+    role: 'Corporate HR',
+    initials: 'VK',
+    quote:
+      'Thinkwires has played an important role in my personal and professional development. It has encouraged me to step beyond my comfort zone, embrace new opportunities, and develop the confidence to grow. This journey has positively transformed my work experience and career outlook.',
+  },
+  {
+    id: 'test-manju',
+    name: 'Manju Sinha',
+    role: 'Account Manager',
+    initials: 'MS',
+    quote:
+      'Thinkwires fosters a culture of transparency, inclusivity, and equal opportunity, where every individual’s voice matters, regardless of their position. Having been part of Thinkwires for over three years, I have witnessed tremendous growth in myself as a professional, with every change bringing new possibilities and improvements.',
+  },
+  {
+    id: 'test-amit',
+    name: 'Amit Choudhary',
+    role: 'Solution Consultant',
+    initials: 'AC',
+    quote:
+      'I truly appreciate the professionalism and dedication demonstrated by the Thinkwires team. Recently, I reached out for assistance with some tax-related queries and guidance, and despite their busy schedules, the team ensured that all my concerns were addressed on the very same day. Their proactive approach and responsiveness reflect a strong commitment to employee care.',
   },
 ];
 
