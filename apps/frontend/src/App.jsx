@@ -29,6 +29,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const MissionVisionPage = lazy(() => import('./pages/MissionVisionPage'));
 const ValuesCodeOfConductPage = lazy(() => import('./pages/ValuesCodeOfConductPage'));
 const LifeAtThinkwiresPage = lazy(() => import('./pages/LifeAtThinkwiresPage'));
+const BenefitsPage = lazy(() => import('./pages/BenefitsPage'));
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage'));
 
 // Authentication Pages (Code-split with React.lazy)
@@ -105,7 +106,7 @@ function App() {
           <Route path="/resources/faqs" element={<FaqPage />} />
           <Route path="/policies" element={<LegalPage />} />
           <Route path="/life-at-thinkwires" element={<LifeAtThinkwiresPage />} />
-          <Route path="/benefits" element={<JobPage />} />
+          <Route path="/benefits" element={<BenefitsPage />} />
 
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
